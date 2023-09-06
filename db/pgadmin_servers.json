@@ -1,0 +1,13 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "cluster-monitoring_data",
+      "Group": "Servers",
+      "Port": 5432,
+      "Username": "user",
+      "SSLMode": "prefer",
+      "MaintenanceDB": "cluster-monitoring_data",
+      "Host": "postgres"
+    }
+  }
+}
