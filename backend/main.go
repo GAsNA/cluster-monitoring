@@ -1,11 +1,19 @@
 package main
 
 import (
-	"fmt"
+	"log"
+	"net/http"
+	"os"
+
 	"main/config"
+	"main/models"
 )
 
 func main() {
-	fmt.Println("HELLO!")
 	config.DatabaseInit()
+	models.CreateUserTable()
+
+	router := InitializeRouter()
+
+	log.Fatal(http.ListenAndServe(":" + os.Getenv("PORT"), router))
 }

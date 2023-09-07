@@ -8,13 +8,13 @@ services:
     restart: unless-stopped
     volumes:
       - ./backend:/usr/src/app
-      - /usr/src/app/node_modules/
     depends_on:
       postgres:
         condition: service_healthy
     environment:
       UID: ${UID}
       SECRET: ${SECRET}
+      PORT: ${PORT_BACK}
       POSTGRES_HOST: ${POSTGRES_HOST}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -35,7 +35,7 @@ services:
       - ./frontend:/usr/src/app
       - /usr/src/app/node_modules
     environment:
-      PORT: ${PORT}
+      PORT: ${PORT_FRONT}
     ports:
       - 4200:4200
     networks:

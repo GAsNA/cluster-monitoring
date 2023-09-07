@@ -3,10 +3,9 @@ package config
 import (
 	"database/sql"
 	"context"
-	"os"
 	"log"
 	"fmt"
-	"main/models"
+	"os"
 
 	_ "github.com/lib/pq"
 	"github.com/uptrace/bun"
@@ -18,16 +17,12 @@ var (
 	db	*bun.DB
 )
 
-func	GetEnvVar(key string) string {
-	return os.Getenv(key)
-}
-
 func	DatabaseInit() {
 	// INIT DB
-	host	:= GetEnvVar("POSTGRES_HOST")
-	user_pg	:= GetEnvVar("POSTGRES_USER")
-	password:= GetEnvVar("POSTGRES_PASSWORD")
-	dbname	:= GetEnvVar("POSTGRES_DB")
+	host	:= os.Getenv("POSTGRES_HOST")
+	user_pg	:= os.Getenv("POSTGRES_USER")
+	password:= os.Getenv("POSTGRES_PASSWORD")
+	dbname	:= os.Getenv("POSTGRES_DB")
 
 	psqlconn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable", host, user_pg, password, dbname)
 	sqldb, err := sql.Open("postgres", psqlconn)
@@ -39,17 +34,12 @@ func	DatabaseInit() {
 	db = bun.NewDB(sqldb, sqlitedialect.New())
 
 	log.Println("The database is connected")
-
-	// Create Table users if not exists
-	createUsersTable()
 }
 
-func	createUsersTable() {
-	_, err := db.NewCreateTable().Model((*models.User)(nil)).IfNotExists().Exec(ctx)
-	if err != nil { log.Fatal(err) }
-}
-
-// Getter for db var
-func	Db() *bun.DB {
+func	DB() *bun.DB {
 	return db
+}
+
+func	Ctx() context.Context {
+	return ctx
 }

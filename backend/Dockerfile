@@ -9,6 +9,7 @@ COPY		*.go ./
 
 COPY		config ./config/
 COPY		models ./models/
+COPY		controllers ./controllers/
 
 RUN			go build -o ./backend
 
