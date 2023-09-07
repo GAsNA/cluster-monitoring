@@ -12,6 +12,7 @@ import (
 )
 
 func UsersIndex(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-type", "application/json;charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
 
@@ -19,6 +20,7 @@ func UsersIndex(w http.ResponseWriter, r *http.Request) {
 }
 
 func UsersCreate(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-type", "application/json;charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
 
@@ -36,6 +38,7 @@ func UsersCreate(w http.ResponseWriter, r *http.Request) {
 }
 
 func UsersShow(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-type", "application/json;charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
 
@@ -49,6 +52,7 @@ func UsersShow(w http.ResponseWriter, r *http.Request) {
 }
 
 func UsersUpdate(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-type", "application/json;charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
 
@@ -69,6 +73,7 @@ func UsersUpdate(w http.ResponseWriter, r *http.Request) {
 }
 
 func UsersDelete(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-type", "application/json;charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
 

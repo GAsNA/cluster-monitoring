@@ -1,23 +1,42 @@
-import './App.css';
+import React, { useState } from 'react';
 import { Button } from '@nextui-org/react';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 
+export const client = axios.create({
+	baseURL: "http://localhost:3000/",
+	timeout: 1000,
+});
+
 function App() {
 
-	async function login() {
-		await axios.post("http://localhost:3000/auth", "")
-				.then((response) => {
-					Cookies.set('connected', 'connected')
-				})
-				.catch((error) => {
-					throw error
-				});
+	const [title, setTitle] = useState(Cookies.get("connected") ? "Logout" : "Login");
+
+	async function login_out() {
+		if (!Cookies.get('connected')) {
+			await client.post("auth/login", "")
+					.then((response) => {
+						Cookies.set('connected', 'connected')
+						setTitle("Logout")
+					})
+					.catch((error) => {
+						throw error
+					});
+		} else {
+			await client.post("auth/logout", "")
+					.then((response) => {
+						Cookies.remove('connected')
+						setTitle("Login")
+					})
+					.catch((error) => {
+						throw error
+					});
+		}
 	}
 
 	return (
-		<div className="App">
-			<Button OnPress={login}>Login</Button>
+		<div>
+			<Button onPress={login_out} color="primary">{title}</Button>
 		</div>
 	);
 }
