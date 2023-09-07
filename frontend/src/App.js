@@ -36,7 +36,9 @@ function App() {
 
 	return (
 		<div>
-			<Button onPress={login_out} color="primary">{title}</Button>
+			<Button onPress={login_out} color="primary" size="lg" radius="md" variant="ghost">
+				{title}
+			</Button>
 		</div>
 	);
 }

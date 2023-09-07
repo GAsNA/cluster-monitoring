@@ -6,7 +6,11 @@ import './index.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-	<NextUIProvider>
-		<App />
-	</NextUIProvider>
+	<React.StrictMode>
+		<NextUIProvider>
+			<main className="purple-dark text-foreground bg-background">
+				<App />
+			</main>
+		</NextUIProvider>
+	</React.StrictMode>
 );
