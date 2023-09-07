@@ -3,6 +3,10 @@ package config
 import (
 	"database/sql"
 	"context"
+	"os"
+	"log"
+	"fmt"
+	"main/models"
 
 	_ "github.com/lib/pq"
 	"github.com/uptrace/bun"
@@ -41,11 +45,11 @@ func	DatabaseInit() {
 }
 
 func	createUsersTable() {
-	_, err := db.NewCreateTable().Model((*User)(nil)).IfNotExists().Exec(ctx)
+	_, err := db.NewCreateTable().Model((*models.User)(nil)).IfNotExists().Exec(ctx)
 	if err != nil { log.Fatal(err) }
 }
 
 // Getter for db var
-func	Db() *sql.DB {
+func	Db() *bun.DB {
 	return db
 }

@@ -5,7 +5,10 @@ WORKDIR		/app
 COPY		go.mod go.sum ./
 RUN			go mod download
 
-COPY		src/*.go ./
+COPY		*.go ./
+
+COPY		config ./config/
+COPY		models ./models/
 
 RUN			go build -o ./backend
 
