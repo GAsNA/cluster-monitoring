@@ -17,22 +17,40 @@ module.exports = {
         "purple-dark": {
           extend: "dark", // <- inherit default values from dark theme
           colors: {
-            background: "#0D001A",
+            background: "#000000",
             foreground: "#ffffff",
             primary: {
-              50: "#3B096C",
-              100: "#520F83",
-              200: "#7318A2",
-              300: "#9823C2",
-              400: "#c031e2",
-              500: "#DD62ED",
-              600: "#F182F6",
-              700: "#FCADF9",
-              800: "#FDD5F9",
-              900: "#FEECFE",
-              DEFAULT: "#DD62ED",
+              DEFAULT: "#01babc",
               foreground: "#ffffff",
             },
+	   secondary: {
+              DEFAULT: "#c1c1c9",
+              foreground: "#ffffff",
+	   },
+	   success: {
+              DEFAULT: "#2cd57a",
+              foreground: "#ffffff",
+	   },
+	   danger: {
+              DEFAULT: "#e96a64",
+              foreground: "#ffffff",
+	   },
+	   warning: {
+              DEFAULT: "#f4a723",
+              foreground: "#ffffff",
+	   },
+	   info: {
+              DEFAULT: "#4990e2",
+              foreground: "#ffffff",
+	   },
+	   light: {
+              DEFAULT: "#e7e7e7",
+              foreground: "#ffffff",
+	   },
+	   dark: {
+              DEFAULT: "#5c5b61",
+              foreground: "#ffffff",
+	   },
             focus: "#F182F6",
           },
           layout: {
