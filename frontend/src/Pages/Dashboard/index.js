@@ -30,8 +30,6 @@ function Dashboard() {
 	}
 
 	const changeCluster = (newClusterId) => {
-		changeClusterIsActive(cluster.id);
-		changeClusterIsActive(parseInt(newClusterId));
 		setAllClusters(
 			allClusters.map((item) => (
 				item.id === cluster.id
