@@ -51,7 +51,6 @@ module.exports = {
               DEFAULT: "#5c5b61",
               foreground: "#ffffff",
 	   },
-            focus: "#F182F6",
           },
           layout: {
             disabledOpacity: "0.3",
