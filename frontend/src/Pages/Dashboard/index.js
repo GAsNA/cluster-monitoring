@@ -62,19 +62,6 @@ function Dashboard() {
 		return <Navigate to={APP_ROUTES.HOME} replace />;
 	}
 
-	// TO ADD LISTENERS ONCE, PLEASE FOUND ANOTHER WAY BECAUSE ANYTHING IS WORKING
-	var run = false;
-	function eventRunOnce() {
-		if (!run) { run = true; addListeners(); }
-	}
-	window.onload = function() {
-		if (window.addEventListener) {
-			document.addEventListener('mousemove', eventRunOnce, false);
-		} else if(window.attachEvent) {
-			document.attachEvent('onmousemove', eventRunOnce);
-		}
-	}
-
 	return (
 		<div>
 			<Navigator />
@@ -89,7 +76,7 @@ function Dashboard() {
 				</NavbarContent>
 			</Navbar>
 
-			<SvgLoader path={cluster.link}>
+			<SvgLoader path={cluster.link} onSVGReady={addListeners}>
 				<SvgProxy selector={"rect"} fill="#e5e5e5" />
 				{ seatHover &&
 					<SvgProxy key={seatHover} selector={"#" + seatHover + ",#" + seatHover + " path"} fill="red" />
