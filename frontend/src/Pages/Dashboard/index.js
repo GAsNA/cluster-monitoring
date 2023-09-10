@@ -4,8 +4,8 @@ import { Navigate } from 'react-router-dom';
 import { Navbar, NavbarContent, NavbarItem, Button } from '@nextui-org/react';
 import { SvgLoader, SvgProxy } from 'react-svgmt';
 import { APP_ROUTES } from '../../utils/constants.jsx';
-import '../../CSS/Dashboard.css';
 import Navigator from '../../Components/Navigator.js';
+import ModalTickets from '../../Components/ModalTickets.js';
 
 function Dashboard() {
 	const items = [
@@ -27,6 +27,9 @@ function Dashboard() {
 	const [cluster, setCluster] = useState(items[0]);
 	
 	const [seatHover, setSeatHover] = useState("");
+	const [selectedSeat, setSelectedSeat] = useState();
+	
+	const [openModal, setOpenModal] = useState(false);
 
 	const changeCluster = (newClusterId) => {
 		if (parseInt(newClusterId) === cluster.id) { return }
@@ -47,7 +50,8 @@ function Dashboard() {
 	function addListeners() {
 		document.querySelectorAll('image').forEach(item => {
 			item.addEventListener('click', event => {
-				console.log(item);
+				setSelectedSeat(item);
+				setOpenModal(true);
 			})
 			item.addEventListener('mouseenter', event => {
 				setSeatHover(item.id);
@@ -63,7 +67,7 @@ function Dashboard() {
 	}
 
 	return (
-		<div>
+		<>
 			<Navigator />
 
 			<Navbar maxWidth="full" isBordered>
@@ -79,10 +83,14 @@ function Dashboard() {
 			<SvgLoader path={cluster.link} onSVGReady={addListeners}>
 				<SvgProxy selector={"rect"} fill="#e5e5e5" />
 				{ seatHover &&
-					<SvgProxy key={seatHover} selector={"#" + seatHover + ",#" + seatHover + " path"} fill="red" />
+					<SvgProxy key={seatHover} selector={"#" + seatHover + ",#" + seatHover + " path"} fill="#01babc" />
 				}
 			</SvgLoader>
-		</div>
+
+			{ selectedSeat &&
+				<ModalTickets open={openModal} setOpen={setOpenModal} seat={selectedSeat} />
+			}
+		</>
 	);
 }
 
