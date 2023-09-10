@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import Cookies from 'js-cookie';
 import { Navigate } from 'react-router-dom';
-import { Navbar, NavbarContent, NavbarItem, Image, Button } from '@nextui-org/react';
+import { Navbar, NavbarContent, NavbarItem, Button } from '@nextui-org/react';
+import { SvgLoader, SvgProxy } from 'react-svgmt';
 import { APP_ROUTES } from '../../utils/constants.jsx';
 import '../../CSS/Dashboard.css';
 import Navigator from '../../Components/Navigator.js';
@@ -24,15 +25,15 @@ function Dashboard() {
 	const [allClusters, setAllClusters] = useState(items);
 	
 	const [cluster, setCluster] = useState(items[0]);
-
-	if (!Cookies.get('connected')) {
-		return <Navigate to={APP_ROUTES.HOME} replace />;
-	}
+	
+	const [seatHover, setSeatHover] = useState("");
 
 	const changeCluster = (newClusterId) => {
+		if (parseInt(newClusterId) === cluster.id) { return }
+
 		setAllClusters(
 			allClusters.map((item) => (
-				item.id === cluster.id
+				item.id === cluster.id 
 					? { ...item, isActive: false }
 					: ( item.id === parseInt(newClusterId)
 						? { ...item, isActive: true }
@@ -41,6 +42,37 @@ function Dashboard() {
 			))
 		);
 		setCluster(allClusters[newClusterId]);
+	}
+
+	function addListeners() {
+		document.querySelectorAll('image').forEach(item => {
+			item.addEventListener('click', event => {
+				console.log(item);
+			})
+			item.addEventListener('mouseenter', event => {
+				setSeatHover(item.id);
+			})
+			item.addEventListener('mouseleave', event => {
+				setSeatHover("");
+			})
+		})
+	}
+
+	if (!Cookies.get('connected')) {
+		return <Navigate to={APP_ROUTES.HOME} replace />;
+	}
+
+	// TO ADD LISTENERS ONCE, PLEASE FOUND ANOTHER WAY BECAUSE ANYTHING IS WORKING
+	var run = false;
+	function eventRunOnce() {
+		if (!run) { run = true; addListeners(); }
+	}
+	window.onload = function() {
+		if (window.addEventListener) {
+			document.addEventListener('mousemove', eventRunOnce, false);
+		} else if(window.attachEvent) {
+			document.attachEvent('onmousemove', eventRunOnce);
+		}
 	}
 
 	return (
@@ -57,7 +89,12 @@ function Dashboard() {
 				</NavbarContent>
 			</Navbar>
 
-			<Image width={1200} alt={`svg-${cluster.name}`} src={cluster.link} />
+			<SvgLoader path={cluster.link}>
+				<SvgProxy selector={"rect"} fill="#e5e5e5" />
+				{ seatHover &&
+					<SvgProxy key={seatHover} selector={"#" + seatHover + ",#" + seatHover + " path"} fill="red" />
+				}
+			</SvgLoader>
 		</div>
 	);
 }
