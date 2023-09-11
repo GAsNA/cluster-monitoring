@@ -14,7 +14,7 @@ function Login() {
 		return <Navigate to={APP_ROUTES.DASHBOARD} replace />;
 	}
 
-	async function login_out() {
+	async function login() {
 		await client.post(API_ROUTES.LOGIN, "")
 				.then((response) => {
 					Cookies.set('connected', 'connected')
@@ -28,7 +28,7 @@ function Login() {
 	return (
 		<div className="center">
 			<Image width={300} alt="42 Logo" src={FtLogo} className="-translate-x-1/2 -translate-y-1/2" />
-			<Button onPress={login_out} color="primary" size="lg" radius="md" variant="ghost" className="-translate-x-1/2 -translate-y-1/2">
+			<Button onPress={login} color="primary" size="lg" radius="md" variant="ghost" className="-translate-x-1/2 -translate-y-1/2">
 				Login
 			</Button>
 		</div>

@@ -31,6 +31,10 @@ function Dashboard() {
 	
 	const [openModal, setOpenModal] = useState(false);
 
+	if (!Cookies.get('connected')) {
+		return <Navigate to={APP_ROUTES.HOME} replace />;
+	}
+
 	const changeCluster = (newClusterId) => {
 		if (parseInt(newClusterId) === cluster.id) { return }
 
@@ -60,10 +64,6 @@ function Dashboard() {
 				setSeatHover("");
 			})
 		})
-	}
-
-	if (!Cookies.get('connected')) {
-		return <Navigate to={APP_ROUTES.HOME} replace />;
 	}
 
 	return (
