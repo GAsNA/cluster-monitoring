@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import Cookies from 'js-cookie';
 import { Navigate } from 'react-router-dom';
-import { Navbar, NavbarContent, NavbarItem, Button } from '@nextui-org/react';
 import { SvgLoader, SvgProxy } from 'react-svgmt';
 import { APP_ROUTES } from '../../utils/constants.jsx';
 import Navigator from '../../Components/Navigator.js';
+import NavigatorClusters from './NavigatorClusters.js';
 import ModalTickets from './ModalTickets.js';
 
 function Dashboard() {
@@ -70,15 +70,7 @@ function Dashboard() {
 		<>
 			<Navigator />
 
-			<Navbar maxWidth="full" isBordered>
-				<NavbarContent className="sm:flex gap-4">
-					{allClusters.map((item) => (
-						<NavbarItem isActive={item.isActive} key={item.name}>
-							<Button value={item.id} onPress={e => changeCluster(e.target.value)} color={item.isActive && "primary"}>{item.name}</Button>
-						</NavbarItem>
-					))}
-				</NavbarContent>
-			</Navbar>
+			<NavigatorClusters allClusters={allClusters} changeCluster={changeCluster} />
 
 			<SvgLoader path={cluster.link} onSVGReady={addListeners}>
 				<SvgProxy selector={"rect"} fill="#e5e5e5" />

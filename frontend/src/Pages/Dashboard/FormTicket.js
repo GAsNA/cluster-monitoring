@@ -19,7 +19,7 @@ function FormTicket({ seat }) {
 		<>
 			<Select disallowEmptySelection defaultSelectedKeys={[possibleIssues[0]]} placeholder="Select an animal" labelPlacement="outside" label={<span style={{ color: 'white' }}>Type of issue</span>} style={{ color: 'black' }}>
 				{ possibleIssues.map((possibleIssue) => (
-					<SelectItem key={possibleIssue}>{possibleIssue}</SelectItem>
+					<SelectItem textValue={possibleIssue} key={possibleIssue}>{possibleIssue}</SelectItem>
 				)) }
 			</Select>
 
