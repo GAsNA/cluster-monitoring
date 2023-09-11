@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import { Navigate } from 'react-router-dom';
 import { SvgLoader, SvgProxy } from 'react-svgmt';
-import { APP_ROUTES } from '../../utils/constants.jsx';
+import { client } from '../../utils/common.jsx';
+import { APP_ROUTES, API_ROUTES } from '../../utils/constants.jsx';
 import Navigator from '../../Components/Navigator.js';
 import NavigatorClusters from './NavigatorClusters.js';
 import ModalTickets from './ModalTickets.js';
@@ -30,6 +31,25 @@ function Dashboard() {
 	const [selectedSeat, setSelectedSeat] = useState();
 	
 	const [openModal, setOpenModal] = useState(false);
+
+	const [issueTypes, setIssueTypes] = useState([]);
+
+	async function getTicketTypes() {
+		await client.get(API_ROUTES.GET_TICKET_TYPES, "")
+				.then((response) => {
+					console.log(response);
+					setIssueTypes(response.data)
+				})
+				.catch((error) => {
+					throw error
+				})
+	}
+
+	useEffect(() => {
+		let getTT = false;
+		if (!getTT) { getTicketTypes(); }
+		return () => { getTT = true; }
+	}, []);
 
 	if (!Cookies.get('connected')) {
 		return <Navigate to={APP_ROUTES.HOME} replace />;
@@ -80,7 +100,7 @@ function Dashboard() {
 			</SvgLoader>
 
 			{ selectedSeat &&
-				<ModalTickets open={openModal} setOpen={setOpenModal} seat={selectedSeat} />
+				<ModalTickets open={openModal} setOpen={setOpenModal} seat={selectedSeat} issueTypes={issueTypes} />
 			}
 		</>
 	);

@@ -1,25 +1,15 @@
 import React from 'react';
 import { Select, SelectItem, Textarea, Spacer, Button } from '@nextui-org/react';
 
-function FormTicket({ seat }) {
-	const possibleIssues = [
-		"Fan",
-		"Internet",
-		"Screen",
-		"Mouse",
-		"Keyboard",
-		"Other possibles issues blablabla",
-		"Other",
-	]
-
+function FormTicket({ seat, issueTypes }) {
 	function send() {
 	}
 
 	return (
 		<>
-			<Select disallowEmptySelection defaultSelectedKeys={[possibleIssues[0]]} placeholder="Select an animal" labelPlacement="outside" label={<span style={{ color: 'white' }}>Type of issue</span>} style={{ color: 'black' }}>
-				{ possibleIssues.map((possibleIssue) => (
-					<SelectItem textValue={possibleIssue} key={possibleIssue}>{possibleIssue}</SelectItem>
+			<Select disallowEmptySelection defaultSelectedKeys={[(issueTypes[0].ID).toString()]} placeholder="Select a issue type" labelPlacement="outside" label={<span style={{ color: 'white' }}>Type of issue</span>} style={{ color: 'black' }}>
+				{ issueTypes.map((issueType) => (
+					<SelectItem textValue={issueType.Name} key={issueType.ID}>{issueType.Name}</SelectItem>
 				)) }
 			</Select>
 

@@ -4,6 +4,7 @@ export const API_ROUTES = {
 	ROOT: `${API_URL}`,
 	LOGIN: 'auth/login',
 	LOGOUT: 'auth/logout',
+	GET_TICKET_TYPES: '/tickettypes',
 }
 
 export const APP_ROUTES = {

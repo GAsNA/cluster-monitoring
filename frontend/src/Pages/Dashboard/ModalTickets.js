@@ -3,7 +3,7 @@ import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Divid
 import FormTicket from './FormTicket.js';
 import Tickets from './Tickets.js';
 
-function ModalTickets({ open, setOpen, seat }) {
+function ModalTickets({ open, setOpen, seat, issueTypes }) {
 	function close() {
 		setOpen(false);
 	}
@@ -19,7 +19,7 @@ function ModalTickets({ open, setOpen, seat }) {
 					<div className="flex h-auto items-center">
 
 						<div style={{width: "40%", display: "inline-block", marginRight: '1%'}}>
-							<FormTicket seat={seat} />
+							<FormTicket seat={seat} issueTypes={issueTypes} />
 						</div>
 
 						<Divider orientation="vertical" />
