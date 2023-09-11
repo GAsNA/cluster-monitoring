@@ -5,7 +5,7 @@ import { Navbar, NavbarContent, NavbarItem, Button } from '@nextui-org/react';
 import { SvgLoader, SvgProxy } from 'react-svgmt';
 import { APP_ROUTES } from '../../utils/constants.jsx';
 import Navigator from '../../Components/Navigator.js';
-import ModalTickets from '../../Components/ModalTickets.js';
+import ModalTickets from './ModalTickets.js';
 
 function Dashboard() {
 	const items = [
