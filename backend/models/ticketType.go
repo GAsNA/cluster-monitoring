@@ -41,7 +41,7 @@ func FindTicketTypeByID(id int) *TicketType {
 				Scan(config.Ctx())
 	if err != nil { log.Fatal(err) }
 
-	if len(ticketTypes) == 0 { log.Println("FindTicketTypeByID: no user found"); return (*TicketType)(nil) }
+	if len(ticketTypes) == 0 { log.Println("FindTicketTypeByID: no ticket type found"); return (*TicketType)(nil) }
 	return &ticketTypes[0]
 }
 

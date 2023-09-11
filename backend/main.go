@@ -17,7 +17,7 @@ func main() {
 
 	// TABLE TICKET TYPE
 	models.CreateTicketTypeTable()
-	tt := &models.TicketType{ Name: "Fan" }
+	/*tt := &models.TicketType{ Name: "Fan" }
 	models.NewTicketType(tt)
 	tt = &models.TicketType{ Name: "Internet" }
 	models.NewTicketType(tt)
@@ -28,7 +28,10 @@ func main() {
 	tt = &models.TicketType{ Name: "Keyboard" }
 	models.NewTicketType(tt)
 	tt = &models.TicketType{ Name: "Other" }
-	models.NewTicketType(tt)
+	models.NewTicketType(tt)*/
+
+	// TABLE TICKET
+	models.CreateTicketTable()
 
 	router := InitializeRouter()
 
