@@ -19,7 +19,7 @@ function ModalTickets({ open, setOpen, seat, issueTypes }) {
 					<div className="flex h-auto items-center">
 
 						<div style={{width: "40%", display: "inline-block", marginRight: '1%'}}>
-							<FormTicket seat={seat} issueTypes={issueTypes} />
+							<FormTicket seat={seat} issueTypes={issueTypes} closeModal={close} />
 						</div>
 
 						<Divider orientation="vertical" />

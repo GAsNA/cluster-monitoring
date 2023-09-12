@@ -17,7 +17,7 @@ type Ticket struct {
 	Type			int			`bun:"type,notnull"`
 	Comment			string		`bun:"comment"`
 	AuthorID		int			`bun:"author_id",notnul`
-	CreatedAT		time.Time	`bun:"created_at,notnull"`
+	CreatedAt		time.Time	`bun:"created_at,notnull"`
 	Resolved		bool		`bun:"resolved,notnull"`
 	ResolvedAt		time.Time	`bun:"resolved_at"`
 	ResolvedByID	int			`bun:"resolved_by_id"`
@@ -37,6 +37,8 @@ func CreateTicketTable() {
 // ACTIONS
 func NewTicket(t *Ticket) {
 	if t == nil { return }
+
+	t.CreatedAt = time.Now();
 
 	_, err := config.DB().NewInsert().Model(t).
 					Ignore().

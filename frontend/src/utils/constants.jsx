@@ -5,6 +5,7 @@ export const API_ROUTES = {
 	LOGIN: 'auth/login',
 	LOGOUT: 'auth/logout',
 	GET_TICKET_TYPES: '/tickettypes',
+	CREATE_TICKET: '/tickets',
 }
 
 export const APP_ROUTES = {

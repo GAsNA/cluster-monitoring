@@ -1,15 +1,24 @@
 import React, { useState } from 'react';
 import { Select, SelectItem, Textarea, Spacer, Button, Card, CardBody } from '@nextui-org/react';
+import { client } from '../../utils/common.jsx';
+import { API_ROUTES } from '../../utils/constants.jsx';
 
-function FormTicket({ seat, issueTypes }) {
+function FormTicket({ seat, issueTypes, closeModal }) {
 	const defaultIssueTypeID = issueTypes ? (issueTypes[0].ID).toString() : ""
 
 	const [ticketType, setTicketType] = useState(new Set([defaultIssueTypeID]));
 	const [comment, setComment] = useState("");
 
-	function send() {
-		console.log(ticketType);
-		console.log(comment);
+	async function send() {
+		await client.post(API_ROUTES.CREATE_TICKET, { "Seat": seat.id, "Type": parseInt([...ticketType][0]), "Comment": comment, "AuthorID": 1 })
+				.then((response) => {
+					console.log(response.data);
+				})
+				.catch((error) => {
+					throw error
+				});
+
+		closeModal();
 	}
 
 	return (
