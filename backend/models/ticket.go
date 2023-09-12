@@ -71,6 +71,7 @@ func AllTicketsOfSeat(seat string) []Ticket {
 	var tickets []Ticket
 	err := config.DB().NewSelect().Model(&tickets).
 				Where("seat = ?", seat).
+				Order("created_at DESC").
 				Scan(config.Ctx())
 	if err != nil { log.Fatal(err) }
 
