@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardHeader, CardBody, Chip } from '@nextui-org/react';
 
-function Tickets({ date, type, comment="", resolved=false }) {
+function Ticket({ date, type, comment="", resolved=false }) {
 	return (
 		<Card style={{ padding: '2%', marginBottom: '2%' }}>
 			<CardHeader className="justify-between">
@@ -28,4 +28,4 @@ function Tickets({ date, type, comment="", resolved=false }) {
 	);
 }
 
-export default Tickets;
+export default Ticket;

@@ -67,6 +67,16 @@ func AllTickets() []Ticket {
 	return tickets
 }
 
+func AllTicketsOfSeat(seat string) []Ticket {
+	var tickets []Ticket
+	err := config.DB().NewSelect().Model(&tickets).
+				Where("seat = ?", seat).
+				Scan(config.Ctx())
+	if err != nil { log.Fatal(err) }
+
+	return tickets
+}
+
 	// Update
 func UpdateTicket(t *Ticket) {
 	if t == nil { return }

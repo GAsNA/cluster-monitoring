@@ -29,13 +29,13 @@ function Dashboard() {
 	
 	const [seatHover, setSeatHover] = useState("");
 	const [selectedSeat, setSelectedSeat] = useState();
+	const [issueTypes, setIssueTypes] = useState([]);
+	const [ticketsBySeat, setTicketsBySeat] = useState([]);
 	
 	const [openModal, setOpenModal] = useState(false);
 
-	const [issueTypes, setIssueTypes] = useState([]);
-
 	async function getTicketTypes() {
-		await client.get(API_ROUTES.GET_TICKET_TYPES, "")
+		await client.get(API_ROUTES.GET_TICKET_TYPES)
 				.then((response) => {
 					console.log(response);
 					setIssueTypes(response.data)
@@ -45,11 +45,23 @@ function Dashboard() {
 				})
 	}
 
+	async function getTicketsBySeat(seat) {
+		await client.get(API_ROUTES.GET_TICKETS_SEAT + seat)
+				.then((response) => {
+					console.log(response);
+					setTicketsBySeat(response.data)
+				})
+				.catch((error) => {
+					throw error
+				})
+	}
+
+	const [getTT, setGetTT] = useState(false);
 	useEffect(() => {
-		let getTT = false;
-		if (!getTT) { getTicketTypes(); }
-		return () => { getTT = true; }
-	}, []);
+		if (selectedSeat) { getTicketsBySeat(selectedSeat.id); }
+
+		if (!getTT) { getTicketTypes(); setGetTT(true); }
+	}, [selectedSeat, getTT]);
 
 	if (!Cookies.get('connected')) {
 		return <Navigate to={APP_ROUTES.HOME} replace />;
@@ -100,7 +112,7 @@ function Dashboard() {
 			</SvgLoader>
 
 			{ selectedSeat &&
-				<ModalTickets open={openModal} setOpen={setOpenModal} seat={selectedSeat} issueTypes={issueTypes} />
+				<ModalTickets open={openModal} setOpen={setOpenModal} seat={selectedSeat} setSelectedSeat={setSelectedSeat} issueTypes={issueTypes} tickets={ticketsBySeat} />
 			}
 		</>
 	);

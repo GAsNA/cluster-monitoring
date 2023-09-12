@@ -19,6 +19,17 @@ func TicketsIndex(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(models.AllTickets())
 }
 
+func TicketsIndexBySeat(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Content-type", "application/json;charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+
+	vars := mux.Vars(r)
+	seat := vars["id"]
+
+	json.NewEncoder(w).Encode(models.AllTicketsOfSeat(seat))
+}
+
 func TicketsCreate(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-type", "application/json;charset=UTF-8")

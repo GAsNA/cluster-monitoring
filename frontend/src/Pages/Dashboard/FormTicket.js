@@ -13,6 +13,7 @@ function FormTicket({ seat, issueTypes, closeModal }) {
 		await client.post(API_ROUTES.CREATE_TICKET, { "Seat": seat.id, "Type": parseInt([...ticketType][0]), "Comment": comment, "AuthorID": 1 })
 				.then((response) => {
 					console.log(response.data);
+					// MESSAGE VALIDATION
 				})
 				.catch((error) => {
 					throw error
