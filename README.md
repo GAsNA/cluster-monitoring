@@ -3,6 +3,13 @@ Little web application to monitoring 42Paris cluster.
 
 Frontend is in React ; Backend is in Go.
 
+## TODO
+- Confirmation send ticket ("Are you sure?")
+- Toast ("Ticket successfully sent")
+- Auth
+- Admin side (staff) - delete ticket, validate ticket, see all ticket (with sort choices), add/delete issue types
+- In modal, list 10 last tickets (not more)
+
 ## Author
 [![rleseur's 42 stats](https://badge42.vercel.app/api/v2/cl7s08vet00110gmnrmm2benl/stats?cursusId=21&coalitionId=45)](https://github.com/JaeSeoKim/badge42)
 
