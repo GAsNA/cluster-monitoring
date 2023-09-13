@@ -1,14 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Select, SelectItem, Textarea, Spacer, Button, Card, CardBody } from '@nextui-org/react';
 import toast from 'react-hot-toast';
 import { client } from '../../utils/common.jsx';
 import { API_ROUTES } from '../../utils/constants.jsx';
+import ModalConfirmation from './ModalConfirmation.js';
 
 function FormTicket({ seat, issueTypes, closeModal }) {
 	const defaultIssueTypeID = issueTypes ? (issueTypes[0].ID).toString() : ""
 
 	const [ticketType, setTicketType] = useState(new Set([defaultIssueTypeID]));
 	const [comment, setComment] = useState("");
+
+	const [ openModalConfirmation, setOpenModalConfirmation ] = useState(false);
+
+	const [ toSend, setToSend ] = useState(false);
+
+	async function areYouSure() {
+		setOpenModalConfirmation(true);
+	}
 
 	async function send() {
 		await client.post(API_ROUTES.CREATE_TICKET, { "Seat": seat.id, "Type": parseInt([...ticketType][0]), "Comment": comment, "AuthorID": 1 })
@@ -23,6 +32,10 @@ function FormTicket({ seat, issueTypes, closeModal }) {
 
 		closeModal();
 	}
+
+	useEffect(() => {
+		if (toSend) { send(); }
+	});
 
 	return (
 		<>
@@ -40,7 +53,9 @@ function FormTicket({ seat, issueTypes, closeModal }) {
 			
 				<Spacer y={4} />
 
-				<Button style={{ background: '#01babc', color: 'white' }} onPress={send}>Send Ticket</Button>
+				<Button style={{ background: '#01babc', color: 'white' }} onPress={areYouSure}>Send Ticket</Button>
+
+				<ModalConfirmation open={openModalConfirmation} setOpen={setOpenModalConfirmation} setToSend={setToSend} />
 			</>
 		:
 			<Card style={{ background: '#e96a64', color: 'white' }}>

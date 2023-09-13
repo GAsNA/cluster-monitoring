@@ -4,7 +4,6 @@ Little web application to monitoring 42Paris cluster.
 Frontend is in React ; Backend is in Go.
 
 ## TODO
-- Confirmation send ticket ("Are you sure?")
 - Auth
 - Admin side (staff) - delete ticket, validate ticket, see all ticket (with sort choices), add/delete issue types
 - In modal, list 10 last tickets (not more)
