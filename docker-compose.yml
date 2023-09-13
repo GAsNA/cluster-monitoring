@@ -33,7 +33,6 @@ services:
     restart: unless-stopped
     volumes:
       - ./frontend:/usr/src/app
-      - /usr/src/app/node_modules
     environment:
       PORT: ${PORT_FRONT}
     ports:
