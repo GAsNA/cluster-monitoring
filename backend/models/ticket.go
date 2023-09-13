@@ -3,6 +3,7 @@ package models
 import (
 	"log"
 	"time"
+	"strconv"
 	"main/config"
 
 	"github.com/uptrace/bun"
@@ -67,12 +68,23 @@ func AllTickets() []Ticket {
 	return tickets
 }
 
-func AllTicketsOfSeat(seat string) []Ticket {
+func AllTicketsOfSeat(seat, limit string) []Ticket {
 	var tickets []Ticket
-	err := config.DB().NewSelect().Model(&tickets).
-				Where("seat = ?", seat).
-				Order("created_at DESC").
-				Scan(config.Ctx())
+	
+	limit_int, err := strconv.Atoi(limit)
+	if err != nil {
+		err = config.DB().NewSelect().Model(&tickets).
+					Where("seat = ?", seat).
+					Order("created_at DESC").
+					Scan(config.Ctx())
+	} else {
+		err = config.DB().NewSelect().Model(&tickets).
+					Where("seat = ?", seat).
+					Order("created_at DESC").
+					Limit(limit_int).
+					Scan(config.Ctx())
+	}
+	
 	if err != nil { log.Fatal(err) }
 
 	return tickets

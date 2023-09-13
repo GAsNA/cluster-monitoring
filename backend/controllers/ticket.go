@@ -27,7 +27,9 @@ func TicketsIndexBySeat(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	seat := vars["id"]
 
-	json.NewEncoder(w).Encode(models.AllTicketsOfSeat(seat))
+	limit := r.URL.Query().Get("limit")
+
+	json.NewEncoder(w).Encode(models.AllTicketsOfSeat(seat, limit))
 }
 
 func TicketsCreate(w http.ResponseWriter, r *http.Request) {

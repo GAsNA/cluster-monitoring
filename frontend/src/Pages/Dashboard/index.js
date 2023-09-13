@@ -47,7 +47,7 @@ function Dashboard() {
 	}
 
 	async function getTicketsBySeat(seat) {
-		await client.get(API_ROUTES.GET_TICKETS_SEAT + seat)
+		await client.get(API_ROUTES.GET_TICKETS_SEAT + seat + "?limit=10")
 				.then((response) => {
 					console.log(response);
 					setTicketsBySeat(response.data)
