@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
+import { Toaster } from 'react-hot-toast';
 import { Navigate } from 'react-router-dom';
 import { SvgLoader, SvgProxy } from 'react-svgmt';
 import { client } from '../../utils/common.jsx';
@@ -103,6 +104,8 @@ function Dashboard() {
 			<Navigator />
 
 			<NavigatorClusters allClusters={allClusters} changeCluster={changeCluster} />
+
+			<Toaster toastOptions={{ style: { background: '#231f20', color: 'white' } }} />
 
 			<SvgLoader path={cluster.link} onSVGReady={addListeners}>
 				<SvgProxy selector={"rect"} fill="#e5e5e5" />

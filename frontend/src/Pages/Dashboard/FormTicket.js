@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Select, SelectItem, Textarea, Spacer, Button, Card, CardBody } from '@nextui-org/react';
+import toast from 'react-hot-toast';
 import { client } from '../../utils/common.jsx';
 import { API_ROUTES } from '../../utils/constants.jsx';
 
@@ -13,9 +14,10 @@ function FormTicket({ seat, issueTypes, closeModal }) {
 		await client.post(API_ROUTES.CREATE_TICKET, { "Seat": seat.id, "Type": parseInt([...ticketType][0]), "Comment": comment, "AuthorID": 1 })
 				.then((response) => {
 					console.log(response.data);
-					// MESSAGE VALIDATION
+					toast.success('Ticket successfully sent');
 				})
 				.catch((error) => {
+					toast.error('An error occured');
 					throw error
 				});
 
