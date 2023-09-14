@@ -13,6 +13,7 @@ function FormTicket({ seat, issueTypes, closeModal }) {
 
 	const [ openModalConfirmation, setOpenModalConfirmation ] = useState(false);
 
+	const [ sending, setSending ] = useState(false);
 	const [ toSend, setToSend ] = useState(false);
 
 	async function areYouSure() {
@@ -20,6 +21,7 @@ function FormTicket({ seat, issueTypes, closeModal }) {
 	}
 
 	async function send() {
+		setSending(true);
 		await client.post(API_ROUTES.CREATE_TICKET, { "Seat": seat.id, "Type": parseInt([...ticketType][0]), "Comment": comment, "AuthorID": 1 })
 				.then((response) => {
 					console.log(response.data);
@@ -30,11 +32,12 @@ function FormTicket({ seat, issueTypes, closeModal }) {
 					throw error
 				});
 
+		setSending(false);
 		closeModal();
 	}
 
 	useEffect(() => {
-		if (toSend) { send(); }
+		if (toSend && !sending) { send(); }
 	});
 
 	return (
@@ -53,7 +56,7 @@ function FormTicket({ seat, issueTypes, closeModal }) {
 			
 				<Spacer y={4} />
 
-				<Button style={{ background: '#01babc', color: 'white' }} onPress={areYouSure}>Send Ticket</Button>
+				<Button style={{ background: '#01babc', color: 'white' }} onPress={areYouSure} isLoading={sending}>Send Ticket</Button>
 
 				<ModalConfirmation open={openModalConfirmation} setOpen={setOpenModalConfirmation} setToSend={setToSend} />
 			</>
