@@ -11,8 +11,9 @@ import (
 type User struct {
 	bun.BaseModel	`bun:"table:user"`
 
-	ID		int		`bun:"id,pk,autoincrement,type:SERIAL"`
+	ID		int		`bun:"id,pk,notnull"`
 	Login	string	`bun:"login,notnull"`
+	IsStaff	bool	`bun:"is_staff,notnull"`
 }
 
 // CREATE TABLE
