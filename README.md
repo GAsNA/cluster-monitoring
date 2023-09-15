@@ -5,7 +5,7 @@ Frontend is in React ; Backend is in Go.
 
 ## TODO
 - Change the color of the seats depending on the number of tickets "in progress"
-- Auth
+- JWT
 - Admin side (staff) - delete ticket, validate ticket, see all ticket (with sort choices), add/delete issue types
 
 ## Author
