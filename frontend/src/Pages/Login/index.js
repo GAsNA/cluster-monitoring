@@ -1,28 +1,18 @@
 import React from 'react';
 import { Image, Button } from '@nextui-org/react';
 import Cookies from 'js-cookie';
-import { Navigate, useNavigate } from 'react-router-dom';
-import { API_ROUTES, APP_ROUTES } from '../../utils/constants.jsx';
-import { client } from '../../utils/common.jsx';
+import { Navigate } from 'react-router-dom';
+import { API_ROUTES, APP_ROUTES, URL_INTRA_AUTHORIZE } from '../../utils/constants.jsx';
 import '../../CSS/Login.css';
 import FtLogo from '../../Images/42_logo.svg';
 
 function Login() {
-	const navigate = useNavigate();
-	
 	if (Cookies.get('connected')) {
 		return <Navigate to={APP_ROUTES.DASHBOARD} replace />;
 	}
 
 	async function login() {
-		await client.post(API_ROUTES.LOGIN, "")
-				.then((response) => {
-					Cookies.set('connected', 'connected')
-					navigate(APP_ROUTES.DASHBOARD)
-				})
-				.catch((error) => {
-					throw error
-				});
+		window.location.replace(URL_INTRA_AUTHORIZE + "?client_id=" + process.env.REACT_APP_UID + "&redirect_uri=" + API_ROUTES.ROOT + "/" + API_ROUTES.LOGIN + "&response_type=code&scope=public")
 	}
 
 	return (

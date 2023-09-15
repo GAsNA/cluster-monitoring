@@ -16,7 +16,7 @@ func InitializeRouter() *mux.Router {
 	router.Methods("DELETE").Path("/users/{id}").HandlerFunc(controllers.UsersDelete)
 
 	// AUTH
-	router.Methods("POST").Path("/auth/login").HandlerFunc(controllers.Login)
+	router.Methods("GET").Path("/auth/login").HandlerFunc(controllers.Login)
 	router.Methods("POST").Path("/auth/logout").HandlerFunc(controllers.Logout)
 
 	// TICKETTYPES
