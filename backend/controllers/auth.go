@@ -64,7 +64,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !primary_campus_is_paris {
-		url_redirect := "http://localhost:4200?error=" + "not_paris" + "&error_description=" + "The primary campus is not Paris."
+		url_redirect := "http://localhost:4200?error=" + "not_paris" + "&error_description=" + "The primary campus is not Paris. You are not allowed."
 		http.Redirect(w, r, url_redirect, http.StatusSeeOther) // change status
 		return
 	}
@@ -74,11 +74,13 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	user_login := res["login"].(string)
 	user_is_staff := res["staff?"].(bool)
 
-	existing_user := models.FindUserByID(user_id)
-	if existing_user == (*models.User)(nil) {
-		user := &models.User{ ID: user_id, Login: user_login, IsStaff: user_is_staff }
+	user := models.FindUserByID(user_id)
+	if user == (*models.User)(nil) {
+		user = &models.User{ ID: user_id, Login: user_login, IsStaff: user_is_staff }
 		models.NewUser(user)
 	}
+
+	http.SetCookie(w, &http.Cookie{ Name: "connected", Value: "connected", Path: "/", MaxAge: 604800 })
 
 	http.Redirect(w, r, "http://localhost:4200", http.StatusSeeOther) // change status
 }
