@@ -40,6 +40,7 @@ func NewTicket(t *Ticket) {
 	if t == nil { return }
 
 	t.CreatedAt = time.Now();
+	t.ResolvedByID = t.AuthorID;
 
 	_, err := config.DB().NewInsert().Model(t).
 					Ignore().

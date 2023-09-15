@@ -7,6 +7,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"main/models"
 )
@@ -80,7 +81,9 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		models.NewUser(user)
 	}
 
+	// Sett cookies and redirect
 	http.SetCookie(w, &http.Cookie{ Name: "connected", Value: "connected", Path: "/", MaxAge: 604800 })
+	http.SetCookie(w, &http.Cookie{ Name: "user_id", Value: strconv.Itoa(user.ID), Path: "/", MaxAge: 604800 })
 
 	http.Redirect(w, r, "http://localhost:4200", http.StatusSeeOther) // change status
 }
