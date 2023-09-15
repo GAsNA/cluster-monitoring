@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Select, SelectItem, Textarea, Spacer, Button, Card, CardBody } from '@nextui-org/react';
+import { Select, SelectItem, Textarea, Spacer, Button } from '@nextui-org/react';
 import toast from 'react-hot-toast';
 import { client } from '../../utils/common.jsx';
 import { API_ROUTES } from '../../utils/constants.jsx';
 import ModalConfirmation from './ModalConfirmation.js';
+import ErrorCard from '../../Components/ErrorCard.js';
 
 function FormTicket({ seat, issueTypes, closeModal }) {
 	const defaultIssueTypeID = issueTypes ? (issueTypes[0].ID).toString() : ""
@@ -61,11 +62,7 @@ function FormTicket({ seat, issueTypes, closeModal }) {
 				<ModalConfirmation open={openModalConfirmation} setOpen={setOpenModalConfirmation} setToSend={setToSend} />
 			</>
 		:
-			<Card style={{ background: '#e96a64', color: 'white' }}>
-				<CardBody>
-					<p><b>To send a ticket:</b><br />No issue types availables. Try again later.</p>
-				</CardBody>
-			</Card>
+			<ErrorCard title="To send a ticket:" description="No issue types availables. Try again later." />
 		}
 		</>
 	);
