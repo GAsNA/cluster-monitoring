@@ -10,6 +10,7 @@ COPY		*.go ./
 COPY		config ./config/
 COPY		models ./models/
 COPY		controllers ./controllers/
+COPY		jwt ./jwt/
 
 RUN			go build -o ./backend
 
