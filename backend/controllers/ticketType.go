@@ -13,6 +13,8 @@ import (
 
 func TicketTypesIndex(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Authorization,Content-Type")
+	w.Header().Set("Access-Control-Allow-Credentials", "true")
 	w.Header().Set("Content-type", "application/json;charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
 
@@ -21,6 +23,7 @@ func TicketTypesIndex(w http.ResponseWriter, r *http.Request) {
 
 func TicketTypesCreate(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Authorization")
 	w.Header().Set("Content-type", "application/json;charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
 
@@ -39,6 +42,7 @@ func TicketTypesCreate(w http.ResponseWriter, r *http.Request) {
 
 func TicketTypesShow(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Authorization")
 	w.Header().Set("Content-type", "application/json;charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
 
@@ -53,6 +57,7 @@ func TicketTypesShow(w http.ResponseWriter, r *http.Request) {
 
 func TicketTypesUpdate(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Authorization")
 	w.Header().Set("Content-type", "application/json;charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
 
@@ -74,6 +79,7 @@ func TicketTypesUpdate(w http.ResponseWriter, r *http.Request) {
 
 func TicketTypesDelete(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Authorization")
 	w.Header().Set("Content-type", "application/json;charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
 

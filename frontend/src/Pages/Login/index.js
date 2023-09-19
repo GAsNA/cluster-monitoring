@@ -12,7 +12,7 @@ function Login() {
 	const error = queryParameters.get("error");
 	const error_description = queryParameters.get("error_description");
 	
-	if (Cookies.get('connected')) {
+	if (Cookies.get('token')) {
 		return <Navigate to={APP_ROUTES.DASHBOARD} replace />;
 	}
 

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Select, SelectItem, Textarea, Spacer, Button } from '@nextui-org/react';
 import toast from 'react-hot-toast';
-import Cookies from 'js-cookie';
 import { client } from '../../utils/common.jsx';
 import { API_ROUTES } from '../../utils/constants.jsx';
 import ModalConfirmation from './ModalConfirmation.js';
@@ -24,14 +23,13 @@ function FormTicket({ seat, issueTypes, closeModal }) {
 
 	async function send() {
 		setSending(true);
-		await client.post(API_ROUTES.CREATE_TICKET, { "Seat": seat.id, "Type": parseInt([...ticketType][0]), "Comment": comment, "AuthorID": Number(Cookies.get('user_id')) })
+		await client.post(API_ROUTES.CREATE_TICKET, { "Seat": seat.id, "Type": parseInt([...ticketType][0]), "Comment": comment, })
 				.then((response) => {
 					console.log(response.data);
 					toast.success('Ticket successfully sent');
 				})
 				.catch((error) => {
 					toast.error('An error occured');
-					throw error
 				});
 
 		setSending(false);

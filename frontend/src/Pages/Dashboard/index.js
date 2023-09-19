@@ -64,7 +64,7 @@ function Dashboard() {
 		if (!getTT) { getTicketTypes(); setGetTT(true); }
 	}, [selectedSeat, getTT]);
 
-	if (!Cookies.get('connected')) {
+	if (!Cookies.get('token')) {
 		return <Navigate to={APP_ROUTES.HOME} replace />;
 	}
 

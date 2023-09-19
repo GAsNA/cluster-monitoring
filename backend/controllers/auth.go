@@ -7,9 +7,10 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"strconv"
+	"time"
 
 	"main/models"
+	"main/jwt"
 )
 
 func Login(w http.ResponseWriter, r *http.Request) {
@@ -81,15 +82,23 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		models.NewUser(user)
 	}
 
-	// Sett cookies and redirect
-	http.SetCookie(w, &http.Cookie{ Name: "connected", Value: "connected", Path: "/", MaxAge: 604800 })
-	http.SetCookie(w, &http.Cookie{ Name: "user_id", Value: strconv.Itoa(user.ID), Path: "/", MaxAge: 604800 })
+	// Set JWT cookie and redirect
+	token, err := jwt.GenerateJWT(user)
+	http.SetCookie(w, &http.Cookie{
+						Name: "token",
+						Value: token,
+						Path: "/",
+						Expires: time.Now().Add(7 * 24 * time.Hour),
+					})
 
 	http.Redirect(w, r, "http://localhost:4200", http.StatusSeeOther) // change status
 }
 
 func Logout(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Authorization")
 	w.Header().Set("Content-type", "application/json;charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
+
+	http.SetCookie(w, &http.Cookie{ Name: "token", Path: "/", Expires: time.Now() })
 }
