@@ -7,6 +7,5 @@ export const client = axios.create({
 	timeout: 1000,
 	headers: {
 		Authorization: `Bearer ${Cookies.get("token")}`,
-		'Content-Type': 'text/plain',
 	}
 });

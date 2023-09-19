@@ -7,9 +7,13 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
+	"errors"
   
 	"main/models"
+	"main/jwt"
 
+	ext_jwt "github.com/golang-jwt/jwt/v5"
 )
 
 func TicketsIndex(w http.ResponseWriter, r *http.Request) {
@@ -37,46 +41,40 @@ func TicketsIndexBySeat(w http.ResponseWriter, r *http.Request) {
 
 func TicketsCreate(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Headers", "Authorization")
-	w.Header().Set("Access-Control-Allow-Credentials", "true")
+	w.Header().Set("Access-Control-Allow-Headers", "Authorization, Content-Type")
 	w.Header().Set("Content-type", "application/json;charset=UTF-8")
-
-	//body, err := ioutil.ReadAll(r.Body)
-	//if err != nil { log.Fatal(err) }
-
+	
 	// Get JWT token and extract values
-	/*token := r.Header.Get("Authorization")
+	token := r.Header.Get("Authorization")
+	if token == "" { return }
 	splitToken := strings.Split(token, "Bearer ")
 	token = splitToken[1]
 
 	claims, err := jwt.VerifyJWT(token)
 	if err != nil {
 		if err == ext_jwt.ErrSignatureInvalid || err == errors.New("Token invalid") {
-			log.Println("PASS3")
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		} 
-		log.Println("PASS4")
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	// Create ticket
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil { log.Fatal(err) }
+
 	var ticket models.Ticket
 	err = json.Unmarshal(body, &ticket)
 	if err != nil { log.Fatal(err) }
 
-	log.Println("PASS5")
-	
 	ticket.AuthorID = claims.User.ID
 
 	models.NewTicket(&ticket)
 
-	log.Println("PASS6")
-
 	// Send back ticket
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(ticket)*/
+	json.NewEncoder(w).Encode(ticket)
 }
 
 func TicketsShow(w http.ResponseWriter, r *http.Request) {
