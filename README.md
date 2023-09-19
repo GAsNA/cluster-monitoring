@@ -13,6 +13,7 @@ Frontend is in React ; Backend is in Go.
 - Clusters in dynamic
 - Change the color of the seats depending on the number of tickets "in progress"
 - In form ticket, if keyboard is choose, select keys on virtual keyboard
+- Refacto/Reorga + verif cookies in useeffect ?
 
 ### Questions
 - see for authorization header in TicketsCreate
