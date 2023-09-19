@@ -4,8 +4,6 @@ Little web application to monitoring 42Paris cluster.
 Frontend is in React ; Backend is in Go.
 
 ## TODO
-- Change the color of the seats depending on the number of tickets "in progress"
-- JWT
 - Admin side (staff)
     - delete ticket
     - validate ticket
@@ -13,6 +11,7 @@ Frontend is in React ; Backend is in Go.
     - add/delete issue types
     - set post to unavailable/do not use
 - Clusters in dynamic
+- Change the color of the seats depending on the number of tickets "in progress"
 - In form ticket, if keyboard is choose, select keys on virtual keyboard
 
 ### Questions
