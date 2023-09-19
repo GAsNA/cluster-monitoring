@@ -15,10 +15,6 @@ Frontend is in React ; Backend is in Go.
 - Clusters in dynamic
 - In form ticket, if keyboard is choose, select keys on virtual keyboard
 
-### Questions
-- user id and login in cookies ?
-- ticket dates in db with FR zone ?
-
 ## Author
 [![rleseur's 42 stats](https://badge42.vercel.app/api/v2/cl7s08vet00110gmnrmm2benl/stats?cursusId=21&coalitionId=45)](https://github.com/JaeSeoKim/badge42)
 
