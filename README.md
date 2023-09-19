@@ -6,7 +6,14 @@ Frontend is in React ; Backend is in Go.
 ## TODO
 - Change the color of the seats depending on the number of tickets "in progress"
 - JWT
-- Admin side (staff) - delete ticket, validate ticket, see all ticket (with sort choices), add/delete issue types
+- Admin side (staff)
+    - delete ticket
+    - validate ticket
+    - see all ticket (with sort choices)
+    - add/delete issue types
+    - set post to unavailable/do not use
+- Clusters in dynamic
+- In form ticket, if keyboard is choose, select keys on virtual keyboard
 
 ### Questions
 - user id and login in cookies ?
