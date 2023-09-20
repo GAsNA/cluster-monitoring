@@ -4,6 +4,7 @@ Little web application to monitoring 42Paris cluster.
 Frontend is in React ; Backend is in Go.
 
 ## TODO
+- Verif is admin on routes
 - Admin side (staff)
     - delete ticket
     - validate ticket
