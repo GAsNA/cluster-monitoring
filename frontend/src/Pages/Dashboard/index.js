@@ -35,6 +35,8 @@ function Dashboard() {
 	
 	const [openModal, setOpenModal] = useState(false);
 
+	const [getTT, setGetTT] = useState(false);
+
 	async function getTicketTypes() {
 		await client.get(API_ROUTES.GET_TICKET_TYPES)
 				.then((response) => {
@@ -57,17 +59,6 @@ function Dashboard() {
 				})
 	}
 
-	const [getTT, setGetTT] = useState(false);
-	useEffect(() => {
-		if (selectedSeat) { getTicketsBySeat(selectedSeat.id); }
-
-		if (!getTT) { getTicketTypes(); setGetTT(true); }
-	}, [selectedSeat, getTT]);
-
-	if (!Cookies.get('token')) {
-		return <Navigate to={APP_ROUTES.HOME} replace />;
-	}
-
 	const changeCluster = (newClusterId) => {
 		if (parseInt(newClusterId) === cluster.id) { return }
 
@@ -83,7 +74,7 @@ function Dashboard() {
 		);
 		setCluster(allClusters[newClusterId]);
 	}
-
+	
 	function addListeners() {
 		document.querySelectorAll('image').forEach(item => {
 			item.addEventListener('click', event => {
@@ -97,6 +88,16 @@ function Dashboard() {
 				setSeatHover("");
 			})
 		})
+	}
+
+	if (!getTT) { setGetTT(true); getTicketTypes(); }
+
+	useEffect(() => {
+		if (selectedSeat) { getTicketsBySeat(selectedSeat.id); }
+	}, [selectedSeat]);
+
+	if (!Cookies.get('token')) {
+		return <Navigate to={APP_ROUTES.HOME} replace />;
 	}
 
 	return (
