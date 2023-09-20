@@ -12,19 +12,22 @@ import (
 )
 
 func TicketTypesIndex(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Headers", "Authorization")
-	w.Header().Set("Content-type", "application/json;charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
+	addHeader(&w)
+	
+	// Verification JWT and get claims
+	_, err := verifyJwtAndClaims(&w, r)
+	if err != nil { return }
 
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(models.AllTicketTypes())
 }
 
 func TicketTypesCreate(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Headers", "Authorization")
-	w.Header().Set("Content-type", "application/json;charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
+	addHeader(&w)
+
+	// Verification JWT and get claims
+	_, err := verifyJwtAndClaims(&w, r)
+	if err != nil { return }
 
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil { log.Fatal(err) }
@@ -36,14 +39,16 @@ func TicketTypesCreate(w http.ResponseWriter, r *http.Request) {
 
 	models.NewTicketType(&ticketType)
 
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(ticketType)
 }
 
 func TicketTypesShow(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Headers", "Authorization")
-	w.Header().Set("Content-type", "application/json;charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
+	addHeader(&w)
+	
+	// Verification JWT and get claims
+	_, err := verifyJwtAndClaims(&w, r)
+	if err != nil { return }
 
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
@@ -51,14 +56,16 @@ func TicketTypesShow(w http.ResponseWriter, r *http.Request) {
 
 	ticketType := models.FindTicketTypeByID(id)
 
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(ticketType)
 }
 
 func TicketTypesUpdate(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Headers", "Authorization")
-	w.Header().Set("Content-type", "application/json;charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
+	addHeader(&w)
+
+	// Verification JWT and get claims
+	_, err := verifyJwtAndClaims(&w, r)
+	if err != nil { return }
 
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
@@ -73,14 +80,16 @@ func TicketTypesUpdate(w http.ResponseWriter, r *http.Request) {
 
 	models.UpdateTicketType(ticketType)
 
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(ticketType)
 }
 
 func TicketTypesDelete(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Headers", "Authorization")
-	w.Header().Set("Content-type", "application/json;charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
+	addHeader(&w)
+
+	// Verification JWT and get claims
+	_, err := verifyJwtAndClaims(&w, r)
+	if err != nil { return }
 
 	vars := mux.Vars(r)
 
@@ -88,5 +97,6 @@ func TicketTypesDelete(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil { log.Fatal(err) }
 
+	w.WriteHeader(http.StatusOK)
 	models.DeleteTicketTypeByID(id)
 }

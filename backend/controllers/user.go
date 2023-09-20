@@ -12,19 +12,22 @@ import (
 )
 
 func UsersIndex(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Headers", "Authorization")
-	w.Header().Set("Content-type", "application/json;charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
+	addHeader(&w)
 
+	// Verification JWT and get claims
+	_, err := verifyJwtAndClaims(&w, r)
+	if err != nil { return }
+
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(models.AllUsers())
 }
 
 func UsersCreate(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Headers", "Authorization")
-	w.Header().Set("Content-type", "application/json;charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
+	addHeader(&w)
+
+	// Verification JWT and get claims
+	_, err := verifyJwtAndClaims(&w, r)
+	if err != nil { return }
 
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil { log.Fatal(err) }
@@ -36,14 +39,16 @@ func UsersCreate(w http.ResponseWriter, r *http.Request) {
 
 	models.NewUser(&user)
 
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(user)
 }
 
 func UsersShow(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Headers", "Authorization")
-	w.Header().Set("Content-type", "application/json;charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
+	addHeader(&w)
+	
+	// Verification JWT and get claims
+	_, err := verifyJwtAndClaims(&w, r)
+	if err != nil { return }
 
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
@@ -51,14 +56,16 @@ func UsersShow(w http.ResponseWriter, r *http.Request) {
 
 	user := models.FindUserByID(id)
 
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(user)
 }
 
 func UsersUpdate(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Headers", "Authorization")
-	w.Header().Set("Content-type", "application/json;charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
+	addHeader(&w)
+
+	// Verification JWT and get claims
+	_, err := verifyJwtAndClaims(&w, r)
+	if err != nil { return }
 
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
@@ -73,14 +80,16 @@ func UsersUpdate(w http.ResponseWriter, r *http.Request) {
 
 	models.UpdateUser(user)
 
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(user)
 }
 
 func UsersDelete(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Headers", "Authorization")
-	w.Header().Set("Content-type", "application/json;charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
+	addHeader(&w)
+
+	// Verification JWT and get claims
+	_, err := verifyJwtAndClaims(&w, r)
+	if err != nil { return }
 
 	vars := mux.Vars(r)
 
@@ -88,5 +97,6 @@ func UsersDelete(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil { log.Fatal(err) }
 
+	w.WriteHeader(http.StatusOK)
 	models.DeleteUserByID(id)
 }

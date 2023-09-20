@@ -7,58 +7,43 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	"strings"
-	"errors"
   
 	"main/models"
-	"main/jwt"
-
-	ext_jwt "github.com/golang-jwt/jwt/v5"
 )
 
 func TicketsIndex(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Headers", "Authorization")
-	w.Header().Set("Content-type", "application/json;charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
+	addHeader(&w)
 
+	// Verification JWT and get claims
+	_, err := verifyJwtAndClaims(&w, r)
+	if err != nil { return }
+	
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(models.AllTickets())
 }
 
 func TicketsIndexBySeat(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Headers", "Authorization")
-	w.Header().Set("Content-type", "application/json;charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
+	addHeader(&w)
+
+	// Verification JWT and get claims
+	_, err := verifyJwtAndClaims(&w, r)
+	if err != nil { return }
 
 	vars := mux.Vars(r)
 	seat := vars["id"]
 
 	limit := r.URL.Query().Get("limit")
 
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(models.AllTicketsOfSeat(seat, limit))
 }
 
 func TicketsCreate(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Headers", "Authorization, Content-Type")
-	w.Header().Set("Content-type", "application/json;charset=UTF-8")
+	addHeader(&w)
 	
-	// Get JWT token and extract values
-	token := r.Header.Get("Authorization")
-	if token == "" { return }
-	splitToken := strings.Split(token, "Bearer ")
-	token = splitToken[1]
-
-	claims, err := jwt.VerifyJWT(token)
-	if err != nil {
-		if err == ext_jwt.ErrSignatureInvalid || err == errors.New("Token invalid") {
-			w.WriteHeader(http.StatusUnauthorized)
-			return
-		} 
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
+	// Verification JWT and get claims
+	claims, err := verifyJwtAndClaims(&w, r)
+	if err != nil { return }
 
 	// Create ticket
 	body, err := ioutil.ReadAll(r.Body)
@@ -78,10 +63,11 @@ func TicketsCreate(w http.ResponseWriter, r *http.Request) {
 }
 
 func TicketsShow(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Headers", "Authorization")
-	w.Header().Set("Content-type", "application/json;charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
+	addHeader(&w)
+
+	// Verification JWT and get claims
+	_, err := verifyJwtAndClaims(&w, r)
+	if err != nil { return }
 
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
@@ -89,14 +75,16 @@ func TicketsShow(w http.ResponseWriter, r *http.Request) {
 
 	ticket := models.FindTicketByID(id)
 
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(ticket)
 }
 
 func TicketsUpdate(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Headers", "Authorization")
-	w.Header().Set("Content-type", "application/json;charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
+	addHeader(&w)
+
+	// Verification JWT and get claims
+	_, err := verifyJwtAndClaims(&w, r)
+	if err != nil { return }
 
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
@@ -111,14 +99,16 @@ func TicketsUpdate(w http.ResponseWriter, r *http.Request) {
 
 	models.UpdateTicket(ticket)
 
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(ticket)
 }
 
 func TicketsDelete(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Headers", "Authorization")
-	w.Header().Set("Content-type", "application/json;charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
+	addHeader(&w)
+
+	// Verification JWT and get claims
+	_, err := verifyJwtAndClaims(&w, r)
+	if err != nil { return }
 
 	vars := mux.Vars(r)
 
@@ -126,5 +116,6 @@ func TicketsDelete(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil { log.Fatal(err) }
 
+	w.WriteHeader(http.StatusOK)
 	models.DeleteTicketByID(id)
 }

@@ -8,42 +8,24 @@ import (
 	"encoding/json"
 	"fmt"
 	"time"
-	"strings"
-	"errors"
 
 	"main/models"
 	"main/jwt"
-
-	ext_jwt "github.com/golang-jwt/jwt/v5"
 )
 
 func Me(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Headers", "Authorization")
-	w.Header().Set("Content-type", "application/json;charset=UTF-8")
+	addHeader(&w)
 
-	token := r.Header.Get("Authorization")
-	if token == "" { return }
-	splitToken := strings.Split(token, "Bearer ")
-	token = splitToken[1]
-
-	claims, err := jwt.VerifyJWT(token)
-	if err != nil {
-		if err == ext_jwt.ErrSignatureInvalid || err == errors.New("Token invalid") {
-			w.WriteHeader(http.StatusUnauthorized)
-			return
-		}
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
+	// Verification JWT and get claims
+	claims, err := verifyJwtAndClaims(&w, r)
+	if err != nil { return }
 
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(claims.User)
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Content-type", "application/json;charset=UTF-8")
+	addHeader(&w)
 
 	error := r.URL.Query().Get("error")
 	error_description := r.URL.Query().Get("error_description")
@@ -123,8 +105,6 @@ func Login(w http.ResponseWriter, r *http.Request) {
 }
 
 func Logout(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Headers", "Authorization")
-	w.Header().Set("Content-type", "application/json;charset=UTF-8")
+	addHeader(&w)
 	w.WriteHeader(http.StatusOK)
 }
