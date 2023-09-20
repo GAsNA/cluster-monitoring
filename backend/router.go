@@ -16,8 +16,9 @@ func InitializeRouter() *mux.Router {
 	router.Methods("DELETE").Path("/users/{id}").HandlerFunc(controllers.UsersDelete)
 
 	// AUTH
+	router.Methods("GET", "OPTIONS").Path("/auth/me").HandlerFunc(controllers.Me)
 	router.Methods("GET").Path("/auth/login").HandlerFunc(controllers.Login)
-	router.Methods("POST").Path("/auth/logout").HandlerFunc(controllers.Logout)
+	router.Methods("POST", "OPTIONS").Path("/auth/logout").HandlerFunc(controllers.Logout)
 
 	// TICKETTYPES
 	router.Methods("GET", "OPTIONS").Path("/tickettypes").HandlerFunc(controllers.TicketTypesIndex)

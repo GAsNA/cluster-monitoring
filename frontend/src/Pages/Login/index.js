@@ -3,6 +3,7 @@ import { Image, Button } from '@nextui-org/react';
 import Cookies from 'js-cookie';
 import { Navigate, useSearchParams } from 'react-router-dom';
 import { API_ROUTES, APP_ROUTES, URL_INTRA_AUTHORIZE } from '../../utils/constants.jsx';
+import { client } from '../../utils/common.jsx';
 import '../../CSS/Login.css';
 import FtLogo from '../../Images/42_logo.svg';
 import ErrorCard from '../../Components/ErrorCard.js';
@@ -11,8 +12,19 @@ function Login() {
 	const [queryParameters] = useSearchParams();
 	const error = queryParameters.get("error");
 	const error_description = queryParameters.get("error_description");
-	
+
+	async function localStoreMe() {
+		await client.get(API_ROUTES.ME)
+				.then((response) => {
+					localStorage.setItem('user', JSON.stringify(response.data))
+				})
+				.catch((error) => {
+					throw error
+				})
+	}
+
 	if (Cookies.get('token')) {
+		localStoreMe();
 		return <Navigate to={APP_ROUTES.DASHBOARD} replace />;
 	}
 

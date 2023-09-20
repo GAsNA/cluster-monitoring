@@ -11,7 +11,8 @@ function Navigator() {
 	async function logout() {
 		await client.post(API_ROUTES.LOGOUT, "")
 				.then((response) => {
-					Cookies.remove('connected')
+					Cookies.remove("token")
+					localStorage.clear();
 					navigate(APP_ROUTES.HOME)
 				})
 				.catch((error) => {

@@ -4,6 +4,7 @@ export const URL_INTRA_AUTHORIZE = 'https://api.intra.42.fr/oauth/authorize'
 
 export const API_ROUTES = {
 	ROOT: `${API_URL}`,
+	ME: 'auth/me',
 	LOGIN: 'auth/login',
 	LOGOUT: 'auth/logout',
 	GET_TICKET_TYPES: '/tickettypes',
