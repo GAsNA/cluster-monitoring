@@ -65,20 +65,18 @@ function Dashboard() {
 				})
 	}
 
-	const changeCluster = (newClusterId) => {
+	function changeCluster(newClusterId) {
 		if (parseInt(newClusterId) === cluster.ID) { return }
 
-		console.log("ID CLUSTER:", newClusterId)
-
 		setAllClusters(
-			allClusters.map((item) => (
-				item.ID === cluster.ID 
-					? { ...item, IsActive: false }
-					: ( item.ID === parseInt(newClusterId)
-						? { ...item, IsActive: true }
-						: { ...item }
-					)
-			))
+			allClusters.map(function (item) {
+				if (item.ID === cluster.ID) {
+					return {...item, IsActive: false}
+				} else if (item.ID === parseInt(newClusterId)) {
+					return {...item, IsActive: true}
+				}
+				return {...item}
+			})
 		);
 		setCluster(allClusters.find((item) => item.ID === parseInt(newClusterId)));
 	}
