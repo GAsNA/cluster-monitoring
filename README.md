@@ -14,6 +14,7 @@ Frontend is in React ; Backend is in Go.
 - Change the color of the seats depending on the number of tickets "in progress"
 - In form ticket, if keyboard is choose, select keys on virtual keyboard
 - Refacto/Reorga + verif cookies in useeffect ?
+- Swagger
 
 ### Questions
 - see for authorization header when option, options route, how manage ?
