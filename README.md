@@ -15,6 +15,7 @@ Frontend is in React ; Backend is in Go.
 - In form ticket, if keyboard is choose, select keys on virtual keyboard
 - Refacto/Reorga + verif cookies in useeffect ?
 - Swagger
+- Mobile
 
 ### Questions
 - see for authorization header when option, options route, how manage ?
