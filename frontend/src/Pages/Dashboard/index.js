@@ -34,8 +34,9 @@ function Dashboard() {
 					clusters[0].IsActive = true;
 
 					console.log(clusters);
-					setAllClusters(clusters)
-					setCluster(clusters[0])
+	
+					setAllClusters(clusters);
+					setCluster(clusters[0]);
 				})
 				.catch((error) => {
 					throw error
@@ -65,19 +66,21 @@ function Dashboard() {
 	}
 
 	const changeCluster = (newClusterId) => {
-		if (parseInt(newClusterId) === cluster.id) { return }
+		if (parseInt(newClusterId) === cluster.ID) { return }
+
+		console.log("ID CLUSTER:", newClusterId)
 
 		setAllClusters(
 			allClusters.map((item) => (
-				item.id === cluster.id 
-					? { ...item, isActive: false }
-					: ( item.id === parseInt(newClusterId)
-						? { ...item, isActive: true }
+				item.ID === cluster.ID 
+					? { ...item, IsActive: false }
+					: ( item.ID === parseInt(newClusterId)
+						? { ...item, IsActive: true }
 						: { ...item }
 					)
 			))
 		);
-		setCluster(allClusters[newClusterId]);
+		setCluster(allClusters.find((item) => item.ID === parseInt(newClusterId)));
 	}
 	
 	function addListeners() {
