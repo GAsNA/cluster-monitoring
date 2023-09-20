@@ -10,6 +10,7 @@ export const API_ROUTES = {
 	GET_TICKET_TYPES: '/tickettypes',
 	CREATE_TICKET: '/tickets',
 	GET_TICKETS_SEAT: '/tickets/seat/',
+	GET_CLUSTERS: '/clusters',
 }
 
 export const APP_ROUTES = {

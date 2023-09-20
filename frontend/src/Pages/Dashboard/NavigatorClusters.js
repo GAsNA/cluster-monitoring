@@ -6,8 +6,8 @@ function NavigatorClusters({ allClusters, changeCluster }) {
 			<Navbar maxWidth="full" isBordered>
 				<NavbarContent className="sm:flex gap-4">
 					{allClusters.map((item) => (
-						<NavbarItem isActive={item.isActive} key={item.name}>
-							<Button value={item.id} onPress={e => changeCluster(e.target.value)} color={item.isActive && "primary"}>{item.name}</Button>
+						<NavbarItem isActive={item.IsActive} key={item.Name}>
+							<Button value={item.ID} onPress={e => changeCluster(e.target.value)} color={item.IsActive && "primary"}>{item.Name}</Button>
 						</NavbarItem>
 					))}
 				</NavbarContent>
