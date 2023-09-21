@@ -14,7 +14,7 @@ module.exports = {
   plugins: [
     nextui({
       themes: {
-        "purple-dark": {
+        "base": {
           extend: "dark", // <- inherit default values from dark theme
           colors: {
             background: "#000000",

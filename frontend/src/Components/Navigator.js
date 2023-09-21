@@ -8,6 +8,8 @@ import { client } from '../utils/common.jsx';
 function Navigator() {
 	const navigate = useNavigate();
 
+	const user = JSON.parse(localStorage.getItem("user"))
+
 	async function logout() {
 		await client.post(API_ROUTES.LOGOUT, "")
 				.then((response) => {
@@ -31,13 +33,15 @@ function Navigator() {
 				<Dropdown placement="bottom-end">
 					<DropdownTrigger>
 						<Avatar isBordered as="button" className="transition-transform" color="secondary"
-							name="Jason Hughes" size="sm" src="https://i.pravatar.cc/150?u=a042581f4e29026704d" />
+							name={ user && user.Login } size="sm" src={ user && user.Image } />
 					</DropdownTrigger>
 
 					<DropdownMenu aria-label="Profile Actions" variant="flat">
 						<DropdownItem textValue="profile" key="profile" className="h-14 gap-2">
 							<p className="font-semibold">Signed in as</p>
-							<p className="font-semibold">zoey@example.com</p>
+							<p className="font-semibold" style={{ color: '#01babc' }}>
+								{ user && user.Login }
+							</p>
 						</DropdownItem>
 						<DropdownItem textValue="logout" key="logout" color="danger" onAction={logout}>Log Out</DropdownItem>
 					</DropdownMenu>

@@ -13,6 +13,7 @@ type User struct {
 
 	ID		int		`bun:"id,pk,notnull"`
 	Login	string	`bun:"login,notnull"`
+	Image	string	`bun:"image,notnull"`
 	IsStaff	bool	`bun:"is_staff,notnull"`
 }
 

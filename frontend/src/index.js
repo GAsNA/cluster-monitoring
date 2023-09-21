@@ -8,7 +8,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
 	<React.StrictMode>
 		<NextUIProvider>
-			<main className="purple-dark text-foreground bg-background">
+			<main className="base text-foreground bg-background">
 				<App />
 			</main>
 		</NextUIProvider>

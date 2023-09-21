@@ -84,12 +84,16 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	// Add user in DB if not exist
 	user_id := int(res["id"].(float64))
 	user_login := res["login"].(string)
+	user_image := res["image"].(map[string]interface{})["link"].(string)
 	user_is_staff := res["staff?"].(bool)
 
 	user := models.FindUserByID(user_id)
 	if user == (*models.User)(nil) {
-		user = &models.User{ ID: user_id, Login: user_login, IsStaff: user_is_staff }
+		user = &models.User{ ID: user_id, Login: user_login, Image: user_image, IsStaff: user_is_staff }
 		models.NewUser(user)
+	} else if user.Image != user_image || user.IsStaff != user_is_staff {
+		user = &models.User{ ID: user_id, Login: user_login, Image: user_image, IsStaff: user_is_staff }
+		models.UpdateUser(user)
 	}
 
 	// Set JWT cookie and redirect
