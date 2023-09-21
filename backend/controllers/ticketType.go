@@ -26,7 +26,11 @@ func TicketTypesCreate(w http.ResponseWriter, r *http.Request) {
 	addHeader(&w)
 
 	// Verification JWT and get claims
-	_, err := verifyJwtAndClaims(&w, r)
+	claims, err := verifyJwtAndClaims(&w, r)
+	if err != nil { return }
+
+	// Check rights
+	err = checkRights(&w, r, claims)
 	if err != nil { return }
 
 	body, err := ioutil.ReadAll(r.Body)
@@ -64,7 +68,11 @@ func TicketTypesUpdate(w http.ResponseWriter, r *http.Request) {
 	addHeader(&w)
 
 	// Verification JWT and get claims
-	_, err := verifyJwtAndClaims(&w, r)
+	claims, err := verifyJwtAndClaims(&w, r)
+	if err != nil { return }
+
+	// Check rights
+	err = checkRights(&w, r, claims)
 	if err != nil { return }
 
 	vars := mux.Vars(r)
@@ -88,7 +96,11 @@ func TicketTypesDelete(w http.ResponseWriter, r *http.Request) {
 	addHeader(&w)
 
 	// Verification JWT and get claims
-	_, err := verifyJwtAndClaims(&w, r)
+	claims, err := verifyJwtAndClaims(&w, r)
+	if err != nil { return }
+
+	// Check rights
+	err = checkRights(&w, r, claims)
 	if err != nil { return }
 
 	vars := mux.Vars(r)

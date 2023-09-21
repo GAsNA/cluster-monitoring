@@ -4,7 +4,6 @@ Little web application to monitoring 42Paris cluster.
 Frontend is in React ; Backend is in Go.
 
 ## TODO
-- Verif is admin on routes
 - SOCKET
 - Admin side (staff)
     - see all ticket (with sort choices)
@@ -15,7 +14,6 @@ Frontend is in React ; Backend is in Go.
 - In form ticket, if keyboard is choose, select keys on virtual keyboard
 - Swagger
 - Mobile
-- Verif cookies in useeffect ?
 
 ### Questions
 - see for authorization header when option, options route, how manage ?
