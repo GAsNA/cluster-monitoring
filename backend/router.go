@@ -31,7 +31,7 @@ func InitializeRouter() *mux.Router {
 	router.Methods("GET").Path("/tickets").HandlerFunc(controllers.TicketsIndex)
 	router.Methods("POST", "OPTIONS").Path("/tickets").HandlerFunc(controllers.TicketsCreate)
 	router.Methods("GET").Path("/tickes/{id}").HandlerFunc(controllers.TicketsShow)
-	router.Methods("PUT").Path("/tickets/{id}").HandlerFunc(controllers.TicketsUpdate)
+	router.Methods("PUT", "OPTIONS").Path("/tickets/{id}").HandlerFunc(controllers.TicketsUpdate)
 	router.Methods("DELETE").Path("/tickets/{id}").HandlerFunc(controllers.TicketsDelete)
 	router.Methods("GET", "OPTIONS").Path("/tickets/seat/{id}").HandlerFunc(controllers.TicketsIndexBySeat)
 

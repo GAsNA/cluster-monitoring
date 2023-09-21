@@ -5,10 +5,9 @@ Frontend is in React ; Backend is in Go.
 
 ## TODO
 - Verif is admin on routes
+- SOCKET
 - Admin side (staff)
     - see all ticket (with sort choices)
-    - delete ticket
-    - validate ticket
     - add/delete/modify issue types
     - add/delete/modify clusters
     - set post to unavailable/do not use

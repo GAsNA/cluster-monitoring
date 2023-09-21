@@ -96,6 +96,7 @@ func TicketsUpdate(w http.ResponseWriter, r *http.Request) {
 	ticket := models.FindTicketByID(id)
 	
 	err = json.Unmarshal(body, &ticket)
+	if err != nil { log.Fatal(err) }
 
 	models.UpdateTicket(ticket)
 

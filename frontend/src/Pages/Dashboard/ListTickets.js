@@ -3,11 +3,6 @@ import { Card, CardBody } from '@nextui-org/react';
 import Ticket from './Ticket.js';
 
 function ListTickets({ tickets, issueTypes }) {
-
-	function getDateFormated(dateStr) {
-		var date = new Date(dateStr)
-		return (date.getDate() + "/" + parseInt(date.getMonth() + 1) + "/" + date.getFullYear())
-	}
 	
 	return (
 		<>
@@ -15,10 +10,9 @@ function ListTickets({ tickets, issueTypes }) {
 			tickets ?
 				tickets.map((ticket, index) => (
 					<div key={index}>
-						<Ticket date={getDateFormated(ticket.CreatedAt)}
+						<Ticket ticket={ticket}
 								type={(issueTypes.find((it) => ticket.Type === it.ID )).Name} 
-								resolved={ticket.Resolved}
-								comment={ticket.Comment} />
+						/>
 					</div>
 				))
 			:

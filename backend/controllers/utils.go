@@ -12,6 +12,7 @@ import (
 
 func addHeader(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	(*w).Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE")
 	(*w).Header().Set("Access-Control-Allow-Headers", "Authorization, Content-Type")
 	(*w).Header().Set("Content-type", "application/json;charset=UTF-8")
 }

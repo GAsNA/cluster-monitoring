@@ -52,7 +52,9 @@ function FormTicket({ seat, issueTypes, closeModal }) {
 
 				<Spacer y={4} />
 
-				<Textarea label={<span style={{ color: 'white' }}>Comment</span>} labelPlacement="outside" placeholder="If you want to add something..." style={{ color: 'black' }} onValueChange={setComment} />
+				<Textarea label={<span style={{ color: 'white' }}>Comment</span>} maxRows={3}
+						labelPlacement="outside" placeholder="If you want to add something..." 
+						style={{ color: 'black' }} onValueChange={setComment} />
 			
 				<Spacer y={4} />
 
