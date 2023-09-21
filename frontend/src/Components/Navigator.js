@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navbar, NavbarBrand, NavbarContent, Dropdown, DropdownTrigger, DropdownItem, DropdownMenu, Avatar } from '@nextui-org/react';
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Dropdown, DropdownTrigger, DropdownItem, DropdownMenu, Avatar, Link, Button } from '@nextui-org/react';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 import { API_ROUTES, APP_ROUTES } from '../utils/constants.jsx';
@@ -25,11 +25,27 @@ function Navigator() {
 	return (
 		<Navbar maxWidth="full" shouldHideOnScroll>
 			<NavbarBrand>
-				<p className="font-bold text-inherit">CLUSTER MONITORING</p>
+				<Link color="foreground" href={ APP_ROUTES.DASHBOARD }>
+					<p className="font-bold text-inherit">CLUSTER MONITORING</p>
+				</Link>
 			</NavbarBrand>
+
+			{ user && user.IsStaff &&
+				<NavbarContent className="gap-4" justify="center">
+					<NavbarItem>
+						<Button variant="light">
+							<Link color="foreground" href={ APP_ROUTES.DASHBOARD }>Dashboard</Link>
+						</Button>
+					</NavbarItem>
+					<NavbarItem>
+						<Button variant="light">
+							<Link color="foreground" href={ APP_ROUTES.ADMIN }>Admin</Link>
+						</Button>
+					</NavbarItem>
+				</NavbarContent>
+			}
 			
 			<NavbarContent as="div" justify="end">
-
 				<Dropdown placement="bottom-end">
 					<DropdownTrigger>
 						<Avatar isBordered as="button" className="transition-transform" color="secondary"
@@ -46,7 +62,6 @@ function Navigator() {
 						<DropdownItem textValue="logout" key="logout" color="danger" onAction={logout}>Log Out</DropdownItem>
 					</DropdownMenu>
 				</Dropdown>
-
 			</NavbarContent>
 		</Navbar>
 	);

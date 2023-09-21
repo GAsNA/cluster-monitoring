@@ -35,7 +35,7 @@ function Ticket({ ticket, type }) {
 					:
 					<Chip style={{ background: inProgressColor, color: 'white' }}>{inProgressText}</Chip>
 				}
-				{ user.IsStaff &&
+				{ user && user.IsStaff &&
 					<DropdownOptions ticket={ticket} isResolved={ticket.Resolved} />
 				}
 			</CardHeader>
