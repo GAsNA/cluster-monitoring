@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"time"
   
 	"main/models"
 )
@@ -98,9 +99,20 @@ func TicketsUpdate(w http.ResponseWriter, r *http.Request) {
 	if err != nil { log.Fatal(err) }
 
 	ticket := models.FindTicketByID(id)
-	
+	lastStatusResolved := ticket.Resolved
+
 	err = json.Unmarshal(body, &ticket)
 	if err != nil { log.Fatal(err) }
+	
+	// If ticket is passed from unresolved to resolved
+	if lastStatusResolved == false && ticket.Resolved == true {
+		ticket.ResolvedAt = time.Now();
+		ticket.ResolvedByID = claims.User.ID
+	// Else if ticket is passed from resolved to unresolved
+	} else if lastStatusResolved == true && ticket.Resolved == false {
+		ticket.ResolvedAt = time.Time{};
+		ticket.ResolvedByID = ticket.AuthorID
+	}
 
 	models.UpdateTicket(ticket)
 
