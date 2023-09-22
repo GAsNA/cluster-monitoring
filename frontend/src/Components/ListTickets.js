@@ -2,18 +2,15 @@ import React from 'react';
 import { Card, CardBody } from '@nextui-org/react';
 import Ticket from './Ticket.js';
 
-function ListTickets({ tickets, issueTypes, displaySeat=false }) {
+function ListTickets({ tickets, displaySeat=false }) {
 	
 	return (
 		<>
 		{
-			tickets ?
+			tickets && tickets.length > 0 ?
 				tickets.map((ticket, index) => (
 					<div key={index}>
-						<Ticket ticket={ticket}
-								type={(issueTypes.find((it) => ticket.Type === it.ID )).Name} 
-								displaySeat={displaySeat}
-						/>
+						<Ticket ticket={ticket} displaySeat={displaySeat} />
 					</div>
 				))
 			:

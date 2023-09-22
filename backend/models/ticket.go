@@ -9,7 +9,7 @@ import (
 	"github.com/uptrace/bun"
 )
 
-// MODEL
+// MODELS
 type Ticket struct {
 	bun.BaseModel	`bun:"table:ticket"`
 
@@ -22,6 +22,13 @@ type Ticket struct {
 	Resolved		bool		`bun:"resolved,notnull"`
 	ResolvedAt		time.Time	`bun:"resolved_at"`
 	ResolvedByID	int			`bun:"resolved_by_id"`
+}
+
+type TicketWithType struct {
+	Ticket `bun:",extend"`
+
+	TicketTypeID	int			`bun:"ticket_type__id"`
+	TicketTypeName	string		`bun:"ticket_type__name"`
 }
 
 // CREATE TABLE
@@ -60,27 +67,36 @@ func FindTicketByID(id int) *Ticket {
 	return &tickets[0]
 }
 
-func AllTickets() []Ticket {
-	var tickets	[]Ticket
+func AllTickets() []TicketWithType {
+	var tickets	[]TicketWithType
 	err := config.DB().NewSelect().Model(&tickets).
+				ColumnExpr("ticket.*").
+				ColumnExpr("tt.id AS ticket_type__id, tt.name AS ticket_type__name").
+				Join("JOIN ticket_type AS tt ON tt.id = ticket.type").
 				Scan(config.Ctx())
 	if err != nil { log.Fatal(err) }
 
 	return tickets
 }
 
-func AllTicketsOfSeat(seat, limit string) []Ticket {
-	var tickets []Ticket
+func AllTicketsOfSeat(seat, limit string) []TicketWithType {
+	var tickets []TicketWithType
 	
 	limit_int, err := strconv.Atoi(limit)
 	if err != nil {
 		err = config.DB().NewSelect().Model(&tickets).
 					Where("seat = ?", seat).
+					ColumnExpr("ticket.*").
+					ColumnExpr("tt.id AS ticket_type__id, tt.name AS ticket_type__name").
+					Join("JOIN ticket_type AS tt ON tt.id = ticket.type").
 					Order("created_at DESC").
 					Scan(config.Ctx())
 	} else {
 		err = config.DB().NewSelect().Model(&tickets).
 					Where("seat = ?", seat).
+					ColumnExpr("ticket.*").
+					ColumnExpr("tt.id AS ticket_type__id, tt.name AS ticket_type__name").
+					Join("JOIN ticket_type AS tt ON tt.id = ticket.type").
 					Order("created_at DESC").
 					Limit(limit_int).
 					Scan(config.Ctx())

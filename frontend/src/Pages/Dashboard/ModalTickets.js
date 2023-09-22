@@ -26,7 +26,7 @@ function ModalTickets({ open, setOpen, seat, setSelectedSeat, issueTypes, ticket
 						<Divider orientation="vertical" />
 
 						<div style={{width: "60%", display: "inline-block", marginLeft: '1%', maxHeight: '340px', overflow: 'auto', padding: '1%'}}>
-							<ListTickets tickets={tickets} issueTypes={issueTypes} />
+							<ListTickets tickets={tickets} />
 						</div>
 
 					</div>

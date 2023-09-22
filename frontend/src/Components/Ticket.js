@@ -10,7 +10,7 @@ const inProgressColor = '#c1c1c9';
 const resolvedText = 'Resolved';
 const inProgressText = 'In progress';
 
-function Ticket({ ticket, type, displaySeat=false }) {
+function Ticket({ ticket, displaySeat=false }) {
 	const user = JSON.parse(localStorage.getItem("user"))
 
 	function getDateFormated(dateStr) {
@@ -28,7 +28,7 @@ function Ticket({ ticket, type, displaySeat=false }) {
 				<div className="flex gap-5">
 					<div className="flex flex-col gap-1 items-start justify-center">
 						<h4 className="font-semibold leading-none">
-							{type}
+							{ticket.TicketTypeName}
 							<span className="ml-2 text-small tracking-tight text-default-400">{getDateFormated(ticket.CreatedAt)}</span>
 						</h4>
 					</div>
@@ -43,7 +43,6 @@ function Ticket({ ticket, type, displaySeat=false }) {
 				{ user && user.IsStaff &&
 					<DropdownOptions ticket={ticket} isResolved={ticket.Resolved} />
 				}
-				{ticket.ID}
 			</CardHeader>
 
 			<CardBody className="px-3 py-0 text-small text-default-400" style={{ color: '#5b5c61' }}>
