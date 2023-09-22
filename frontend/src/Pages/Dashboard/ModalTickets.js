@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Divider } from '@nextui-org/react';
 import FormTicket from './FormTicket.js';
-import ListTickets from './ListTickets.js';
+import ListTickets from '../../Components/ListTickets.js';
 
 function ModalTickets({ open, setOpen, seat, setSelectedSeat, issueTypes, tickets }) {
 	function close() {

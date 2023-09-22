@@ -33,14 +33,14 @@ function Navigator() {
 			{ user && user.IsStaff &&
 				<NavbarContent className="gap-4" justify="center">
 					<NavbarItem>
-						<Button variant="light">
-							<Link color="foreground" href={ APP_ROUTES.DASHBOARD }>Dashboard</Link>
-						</Button>
+						<Link color="foreground" href={ APP_ROUTES.DASHBOARD }>
+							<Button variant="light">Dashboard</Button>
+						</Link>
 					</NavbarItem>
 					<NavbarItem>
-						<Button variant="light">
-							<Link color="foreground" href={ APP_ROUTES.ADMIN }>Admin</Link>
-						</Button>
+						<Link color="foreground" href={ APP_ROUTES.ADMIN }>
+							<Button variant="light">Admin</Button>
+						</Link>
 					</NavbarItem>
 				</NavbarContent>
 			}

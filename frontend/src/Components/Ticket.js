@@ -1,16 +1,16 @@
 import React from 'react';
 import { Card, CardHeader, CardBody, Chip, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from '@nextui-org/react';
 import toast from 'react-hot-toast';
-import { client } from '../../utils/common.jsx';
-import { API_ROUTES } from '../../utils/constants.jsx';
-import {SettingIcon} from '../../Icon/SettingIcon';
+import { client } from '../utils/common.jsx';
+import { API_ROUTES } from '../utils/constants.jsx';
+import {SettingIcon} from '../Icon/SettingIcon';
 
 const resolvedColor = '#2cd57a';
 const inProgressColor = '#c1c1c9';
 const resolvedText = 'Resolved';
 const inProgressText = 'In progress';
 
-function Ticket({ ticket, type }) {
+function Ticket({ ticket, type, displaySeat=false }) {
 	const user = JSON.parse(localStorage.getItem("user"))
 
 	function getDateFormated(dateStr) {
@@ -19,8 +19,12 @@ function Ticket({ ticket, type }) {
 	}
 
 	return (
-		<Card style={{ padding: '2%', marginBottom: '2%' }}>
+		<Card style={{ padding: '2%', marginBottom: '2%', background: 'white', color: 'black' }}>
 			<CardHeader className="justify-between">
+				{ displaySeat &&
+					<b><span style={{ color: '#01babc' }}>{ticket.Seat}</span></b>
+				}
+
 				<div className="flex gap-5">
 					<div className="flex flex-col gap-1 items-start justify-center">
 						<h4 className="font-semibold leading-none">
@@ -35,9 +39,11 @@ function Ticket({ ticket, type }) {
 					:
 					<Chip style={{ background: inProgressColor, color: 'white' }}>{inProgressText}</Chip>
 				}
+
 				{ user && user.IsStaff &&
 					<DropdownOptions ticket={ticket} isResolved={ticket.Resolved} />
 				}
+				{ticket.ID}
 			</CardHeader>
 
 			<CardBody className="px-3 py-0 text-small text-default-400" style={{ color: '#5b5c61' }}>
@@ -71,7 +77,7 @@ function DropdownOptions({ ticket, isResolved }) {
 	return (
 		<Dropdown placement="bottom-end">
 			<DropdownTrigger>
-				<Button isIconOnly color="warning" variant="faded" aria-label="Settings">
+				<Button isIconOnly variant="faded" aria-label="Settings" style={{ background: 'white' }}>
 					<SettingIcon />
 				</Button>    
 			</DropdownTrigger>

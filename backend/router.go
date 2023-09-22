@@ -18,6 +18,7 @@ func InitializeRouter() *mux.Router {
 	router.Methods("GET", "OPTIONS").Path("/tickettypes").HandlerFunc(controllers.TicketTypesIndex)
 
 		// TICKETS
+	router.Methods("GET").Path("/tickets").HandlerFunc(controllers.TicketsIndex)
 	router.Methods("POST", "OPTIONS").Path("/tickets").HandlerFunc(controllers.TicketsCreate)
 	router.Methods("PUT", "OPTIONS").Path("/tickets/{id}").HandlerFunc(controllers.TicketsUpdate)
 	router.Methods("DELETE").Path("/tickets/{id}").HandlerFunc(controllers.TicketsDelete)
@@ -41,7 +42,6 @@ func InitializeRouter() *mux.Router {
 //	router.Methods("DELETE").Path("/tickettypes/{id}").HandlerFunc(controllers.TicketTypesDelete)
 
 		// TICKETS
-//	router.Methods("GET").Path("/tickets").HandlerFunc(controllers.TicketsIndex)
 //	router.Methods("GET").Path("/tickes/{id}").HandlerFunc(controllers.TicketsShow)
 
 		// CLUSTERS

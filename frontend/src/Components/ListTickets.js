@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardBody } from '@nextui-org/react';
 import Ticket from './Ticket.js';
 
-function ListTickets({ tickets, issueTypes }) {
+function ListTickets({ tickets, issueTypes, displaySeat=false }) {
 	
 	return (
 		<>
@@ -12,6 +12,7 @@ function ListTickets({ tickets, issueTypes }) {
 					<div key={index}>
 						<Ticket ticket={ticket}
 								type={(issueTypes.find((it) => ticket.Type === it.ID )).Name} 
+								displaySeat={displaySeat}
 						/>
 					</div>
 				))
