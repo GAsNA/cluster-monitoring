@@ -14,8 +14,10 @@ function TicketsSort() {
 	const [currentPage, setCurrentPage] = useState(1);
 
 	const [seatChoice, setSeatChoice] = useState("");
+	const [authorChoice, setAuthorChoice] = useState("");
 
 	const [getTickets, setGetTickets] = useState(false);
+	const [toRefreshFilteredTickets, setToRefreshFilteredTickets] = useState(false);
 
 	async function getAllTickets() {
 		await client.get(API_ROUTES.GET_TICKETS)
@@ -30,28 +32,48 @@ function TicketsSort() {
 	}
 	
 	function onSeatChoiceChange(value) {
-		setSeatChoice(value)
-		if (value !== "") {
-			setTicketsFiltered(tickets.filter(ticket => ticket.Seat.includes(value)))
-		} else {
-			setTicketsFiltered(tickets)
-		}
+		setSeatChoice(value);
+		setToRefreshFilteredTickets(true);
+	}
+
+	function onAuthorChoiceChange(value) {
+		setAuthorChoice(value);
+		setToRefreshFilteredTickets(true);
 	}
 
 	useEffect(() => {
 		if (!getTickets) { setGetTickets(true); getAllTickets(); }
+
+		if (toRefreshFilteredTickets) {
+			setTicketsFiltered(tickets.filter(ticket => 
+				ticket.Seat.includes(seatChoice)
+				&& ticket.AuthorLogin.includes(authorChoice)
+			));
+			setToRefreshFilteredTickets(false);
+		}
 
 		if (ticketsFiltered) {
 			setTicketsToShow(ticketsFiltered.slice((currentPage - 1) * limitPerPage, currentPage * limitPerPage));
 		} else {
 			setTicketsToShow([]);
 		}
-	}, [getTickets, currentPage, ticketsFiltered, seatChoice, tickets]);
+	}, [getTickets, currentPage, ticketsFiltered, tickets, authorChoice, seatChoice, toRefreshFilteredTickets]);
 
 	return (
 		<>
 			<div style={{ margin: '20px 0' }}>
-				<Input key="seat" label="Seat" labelPlacement="outside" isClearable onValueChange={onSeatChoiceChange}/>
+				<div style={{ display: 'flex', flexWrap: 'wrap',  }}>
+					<Input key="seat" label="Seat" labelPlacement="outside" fullWidth={false}
+						isClearable onValueChange={onSeatChoiceChange}/>
+					<Input key="author" label="Author" labelPlacement="outside" className="max-w-xs pr-1"
+						isClearable onValueChange={onAuthorChoiceChange}/>
+					<Input key="author" label="Author" labelPlacement="outside" className="max-w-xs pr-1"
+						isClearable onValueChange={onAuthorChoiceChange}/>
+					<Input key="author" label="Author" labelPlacement="outside" className="max-w-xs pr-1"
+						isClearable onValueChange={onAuthorChoiceChange}/>
+					<Input key="author" label="Author" labelPlacement="outside" className="max-w-xs pr-1"
+						isClearable onValueChange={onAuthorChoiceChange}/>
+				</div>
 
 				{ ticketsFiltered && ticketsFiltered.length > limitPerPage &&
 					<Pagination total={Math.ceil(ticketsFiltered.length / limitPerPage)} onChange={setCurrentPage} />

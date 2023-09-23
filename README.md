@@ -7,7 +7,8 @@ Frontend is in React ; Backend is in Go.
 - SOCKET
 - Modal confirmation when delete ticket
 - Admin side (staff)
-    - see all ticket (with sort choices: seat (enter name), clusters (select), status (select), type (select), date (inc/dec) (enter name + radio))
+    - See author on tickets
+    - see all ticket (with sort choices: author (input), status (select), type (select), date (inc/dec) (enter name + radio))
     - add/delete/modify issue types
     - add/delete/modify clusters
     - set post to unavailable/do not use

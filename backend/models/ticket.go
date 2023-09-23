@@ -24,11 +24,12 @@ type Ticket struct {
 	ResolvedByID	int			`bun:"resolved_by_id"`
 }
 
-type TicketWithType struct {
+type TicketWithTypeAndAuthor struct {
 	Ticket `bun:",extend"`
 
-	TicketTypeID	int			`bun:"ticket_type__id"`
 	TicketTypeName	string		`bun:"ticket_type__name"`
+	AuthorLogin		string		`bun:"author__login"`
+	AuthorImage		string		`bun:"author__image"`
 }
 
 // CREATE TABLE
@@ -67,20 +68,22 @@ func FindTicketByID(id int) *Ticket {
 	return &tickets[0]
 }
 
-func AllTickets() []TicketWithType {
-	var tickets	[]TicketWithType
+func AllTickets() []TicketWithTypeAndAuthor {
+	var tickets	[]TicketWithTypeAndAuthor
 	err := config.DB().NewSelect().Model(&tickets).
 				ColumnExpr("ticket.*").
 				ColumnExpr("tt.id AS ticket_type__id, tt.name AS ticket_type__name").
+				ColumnExpr("a.login AS author__login, a.image AS author__image").
 				Join("JOIN ticket_type AS tt ON tt.id = ticket.type").
+				Join("JOIN public.\"user\" AS a ON a.id = ticket.author_id").
 				Scan(config.Ctx())
 	if err != nil { log.Fatal(err) }
 
 	return tickets
 }
 
-func AllTicketsOfSeat(seat, limit string) []TicketWithType {
-	var tickets []TicketWithType
+func AllTicketsOfSeat(seat, limit string) []TicketWithTypeAndAuthor {
+	var tickets []TicketWithTypeAndAuthor
 	
 	limit_int, err := strconv.Atoi(limit)
 	if err != nil {
@@ -88,7 +91,9 @@ func AllTicketsOfSeat(seat, limit string) []TicketWithType {
 					Where("seat = ?", seat).
 					ColumnExpr("ticket.*").
 					ColumnExpr("tt.id AS ticket_type__id, tt.name AS ticket_type__name").
+					ColumnExpr("a.login AS author__login, a.image AS author__image").
 					Join("JOIN ticket_type AS tt ON tt.id = ticket.type").
+					Join("JOIN user AS a ON a.id = ticket.author_id").
 					Order("created_at DESC").
 					Scan(config.Ctx())
 	} else {
@@ -96,7 +101,9 @@ func AllTicketsOfSeat(seat, limit string) []TicketWithType {
 					Where("seat = ?", seat).
 					ColumnExpr("ticket.*").
 					ColumnExpr("tt.id AS ticket_type__id, tt.name AS ticket_type__name").
+					ColumnExpr("a.login AS author__login, a.image AS author__image").
 					Join("JOIN ticket_type AS tt ON tt.id = ticket.type").
+					Join("JOIN user AS a ON a.id = ticket.author_id").
 					Order("created_at DESC").
 					Limit(limit_int).
 					Scan(config.Ctx())
