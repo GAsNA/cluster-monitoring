@@ -44,8 +44,7 @@ function TicketsSort() {
 		await client.get(API_ROUTES.GET_TICKET_TYPES)
 				.then((response) => {
 					console.log(response)
-					var data = response.data
-					data = [{ID: -1, Name: "All"}, ...data]
+					var data = [{ID: -1, Name: "All"}, ...response.data]
 					setIssueTypes(data)
 				})
 				.catch((error) => {
@@ -81,7 +80,7 @@ function TicketsSort() {
 				ticket.Seat.includes(seatChoice)
 				&& ticket.AuthorLogin.includes(authorChoice)
 				&& (statusChoice === 'success' ? ticket.Resolved : (statusChoice === 'inProgress' ? !ticket.Resolved : ticket))
-				&& (Number(issueTypeChoice) !== -1 ? ticket.Type === Number(issueTypeChoice) : ticket)
+				&& (Number(issueTypeChoice) !== -1 ? (ticket.Type === Number(issueTypeChoice)) : ticket)
 			));
 			setToRefreshFilteredTickets(false);
 		}
