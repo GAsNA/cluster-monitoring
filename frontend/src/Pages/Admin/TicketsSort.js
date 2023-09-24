@@ -62,11 +62,6 @@ function TicketsSort() {
 				&& ticket.AuthorLogin.includes(authorChoice)
 				&& (statusChoice === 'success' ? ticket.Resolved : (statusChoice === 'inProgress' ? !ticket.Resolved : ticket))
 			));
-			/*if (statusChoice === 'success') {
-				setTicketsFiltered(ticketsFiltered.filter(ticket => ticket.Resolved === true))
-			} else if (statusChoice === 'inProgress') {
-				setTicketsFiltered(ticketsFiltered.filter(ticket => ticket.Resolved === false))
-			}*/
 			setToRefreshFilteredTickets(false);
 		}
 
@@ -80,7 +75,7 @@ function TicketsSort() {
 	return (
 		<>
 			<div style={{ margin: '20px 0' }}>
-				<div style={{ display: 'flex', flexWrap: 'wrap',  }}>
+				<div style={{ display: 'flex', flexWrap: 'wrap' }}>
 
 					<div style={{ maxWidth: '200px', margin: '15px 1%' }}>
 						<Input key="seat" label="Seat" labelPlacement="outside"
@@ -92,12 +87,12 @@ function TicketsSort() {
 							isClearable onValueChange={onAuthorChoiceChange}/>
 					</div>
 
-					<div style={{ maxWidth: '200px', margin: '15px 1%' }}>
-						<Select disallowEmptySelection defaultSelectedKeys={[statusTypes[0].key]}
-							label="Status" labelPlacement="outside" onSelectionChange={onStatusChoiceChange}>
-							{ statusTypes.map((type) => (
-								<SelectItem textValue={type.name} key={type.key}>{type.name}</SelectItem>
-							))}
+					<div style={{ width: '200px', margin: '15px 1%' }}>
+						<Select disallowEmptySelection defaultSelectedKeys={[statusTypes[0].key]} label="Status"
+							labelPlacement="outside" onSelectionChange={onStatusChoiceChange} >
+								{ statusTypes.map((type) => (
+									<SelectItem textValue={type.name} key={type.key}>{type.name}</SelectItem>
+								))}
 						</Select>
 					</div>
 				</div>
