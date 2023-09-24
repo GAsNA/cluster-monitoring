@@ -8,7 +8,7 @@ Frontend is in React ; Backend is in Go.
 - Modal confirmation when delete ticket
 - Admin side (staff)
     - See author on tickets
-    - see all ticket (with sort choices: type (select), date (inc/dec) (enter name + radio))
+    - see all ticket (with sort choices: date (inc/dec) (enter name + radio))
     - add/delete/modify issue types
     - add/delete/modify clusters
     - set post to unavailable/do not use

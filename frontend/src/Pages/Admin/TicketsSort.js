@@ -16,14 +16,16 @@ function TicketsSort() {
 	const [seatChoice, setSeatChoice] = useState("");
 	const [authorChoice, setAuthorChoice] = useState("");
 	const [statusChoice, setStatusChoice] = useState('all');
+	const [issueTypeChoice, setIssueTypeChoice] = useState();
 	
 	const statusTypes = [
 		{ name: "All", key: 'all' }, 
 		{ name: "Success", key: 'success' },
 		{ name: "In progress", key: 'inProgress' }
 	];
+	const [issueTypes, setIssueTypes] = useState([]);
 
-	const [getTickets, setGetTickets] = useState(false);
+	const [getTicketsAndTypes, setGetTicketsAndTypes] = useState(false);
 	const [toRefreshFilteredTickets, setToRefreshFilteredTickets] = useState(false);
 
 	async function getAllTickets() {
@@ -31,7 +33,20 @@ function TicketsSort() {
 				.then((response) => {
 					setTickets(response.data);
 					setTicketsFiltered(response.data);
-					console.log(response.data)
+					console.log(response)
+				})
+				.catch((error) => {
+					toast.error('An error occured');
+				})
+	}
+
+	async function getIssueTypes() {
+		await client.get(API_ROUTES.GET_TICKET_TYPES)
+				.then((response) => {
+					console.log(response)
+					var data = response.data
+					data = [{ID: -1, Name: "All"}, ...data]
+					setIssueTypes(data)
 				})
 				.catch((error) => {
 					toast.error('An error occured');
@@ -53,14 +68,20 @@ function TicketsSort() {
 		setToRefreshFilteredTickets(true);
 	}
 
+	function onIssueTypeChoiceChange(value) {
+		setIssueTypeChoice([...value][0]);
+		setToRefreshFilteredTickets(true);
+	}
+
 	useEffect(() => {
-		if (!getTickets) { setGetTickets(true); getAllTickets(); }
+		if (!getTicketsAndTypes) { setGetTicketsAndTypes(true); getAllTickets(); getIssueTypes(); }
 
 		if (toRefreshFilteredTickets) {
 			setTicketsFiltered(tickets.filter(ticket => 
 				ticket.Seat.includes(seatChoice)
 				&& ticket.AuthorLogin.includes(authorChoice)
 				&& (statusChoice === 'success' ? ticket.Resolved : (statusChoice === 'inProgress' ? !ticket.Resolved : ticket))
+				&& (Number(issueTypeChoice) !== -1 ? ticket.Type === Number(issueTypeChoice) : ticket)
 			));
 			setToRefreshFilteredTickets(false);
 		}
@@ -70,7 +91,7 @@ function TicketsSort() {
 		} else {
 			setTicketsToShow([]);
 		}
-	}, [getTickets, currentPage, ticketsFiltered, tickets, authorChoice, seatChoice, statusChoice, toRefreshFilteredTickets]);
+	}, [getTicketsAndTypes, currentPage, ticketsFiltered, tickets, authorChoice, seatChoice, statusChoice, issueTypeChoice, toRefreshFilteredTickets]);
 
 	return (
 		<>
@@ -94,6 +115,17 @@ function TicketsSort() {
 									<SelectItem textValue={type.name} key={type.key}>{type.name}</SelectItem>
 								))}
 						</Select>
+					</div>
+
+					<div style={{ width: '200px', margin: '15px 1%' }}>
+						{ issueTypes && issueTypes.length > 0 &&
+						<Select disallowEmptySelection defaultSelectedKeys={[(issueTypes[0].ID).toString()]} label="Issue types"
+							labelPlacement="outside" onSelectionChange={onIssueTypeChoiceChange} >
+								{ issueTypes.map((type) => (
+									<SelectItem textValue={type.Name} key={type.ID}>{type.Name}</SelectItem>
+								))}
+						</Select>
+						}
 					</div>
 				</div>
 
