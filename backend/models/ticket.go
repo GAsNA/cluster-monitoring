@@ -72,7 +72,7 @@ func AllTickets() []TicketWithTypeAndAuthor {
 	var tickets	[]TicketWithTypeAndAuthor
 	err := config.DB().NewSelect().Model(&tickets).
 				ColumnExpr("ticket.*").
-				ColumnExpr("tt.id AS ticket_type__id, tt.name AS ticket_type__name").
+				ColumnExpr("tt.name AS ticket_type__name").
 				ColumnExpr("a.login AS author__login, a.image AS author__image").
 				Join("JOIN ticket_type AS tt ON tt.id = ticket.type").
 				Join("JOIN public.\"user\" AS a ON a.id = ticket.author_id").
@@ -82,6 +82,7 @@ func AllTickets() []TicketWithTypeAndAuthor {
 	return tickets
 }
 
+/*TODO See facto*/
 func AllTicketsOfSeat(seat, limit string) []TicketWithTypeAndAuthor {
 	var tickets []TicketWithTypeAndAuthor
 	
@@ -90,20 +91,20 @@ func AllTicketsOfSeat(seat, limit string) []TicketWithTypeAndAuthor {
 		err = config.DB().NewSelect().Model(&tickets).
 					Where("seat = ?", seat).
 					ColumnExpr("ticket.*").
-					ColumnExpr("tt.id AS ticket_type__id, tt.name AS ticket_type__name").
+					ColumnExpr("tt.name AS ticket_type__name").
 					ColumnExpr("a.login AS author__login, a.image AS author__image").
 					Join("JOIN ticket_type AS tt ON tt.id = ticket.type").
-					Join("JOIN user AS a ON a.id = ticket.author_id").
+					Join("JOIN public.\"user\" AS a ON a.id = ticket.author_id").
 					Order("created_at DESC").
 					Scan(config.Ctx())
 	} else {
 		err = config.DB().NewSelect().Model(&tickets).
 					Where("seat = ?", seat).
 					ColumnExpr("ticket.*").
-					ColumnExpr("tt.id AS ticket_type__id, tt.name AS ticket_type__name").
+					ColumnExpr("tt.name AS ticket_type__name").
 					ColumnExpr("a.login AS author__login, a.image AS author__image").
 					Join("JOIN ticket_type AS tt ON tt.id = ticket.type").
-					Join("JOIN user AS a ON a.id = ticket.author_id").
+					Join("JOIN public.\"user\" AS a ON a.id = ticket.author_id").
 					Order("created_at DESC").
 					Limit(limit_int).
 					Scan(config.Ctx())
