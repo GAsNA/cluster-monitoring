@@ -16,7 +16,7 @@ function TicketsSort() {
 	const [seatChoice, setSeatChoice] = useState("");
 	const [authorChoice, setAuthorChoice] = useState("");
 	const [statusChoice, setStatusChoice] = useState('all');
-	const [issueTypeChoice, setIssueTypeChoice] = useState();
+	const [issueTypeChoice, setIssueTypeChoice] = useState(-1);
 	
 	const statusTypes = [
 		{ name: "All", key: 'all' }, 
@@ -53,12 +53,12 @@ function TicketsSort() {
 	}
 	
 	function onSeatChoiceChange(value) {
-		setSeatChoice(value);
+		setSeatChoice(value.toLowerCase());
 		setToRefreshFilteredTickets(true);
 	}
 
 	function onAuthorChoiceChange(value) {
-		setAuthorChoice(value);
+		setAuthorChoice(value.toLowerCase());
 		setToRefreshFilteredTickets(true);
 	}
 
@@ -77,8 +77,8 @@ function TicketsSort() {
 
 		if (toRefreshFilteredTickets) {
 			setTicketsFiltered(tickets.filter(ticket => 
-				ticket.Seat.includes(seatChoice)
-				&& ticket.AuthorLogin.includes(authorChoice)
+				ticket.Seat.toLowerCase().includes(seatChoice)
+				&& ticket.AuthorLogin.toLowerCase().includes(authorChoice)
 				&& (statusChoice === 'success' ? ticket.Resolved : (statusChoice === 'inProgress' ? !ticket.Resolved : ticket))
 				&& (Number(issueTypeChoice) !== -1 ? (ticket.Type === Number(issueTypeChoice)) : ticket)
 			));
