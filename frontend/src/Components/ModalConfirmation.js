@@ -1,13 +1,13 @@
 import React from 'react';
 import { Modal, ModalContent, ModalBody, ModalFooter, Button } from '@nextui-org/react';
 
-function ModalConfirmation({ open, setOpen, setToSend }) {
+function ModalConfirmation({ open, setOpen, action, text }) {
 	function close() {
 		setOpen(false);
 	}
 
 	function yesToSend() {
-		setToSend(true);
+		action();
 		close();
 	}
 
@@ -15,7 +15,7 @@ function ModalConfirmation({ open, setOpen, setToSend }) {
 		<Modal isOpen={open} onClose={close} placement="center" backdrop="opaque" style={{ background:'#231f20', color: 'white', padding: '1% 0 .5% 0' }}>
 			<ModalContent>
 				<ModalBody>
-					<p><span style={{ color: '#01babc' }}>Are you sure</span> you want to send this ticket ?</p>
+					{text}
 				</ModalBody>
 
 				<ModalFooter>

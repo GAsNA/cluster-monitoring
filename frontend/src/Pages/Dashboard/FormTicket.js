@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Select, SelectItem, Textarea, Spacer, Button } from '@nextui-org/react';
 import toast from 'react-hot-toast';
 import { client } from '../../utils/common.jsx';
 import { API_ROUTES } from '../../utils/constants.jsx';
-import ModalConfirmation from './ModalConfirmation.js';
+import ModalConfirmation from '../../Components/ModalConfirmation.js';
 import ErrorCard from '../../Components/ErrorCard.js';
 
 function FormTicket({ seat, issueTypes, closeModal }) {
@@ -15,9 +15,8 @@ function FormTicket({ seat, issueTypes, closeModal }) {
 	const [ openModalConfirmation, setOpenModalConfirmation ] = useState(false);
 
 	const [ sending, setSending ] = useState(false);
-	const [ toSend, setToSend ] = useState(false);
 
-	async function areYouSure() {
+	function areYouSure() {
 		setOpenModalConfirmation(true);
 	}
 
@@ -35,10 +34,6 @@ function FormTicket({ seat, issueTypes, closeModal }) {
 		setSending(false);
 		closeModal();
 	}
-
-	useEffect(() => {
-		if (toSend && !sending) { send(); }
-	});
 
 	return (
 		<>
@@ -60,7 +55,10 @@ function FormTicket({ seat, issueTypes, closeModal }) {
 
 				<Button style={{ background: '#01babc', color: 'white' }} onPress={areYouSure} isLoading={sending}>Send Ticket</Button>
 
-				<ModalConfirmation open={openModalConfirmation} setOpen={setOpenModalConfirmation} setToSend={setToSend} />
+				<ModalConfirmation open={openModalConfirmation} setOpen={setOpenModalConfirmation}
+					action={send}
+					text=<p><span style={{ color: '#01babc' }}>Are you sure</span>you want to send this ticket?</p>
+				/>
 			</>
 		:
 			<ErrorCard title="To send a ticket:" description="No issue types availables. Try again later." />
