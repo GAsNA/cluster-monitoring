@@ -16,7 +16,11 @@ func TicketsIndex(w http.ResponseWriter, r *http.Request) {
 	addHeader(&w)
 
 	// Verification JWT and get claims
-	_, err := verifyJwtAndClaims(&w, r)
+	claims, err := verifyJwtAndClaims(&w, r)
+	if err != nil { return }
+
+	// Check rights
+	err = checkRights(&w, r, claims)
 	if err != nil { return }
 	
 	w.WriteHeader(http.StatusOK)
@@ -27,7 +31,7 @@ func TicketsIndexBySeat(w http.ResponseWriter, r *http.Request) {
 	addHeader(&w)
 
 	// Verification JWT and get claims
-	_, err := verifyJwtAndClaims(&w, r)
+	claims, err := verifyJwtAndClaims(&w, r)
 	if err != nil { return }
 
 	vars := mux.Vars(r)
@@ -36,7 +40,12 @@ func TicketsIndexBySeat(w http.ResponseWriter, r *http.Request) {
 	limit := r.URL.Query().Get("limit")
 
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(models.AllTicketsOfSeat(seat, limit))
+	
+	if claims.User.IsStaff {
+		json.NewEncoder(w).Encode(models.AllTicketsOfSeatWithTypeAndAuthor(seat, limit))
+	} else {
+		json.NewEncoder(w).Encode(models.AllTicketsOfSeatWithType(seat, limit))
+	}
 }
 
 func TicketsCreate(w http.ResponseWriter, r *http.Request) {

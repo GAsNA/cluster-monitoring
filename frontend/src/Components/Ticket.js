@@ -21,7 +21,7 @@ function Ticket({ ticket, displaySeat=false }) {
 	return (
 		<Card style={{ padding: '2%', marginBottom: '2%', background: 'white', color: 'black' }}>
 			<CardHeader className="justify-between">
-				{ user && user.IsStaff &&
+				{ user && user.IsStaff && ticket.AuthorLogin &&
 					<Link href={ URL_INTRA_PROFILES + ticket.AuthorID } isExternal className="text-black">
 						<User name={ticket.AuthorLogin} avatarProps={{ src: ticket.AuthorImage }} />
 					</Link>

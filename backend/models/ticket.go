@@ -24,6 +24,12 @@ type Ticket struct {
 	ResolvedByID	int			`bun:"resolved_by_id"`
 }
 
+type TicketWithType struct {
+	Ticket `bun:",extend"`
+
+	TicketTypeName	string		`bun:"ticket_type__name"`
+}
+
 type TicketWithTypeAndAuthor struct {
 	Ticket `bun:",extend"`
 
@@ -82,32 +88,41 @@ func AllTickets() []TicketWithTypeAndAuthor {
 	return tickets
 }
 
-/*TODO See facto*/
-func AllTicketsOfSeat(seat, limit string) []TicketWithTypeAndAuthor {
+func AllTicketsOfSeatWithTypeAndAuthor(seat, limit string) []TicketWithTypeAndAuthor {
 	var tickets []TicketWithTypeAndAuthor
+
+	subquery := config.DB().NewSelect().Model(&tickets).
+					Where("seat = ?", seat).
+					ColumnExpr("ticket.*").
+					ColumnExpr("tt.name AS ticket_type__name").
+					ColumnExpr("a.login AS author__login, a.image AS author__image").
+					Join("JOIN ticket_type AS tt ON tt.id = ticket.type").
+					Join("JOIN public.\"user\" AS a ON a.id = ticket.author_id").
+					Order("ticket.created_at DESC")
 	
 	limit_int, err := strconv.Atoi(limit)
-	if err != nil {
-		err = config.DB().NewSelect().Model(&tickets).
+	if err == nil { subquery = subquery.Limit(limit_int) }
+
+	err = subquery.Scan(config.Ctx())
+	if err != nil { log.Fatal(err) }
+
+	return tickets
+}
+
+func AllTicketsOfSeatWithType(seat, limit string) []TicketWithType {
+	var tickets []TicketWithType
+
+	subquery := config.DB().NewSelect().Model(&tickets).
 					Where("seat = ?", seat).
 					ColumnExpr("ticket.*").
 					ColumnExpr("tt.name AS ticket_type__name").
-					ColumnExpr("a.login AS author__login, a.image AS author__image").
 					Join("JOIN ticket_type AS tt ON tt.id = ticket.type").
-					Join("JOIN public.\"user\" AS a ON a.id = ticket.author_id").
-					Scan(config.Ctx())
-	} else {
-		err = config.DB().NewSelect().Model(&tickets).
-					Where("seat = ?", seat).
-					ColumnExpr("ticket.*").
-					ColumnExpr("tt.name AS ticket_type__name").
-					ColumnExpr("a.login AS author__login, a.image AS author__image").
-					Join("JOIN ticket_type AS tt ON tt.id = ticket.type").
-					Join("JOIN public.\"user\" AS a ON a.id = ticket.author_id").
-					Limit(limit_int).
-					Scan(config.Ctx())
-	}
+					Order("ticket.created_at DESC")
 	
+	limit_int, err := strconv.Atoi(limit)
+	if err == nil { subquery = subquery.Limit(limit_int) }
+
+	err = subquery.Scan(config.Ctx())
 	if err != nil { log.Fatal(err) }
 
 	return tickets
