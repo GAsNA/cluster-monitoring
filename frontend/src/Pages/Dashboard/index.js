@@ -57,8 +57,9 @@ function Dashboard() {
 	async function getTicketsBySeat(seat) {
 		await client.get(API_ROUTES.GET_TICKETS_SEAT + seat + "?limit=10")
 				.then((response) => {
-					console.log(response);
-					setTicketsBySeat(response.data)
+					const sorted = response.data ? [...response.data].sort((a, b) => a.CreatedAt > b.CreatedAt ? -1 : 1,) : [];
+					console.log(sorted)
+					setTicketsBySeat(sorted)
 				})
 				.catch((error) => {
 					throw error
