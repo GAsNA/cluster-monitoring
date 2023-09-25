@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
-import { Toaster } from 'react-hot-toast';
+import { Toaster, toast } from 'react-hot-toast';
 import { Navigate } from 'react-router-dom';
 import { SvgLoader, SvgProxy } from 'react-svgmt';
 import { client } from '../../utils/common.jsx';
@@ -39,7 +39,7 @@ function Dashboard() {
 					setCluster(clusters[0]);
 				})
 				.catch((error) => {
-					throw error
+					toast.error('An error occured');
 				})
 	}
 
@@ -50,7 +50,7 @@ function Dashboard() {
 					setIssueTypes(response.data)
 				})
 				.catch((error) => {
-					throw error
+					toast.error('An error occured');
 				})
 	}
 
@@ -62,7 +62,7 @@ function Dashboard() {
 					setTicketsBySeat(sorted)
 				})
 				.catch((error) => {
-					throw error
+					toast.error('An error occured');
 				})
 	}
 

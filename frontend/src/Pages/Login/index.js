@@ -1,6 +1,7 @@
 import React from 'react';
 import { Image, Button } from '@nextui-org/react';
 import Cookies from 'js-cookie';
+import toast from 'react-hot-toast';
 import { Navigate, useSearchParams } from 'react-router-dom';
 import { API_ROUTES, APP_ROUTES, URL_INTRA_AUTHORIZE } from '../../utils/constants.jsx';
 import { client } from '../../utils/common.jsx';
@@ -19,7 +20,7 @@ function Login() {
 					localStorage.setItem('user', JSON.stringify(response.data))
 				})
 				.catch((error) => {
-					throw error
+					toast.error('An error occured');
 				})
 	}
 

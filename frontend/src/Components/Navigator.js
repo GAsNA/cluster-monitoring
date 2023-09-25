@@ -1,6 +1,7 @@
 import React from 'react';
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Dropdown, DropdownTrigger, DropdownItem, DropdownMenu, Avatar, Link, Button } from '@nextui-org/react';
 import Cookies from 'js-cookie';
+import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { API_ROUTES, APP_ROUTES } from '../utils/constants.jsx';
 import { client } from '../utils/common.jsx';
@@ -18,7 +19,7 @@ function Navigator() {
 					navigate(APP_ROUTES.HOME)
 				})
 				.catch((error) => {
-					throw error
+					toast.error('An error occured');
 				})
 	}
 

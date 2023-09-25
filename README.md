@@ -5,7 +5,6 @@ Frontend is in React ; Backend is in Go.
 
 ## TODO
 - SOCKET
-- All throw error in front must be toast
 - Modal confirmation when delete ticket
 - Protect author visibility in back
 - Admin side (staff)
