@@ -6,8 +6,8 @@ Frontend is in React ; Backend is in Go.
 ## TODO
 - SOCKET
 - Modal confirmation when delete ticket
+- Protect author visibility in back
 - Admin side (staff)
-    - See author on tickets
     - see all ticket (with sort choices: date (inc/dec) (enter name + radio))
     - add/delete/modify issue types
     - add/delete/modify clusters

@@ -1,6 +1,7 @@
 const API_URL = 'http://localhost:3000'
 
 export const URL_INTRA_AUTHORIZE = 'https://api.intra.42.fr/oauth/authorize'
+export const URL_INTRA_PROFILES = 'https://profile.intra.42.fr/users/'
 
 export const API_ROUTES = {
 	ROOT: `${API_URL}`,

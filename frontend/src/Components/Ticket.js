@@ -1,8 +1,8 @@
 import React from 'react';
-import { Card, CardHeader, CardBody, Chip, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from '@nextui-org/react';
+import { Card, CardHeader, CardBody, Chip, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button, User, Link } from '@nextui-org/react';
 import toast from 'react-hot-toast';
 import { client } from '../utils/common.jsx';
-import { API_ROUTES } from '../utils/constants.jsx';
+import { URL_INTRA_PROFILES, API_ROUTES } from '../utils/constants.jsx';
 import {SettingIcon} from '../Icon/SettingIcon';
 
 const resolvedColor = '#2cd57a';
@@ -21,6 +21,12 @@ function Ticket({ ticket, displaySeat=false }) {
 	return (
 		<Card style={{ padding: '2%', marginBottom: '2%', background: 'white', color: 'black' }}>
 			<CardHeader className="justify-between">
+				{ user && user.IsStaff &&
+					<Link href={ URL_INTRA_PROFILES + ticket.AuthorID } isExternal className="text-black">
+						<User name={ticket.AuthorLogin} avatarProps={{ src: ticket.AuthorImage }} />
+					</Link>
+				}
+
 				{ displaySeat &&
 					<b><span style={{ color: '#01babc' }}>{ticket.Seat}</span></b>
 				}
