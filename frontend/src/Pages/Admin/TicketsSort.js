@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Input, Pagination, Select, SelectItem } from '@nextui-org/react';
+import { Input, Pagination, Select, SelectItem, RadioGroup, Radio } from '@nextui-org/react';
 import toast from 'react-hot-toast';
 import ListTickets from '../../Components/ListTickets.js';
 import { client } from '../../utils/common.jsx';
@@ -17,13 +17,18 @@ function TicketsSort() {
 	const [authorChoice, setAuthorChoice] = useState("");
 	const [statusChoice, setStatusChoice] = useState('all');
 	const [issueTypeChoice, setIssueTypeChoice] = useState(-1);
+	const [orderByDateChoice, setOrderByDateChoice] = useState('desc');
 	
 	const statusTypes = [
 		{ name: "All", key: 'all' }, 
-		{ name: "Success", key: 'success' },
+		{ name: "Resolved", key: 'resolved' },
 		{ name: "In progress", key: 'inProgress' }
 	];
 	const [issueTypes, setIssueTypes] = useState([]);
+	const orderByDate = [
+		{ name: "Desc", key: 'desc' }, 
+		{ name: "Asc", key: 'asc' },
+	];
 
 	const [getTicketsAndTypes, setGetTicketsAndTypes] = useState(false);
 	const [toRefreshFilteredTickets, setToRefreshFilteredTickets] = useState(false);
@@ -34,6 +39,7 @@ function TicketsSort() {
 					setTickets(response.data);
 					setTicketsFiltered(response.data);
 					console.log(response)
+					setToRefreshFilteredTickets(true);
 				})
 				.catch((error) => {
 					toast.error('An error occured');
@@ -72,16 +78,31 @@ function TicketsSort() {
 		setToRefreshFilteredTickets(true);
 	}
 
+	function onOrderByDateChoiceChange(value) {
+		setOrderByDateChoice(value);
+		setToRefreshFilteredTickets(true);
+	}
+
 	useEffect(() => {
 		if (!getTicketsAndTypes) { setGetTicketsAndTypes(true); getAllTickets(); getIssueTypes(); }
 
 		if (toRefreshFilteredTickets) {
-			setTicketsFiltered(tickets.filter(ticket => 
+			var newTicketsFiltered = tickets.filter(ticket => 
 				ticket.Seat.toLowerCase().includes(seatChoice)
 				&& ticket.AuthorLogin.toLowerCase().includes(authorChoice)
-				&& (statusChoice === 'success' ? ticket.Resolved : (statusChoice === 'inProgress' ? !ticket.Resolved : ticket))
+				&& (statusChoice === 'resolved' ? ticket.Resolved : (statusChoice === 'inProgress' ? !ticket.Resolved : ticket))
 				&& (Number(issueTypeChoice) !== -1 ? (ticket.Type === Number(issueTypeChoice)) : ticket)
-			));
+			);
+			if (orderByDateChoice === 'desc') {
+				newTicketsFiltered = newTicketsFiltered ?
+										[...newTicketsFiltered].sort((a, b) => a.CreatedAt > b.CreatedAt ? -1 : 1,)
+										: [];
+			} else if (orderByDateChoice === 'asc') {
+				newTicketsFiltered = newTicketsFiltered ?
+										[...newTicketsFiltered].sort((a, b) => a.CreatedAt > b.CreatedAt ? 1 : -1,)
+										: [];
+			}
+			setTicketsFiltered(newTicketsFiltered);
 			setToRefreshFilteredTickets(false);
 		}
 
@@ -90,7 +111,7 @@ function TicketsSort() {
 		} else {
 			setTicketsToShow([]);
 		}
-	}, [getTicketsAndTypes, currentPage, ticketsFiltered, tickets, authorChoice, seatChoice, statusChoice, issueTypeChoice, toRefreshFilteredTickets]);
+	}, [getTicketsAndTypes, currentPage, ticketsFiltered, tickets, authorChoice, seatChoice, statusChoice, issueTypeChoice, orderByDateChoice, toRefreshFilteredTickets]);
 
 	return (
 		<>
@@ -126,6 +147,15 @@ function TicketsSort() {
 						</Select>
 						}
 					</div>
+					
+					<RadioGroup label="Order by date" orientation="horizontal" value={orderByDateChoice}
+						onValueChange={onOrderByDateChoiceChange}
+					>
+						{ orderByDate.map((order) => (
+							<Radio value={order.key}>{order.name}</Radio>
+						))}
+					</RadioGroup>
+
 				</div>
 
 				{ ticketsFiltered && ticketsFiltered.length > limitPerPage &&

@@ -6,7 +6,6 @@ Frontend is in React ; Backend is in Go.
 ## TODO
 - SOCKET
 - Admin side (staff)
-    - see all ticket (with sort choices: date (inc/dec) (enter name + radio))
     - add/delete/modify issue types
     - add/delete/modify clusters
     - set post to unavailable/do not use
