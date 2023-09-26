@@ -64,11 +64,15 @@ function ModalCluster({ open, setOpen, clusters, cluster }) {
 
 					<ModalBody>
 						<div className="flex h-auto items-center" style={{ display: 'inline-block' }}>
-							<Input label="Name" style={{ color: 'black' }} onValueChange={onNameChange} />
+							<Input label="Name" style={{ color: 'black' }} onValueChange={onNameChange}
+								value={cluster ? cluster.Name : ""}
+							/>
 							
 							<Spacer y={4} />
 
-							<Input label="Link of the SVG" style={{ color: 'black' }} onValueChange={setLink} />
+							<Input label="Link of the SVG" style={{ color: 'black' }} onValueChange={setLink}
+								value={cluster ? cluster.Link : ""}
+							/>
 						</div>
 					</ModalBody>
 

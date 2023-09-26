@@ -63,7 +63,9 @@ function ModalTicketType({ open, setOpen, ticketTypes, ticketType }) {
 
 					<ModalBody>
 						<div className="flex h-auto items-center">
-							<Input label="Name" style={{ color: 'black' }} onValueChange={onNameChange} />
+							<Input label="Name" style={{ color: 'black' }} onValueChange={onNameChange}
+								value={ticketType ? ticketType.Name : ""}
+							/>
 						</div>
 					</ModalBody>
 
