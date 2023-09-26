@@ -1,15 +1,44 @@
-import React, { useState, useLayoutEffect } from 'react';
+import React, { useState, useLayoutEffect, useEffect } from 'react';
 import { Divider } from '@nextui-org/react';
-import { Toaster } from 'react-hot-toast';
+import { Toaster, toast } from 'react-hot-toast';
 import { Navigate } from 'react-router-dom';
 import Navigator from '../../Components/Navigator.js';
-import { APP_ROUTES } from '../../utils/constants.jsx';
+import { APP_ROUTES, API_ROUTES } from '../../utils/constants.jsx';
+import { client } from '../../utils/common.jsx';
 import TicketsSort from './TicketsSort.js';
+import ManageTicketTypes from './ManageTicketTypes.js';
 
 function Admin() {
 	const user = JSON.parse(localStorage.getItem("user"))
 
+	const [tickets, setTickets] = useState([]);
+	const [issueTypes, setIssueTypes] = useState([]);
+	const [init, setInit] = useState(false);
+
 	const [windowHeight, setWindowHeight] = useState(window.innerHeight);
+
+	async function getAllTickets() {
+		await client.get(API_ROUTES.GET_TICKETS)
+				.then((response) => {
+					setTickets(response.data);
+					console.log(response.data)
+				})
+				.catch((error) => {
+					toast.error('An error occured');
+				})
+	}
+
+	async function getIssueTypes() {
+		await client.get(API_ROUTES.GET_TICKET_TYPES)
+				.then((response) => {
+					console.log(response)
+					var data = response.data
+					setIssueTypes(data)
+				})
+				.catch((error) => {
+					toast.error('An error occured');
+				})
+	}
 	
 	useLayoutEffect(() => {
 		function updateWindowHeight() {
@@ -20,6 +49,10 @@ function Admin() {
 		updateWindowHeight();
 		return () => window.removeEventListener('resize', updateWindowHeight);
 	}, []);
+
+	useEffect(() => {
+		if (!init) { setInit(true); getAllTickets(); getIssueTypes(); }
+	}, [init])
 
 	if (user && !user.IsStaff) {
 		return <Navigate to={APP_ROUTES.DASHBOARD} replace />;
@@ -33,14 +66,14 @@ function Admin() {
 			
 			<div className="flex h-auto items-center space-x-4">
 				<div style={{ width: '50%', height: (windowHeight * 92 / 100) + 'px', borderRight: 'grey 1px solid', padding: '.5% 1%' }}>
-					<TicketsSort />
+					<TicketsSort tickets={tickets} issueTypes={issueTypes} />
 				</div>
 				
 				<Divider orientation="vertical" />
 				
 				<div style={{ width: '50%', padding: '.5% 1%' }}>
 					<div>
-						MANAGE TICKET TYPES
+						<ManageTicketTypes tickets={tickets} issueTypes={issueTypes} />
 					</div>
 
 					<Divider orientation="horizontal" />

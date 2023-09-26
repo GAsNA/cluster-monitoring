@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Input, Pagination, Select, SelectItem, RadioGroup, Radio } from '@nextui-org/react';
-import toast from 'react-hot-toast';
 import ListTickets from '../../Components/ListTickets.js';
-import { client } from '../../utils/common.jsx';
-import { API_ROUTES } from '../../utils/constants.jsx';
 
-function TicketsSort() {
-	const [tickets, setTickets] = useState([]);
-	const [ticketsFiltered, setTicketsFiltered] = useState([]);
+function TicketsSort({ tickets=[], issueTypes=[] }) {
+	const [ticketsFiltered, setTicketsFiltered] = useState(tickets);
 	const [ticketsToShow, setTicketsToShow] = useState(ticketsFiltered);
 
 	const limitPerPage = 30;
@@ -16,7 +12,7 @@ function TicketsSort() {
 	const [seatChoice, setSeatChoice] = useState("");
 	const [authorChoice, setAuthorChoice] = useState("");
 	const [statusChoice, setStatusChoice] = useState('all');
-	const [issueTypeChoice, setIssueTypeChoice] = useState(-1);
+	const [ticketTypeChoice, setTicketTypeChoice] = useState(-1);
 	const [orderByDateChoice, setOrderByDateChoice] = useState('desc');
 	
 	const statusTypes = [
@@ -24,39 +20,15 @@ function TicketsSort() {
 		{ name: "Resolved", key: 'resolved' },
 		{ name: "In progress", key: 'inProgress' }
 	];
-	const [issueTypes, setIssueTypes] = useState([]);
+	const [ticketTypes, setTicketTypes] = useState([]);
 	const orderByDate = [
 		{ name: "Desc", key: 'desc' }, 
 		{ name: "Asc", key: 'asc' },
 	];
 
-	const [getTicketsAndTypes, setGetTicketsAndTypes] = useState(false);
-	const [toRefreshFilteredTickets, setToRefreshFilteredTickets] = useState(false);
-
-	async function getAllTickets() {
-		await client.get(API_ROUTES.GET_TICKETS)
-				.then((response) => {
-					setTickets(response.data);
-					setTicketsFiltered(response.data);
-					console.log(response)
-					setToRefreshFilteredTickets(true);
-				})
-				.catch((error) => {
-					toast.error('An error occured');
-				})
-	}
-
-	async function getIssueTypes() {
-		await client.get(API_ROUTES.GET_TICKET_TYPES)
-				.then((response) => {
-					console.log(response)
-					var data = [{ID: -1, Name: "All"}, ...response.data]
-					setIssueTypes(data)
-				})
-				.catch((error) => {
-					toast.error('An error occured');
-				})
-	}
+	const [getTickets, setGetTickets] = useState(false);
+	const [getTicketTypes, setGetTicketTypes] = useState(false);
+	const [toRefreshFilteredTickets, setToRefreshFilteredTickets] = useState(true);
 	
 	function onSeatChoiceChange(value) {
 		setSeatChoice(value.toLowerCase());
@@ -73,8 +45,8 @@ function TicketsSort() {
 		setToRefreshFilteredTickets(true);
 	}
 
-	function onIssueTypeChoiceChange(value) {
-		setIssueTypeChoice([...value][0]);
+	function onTicketTypeChoiceChange(value) {
+		setTicketTypeChoice([...value][0]);
 		setToRefreshFilteredTickets(true);
 	}
 
@@ -84,14 +56,19 @@ function TicketsSort() {
 	}
 
 	useEffect(() => {
-		if (!getTicketsAndTypes) { setGetTicketsAndTypes(true); getAllTickets(); getIssueTypes(); }
+		if (!getTickets && tickets.length > 0) { setGetTickets(true); setTicketsFiltered(tickets); }
+		if (!getTicketTypes && issueTypes.length > 0) { 
+			setGetTicketTypes(true); 
+			var data = [{ID: -1, Name: "All"}, ...issueTypes]
+			setTicketTypes(data);
+		}
 
 		if (toRefreshFilteredTickets) {
 			var newTicketsFiltered = tickets.filter(ticket => 
 				ticket.Seat.toLowerCase().includes(seatChoice)
 				&& ticket.AuthorLogin.toLowerCase().includes(authorChoice)
 				&& (statusChoice === 'resolved' ? ticket.Resolved : (statusChoice === 'inProgress' ? !ticket.Resolved : ticket))
-				&& (Number(issueTypeChoice) !== -1 ? (ticket.Type === Number(issueTypeChoice)) : ticket)
+				&& (Number(ticketTypeChoice) !== -1 ? (ticket.Type === Number(ticketTypeChoice)) : ticket)
 			);
 			if (orderByDateChoice === 'desc') {
 				newTicketsFiltered = newTicketsFiltered ?
@@ -103,7 +80,7 @@ function TicketsSort() {
 										: [];
 			}
 			setTicketsFiltered(newTicketsFiltered);
-			setToRefreshFilteredTickets(false);
+			if (tickets.length > 0) { setToRefreshFilteredTickets(false); }
 		}
 
 		if (ticketsFiltered) {
@@ -111,7 +88,7 @@ function TicketsSort() {
 		} else {
 			setTicketsToShow([]);
 		}
-	}, [getTicketsAndTypes, currentPage, ticketsFiltered, tickets, authorChoice, seatChoice, statusChoice, issueTypeChoice, orderByDateChoice, toRefreshFilteredTickets]);
+	}, [getTickets, getTicketTypes, currentPage, ticketsFiltered, tickets, issueTypes, authorChoice, seatChoice, statusChoice, ticketTypeChoice, orderByDateChoice, toRefreshFilteredTickets]);
 
 	return (
 		<>
@@ -131,17 +108,17 @@ function TicketsSort() {
 					<div style={{ width: '200px', margin: '15px 1%' }}>
 						<Select disallowEmptySelection defaultSelectedKeys={[statusTypes[0].key]} label="Status"
 							labelPlacement="outside" onSelectionChange={onStatusChoiceChange} >
-								{ statusTypes.map((type) => (
-									<SelectItem textValue={type.name} key={type.key}>{type.name}</SelectItem>
+								{ statusTypes.map((status) => (
+									<SelectItem textValue={status.name} key={status.key}>{status.name}</SelectItem>
 								))}
 						</Select>
 					</div>
 
 					<div style={{ width: '200px', margin: '15px 1%' }}>
-						{ issueTypes && issueTypes.length > 0 &&
-						<Select disallowEmptySelection defaultSelectedKeys={[(issueTypes[0].ID).toString()]} label="Issue types"
-							labelPlacement="outside" onSelectionChange={onIssueTypeChoiceChange} >
-								{ issueTypes.map((type) => (
+						{ ticketTypes && ticketTypes.length > 0 &&
+						<Select disallowEmptySelection defaultSelectedKeys={[(ticketTypes[0].ID).toString()]} label="Ticket types"
+							labelPlacement="outside" onSelectionChange={onTicketTypeChoiceChange} >
+								{ ticketTypes.map((type) => (
 									<SelectItem textValue={type.Name} key={type.ID}>{type.Name}</SelectItem>
 								))}
 						</Select>
@@ -152,7 +129,7 @@ function TicketsSort() {
 						onValueChange={onOrderByDateChoiceChange}
 					>
 						{ orderByDate.map((order) => (
-							<Radio value={order.key}>{order.name}</Radio>
+							<Radio key={order.key} value={order.key}>{order.name}</Radio>
 						))}
 					</RadioGroup>
 

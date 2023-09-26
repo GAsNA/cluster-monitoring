@@ -9,6 +9,7 @@ Frontend is in React ; Backend is in Go.
     - add/delete/modify issue types
     - add/delete/modify clusters
     - set post to unavailable/do not use
+    - possibility to archieved ticket types and clusters ??
 - Change the color of the seats depending on the number of tickets "in progress"
 - In form ticket, if keyboard is choose, select keys on virtual keyboard
 - Swagger
