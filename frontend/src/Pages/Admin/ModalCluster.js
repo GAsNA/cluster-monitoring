@@ -5,7 +5,7 @@ import { client } from '../../utils/common.jsx';
 import { API_ROUTES } from '../../utils/constants.jsx';
 import ModalConfirmation from '../../Components/ModalConfirmation.js';
 
-function ModalCluster({ open, setOpen, clusters, cluster }) {
+function ModalCluster({ open, setOpen, clusters, cluster, setCluster }) {
 	const [name, setName] = useState("");
 	const [link, setLink] = useState("");
 
@@ -19,6 +19,7 @@ function ModalCluster({ open, setOpen, clusters, cluster }) {
 	}
 
 	function close() {
+		setCluster();
 		setOpen(false);
 	}
 

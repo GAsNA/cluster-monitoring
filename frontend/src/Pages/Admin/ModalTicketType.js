@@ -5,7 +5,7 @@ import { client } from '../../utils/common.jsx';
 import { API_ROUTES } from '../../utils/constants.jsx';
 import ModalConfirmation from '../../Components/ModalConfirmation.js';
 
-function ModalTicketType({ open, setOpen, ticketTypes, ticketType }) {
+function ModalTicketType({ open, setOpen, ticketTypes, ticketType, setTicketType }) {
 	const [name, setName] = useState("");
 
 	const [openModalConfirmation, setOpenModalConfirmation] = useState(false);
@@ -18,6 +18,7 @@ function ModalTicketType({ open, setOpen, ticketTypes, ticketType }) {
 	}
 
 	function close() {
+		setTicketType();
 		setOpen(false);
 	}
 
