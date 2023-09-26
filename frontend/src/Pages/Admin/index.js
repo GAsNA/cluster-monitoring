@@ -72,13 +72,13 @@ function Admin() {
 				<Divider orientation="vertical" />
 				
 				<div style={{ width: '50%', padding: '.5% 1%' }}>
-					<div style={{ maxHeight: (windowHeight * 44 / 100) + 'px', overflow: 'auto', marginBottom: '2%' }}>
+					<div style={{ height: (windowHeight * 43 / 100) + 'px', overflow: 'auto', marginBottom: '2%' }}>
 						<ManageTicketTypes tickets={tickets} issueTypes={issueTypes} />
 					</div>
 
 					<Divider orientation="horizontal" />
 
-					<div style={{ maxHeight: (windowHeight * 44 / 100) + 'px', overflow: 'auto', marginTop: '2%' }}>
+					<div style={{ height: (windowHeight * 43 / 100) + 'px', overflow: 'auto', marginTop: '2%' }}>
 						<ManageTicketTypes tickets={tickets} issueTypes={issueTypes} />
 					</div>
 				</div>

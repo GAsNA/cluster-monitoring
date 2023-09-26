@@ -1,22 +1,48 @@
 import React, { useState } from 'react';
-import { Card, CardHeader, CardBody, Chip, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button, User, Link } from '@nextui-org/react';
+import { Card, CardHeader, CardBody, Chip, DropdownItem, User, Link } from '@nextui-org/react';
 import toast from 'react-hot-toast';
 import { client } from '../utils/common.jsx';
 import { URL_INTRA_PROFILES, API_ROUTES } from '../utils/constants.jsx';
-import {SettingIcon} from '../Icon/SettingIcon';
 import ModalConfirmation from './ModalConfirmation';
-
-const resolvedColor = '#2cd57a';
-const inProgressColor = '#c1c1c9';
-const resolvedText = 'Resolved';
-const inProgressText = 'In progress';
+import OptionButton from './OptionButton';
 
 function Ticket({ ticket, displaySeat=false }) {
 	const user = JSON.parse(localStorage.getItem("user"))
 
+	const [openModalConfirmation, setOpenModalConfirmation] = useState(false);
+
+	const resolvedColor = '#2cd57a';
+	const inProgressColor = '#c1c1c9';
+	const resolvedText = 'Resolved';
+	const inProgressText = 'In progress';
+
 	function getDateFormated(dateStr) {
 		var date = new Date(dateStr)
 		return (date.getDate() + "/" + parseInt(date.getMonth() + 1) + "/" + date.getFullYear())
+	}
+
+	function areYouSure() {
+		setOpenModalConfirmation(true);
+	}
+
+	async function changeStatus() {
+		await client.put(API_ROUTES.UPDATE_TICKET + ticket.ID, { "Resolved": !ticket.Resolved })
+			.then((response) => {
+				toast.success('Ticket status changed!');
+			})
+			.catch((error) => {
+				toast.error('An error occured');
+			})
+	}
+
+	async function deleteTicket() {
+		await client.delete(API_ROUTES.DELETE_TICKET + ticket.ID)
+			.then((response) => {
+				toast.success('Ticket deleted!');
+			})
+			.catch((error) => {
+				toast.error('An error occured');
+			})
 	}
 
 	return (
@@ -48,7 +74,26 @@ function Ticket({ ticket, displaySeat=false }) {
 				}
 
 				{ user && user.IsStaff &&
-					<DropdownOptions ticket={ticket} isResolved={ticket.Resolved} />
+					<>
+						<ModalConfirmation open={openModalConfirmation} setOpen={setOpenModalConfirmation}
+							action={deleteTicket}
+							text=<p><span style={{ color: '#01babc' }}>Are you sure</span> you want to delete this ticket?
+								<br/>This action is irreversible.
+							</p>
+						/>
+						<OptionButton background="white" dropdownItems={[
+							<DropdownItem textValue="set as" key="set_resolved" color={ !ticket.Resolved ? "success" : "default" }
+								onAction={changeStatus}
+							>
+								Set as { !ticket.Resolved ? resolvedText : inProgressText }
+							</DropdownItem>,
+							<DropdownItem textValue="delete" key="delete" style={{ color: '#e96a64' }}
+								onAction={areYouSure}
+							>
+								Delete
+							</DropdownItem>
+						]} />
+					</>
 				}
 			</CardHeader>
 
@@ -57,66 +102,6 @@ function Ticket({ ticket, displaySeat=false }) {
 			</CardBody>
 		</Card>
 	);
-}
-
-function DropdownOptions({ ticket, isResolved }) {
-	const [openModalConfirmation, setOpenModalConfirmation] = useState(false);
-
-	function areYouSure() {
-		setOpenModalConfirmation(true);
-	}
-
-	async function changeStatus() {
-		await client.put(API_ROUTES.UPDATE_TICKET + ticket.ID, { "Resolved": !isResolved })
-			.then((response) => {
-				toast.success('Ticket status changed!');
-			})
-			.catch((error) => {
-				toast.error('An error occured');
-			})
-	}
-
-	async function deleteTicket() {
-		await client.delete(API_ROUTES.DELETE_TICKET + ticket.ID)
-			.then((response) => {
-				toast.success('Ticket deleted!');
-			})
-			.catch((error) => {
-				toast.error('An error occured');
-			})
-	}
-
-	return (
-		<>
-			<ModalConfirmation open={openModalConfirmation} setOpen={setOpenModalConfirmation}
-				action={deleteTicket}
-				text=<p><span style={{ color: '#01babc' }}>Are you sure</span> you want to delete this ticket?
-					<br/>This action is irreversible.
-				</p>
-			/>
-
-			<Dropdown placement="bottom-end">
-				<DropdownTrigger>
-					<Button isIconOnly variant="faded" aria-label="Settings" style={{ background: 'white' }}>
-						<SettingIcon />
-					</Button>    
-				</DropdownTrigger>
-
-				<DropdownMenu aria-label="Ticket Action">
-					<DropdownItem textValue="set as" key="set_resolved" color={ !isResolved ? "success" : "default" }
-						onAction={changeStatus}
-					>
-						Set as { !isResolved ? resolvedText : inProgressText }
-					</DropdownItem>
-					<DropdownItem textValue="delete" key="delete" style={{ color: '#e96a64' }}
-						onAction={areYouSure}
-					>
-						Delete
-					</DropdownItem>
-				</DropdownMenu>
-			</Dropdown>
-		</>
-	 )
 }
 
 export default Ticket;

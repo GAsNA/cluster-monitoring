@@ -9,6 +9,8 @@ export const API_ROUTES = {
 	LOGIN: 'auth/login',
 	LOGOUT: 'auth/logout',
 	GET_TICKET_TYPES: '/tickettypes',
+	CREATE_TICKET_TYPE: '/tickettypes',
+	DELETE_TICKET_TYPE: '/tickettypes/',
 	GET_TICKETS: '/tickets',
 	CREATE_TICKET: '/tickets',
 	UPDATE_TICKET: '/tickets/',
