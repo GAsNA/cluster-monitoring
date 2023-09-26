@@ -6,8 +6,6 @@ Frontend is in React ; Backend is in Go.
 ## TODO
 - SOCKET
 - Admin side (staff)
-    - add/delete/modify issue types
-    - add/delete/modify clusters
     - set post to unavailable/do not use
     - possibility to archieved ticket types and clusters ??
 - Change the color of the seats depending on the number of tickets "in progress"
