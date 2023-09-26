@@ -5,11 +5,13 @@ import { client } from '../../utils/common.jsx';
 import { API_ROUTES } from '../../utils/constants.jsx';
 import ModalConfirmation from '../../Components/ModalConfirmation.js';
 
-function ModalCreationTicketType({ open, setOpen, ticketTypes }) {
+function ModalTicketType({ open, setOpen, ticketTypes, ticketType }) {
 	const [name, setName] = useState("");
 
 	const [openModalConfirmation, setOpenModalConfirmation] = useState(false);
 	const [sending, setSending] = useState(false);
+
+	const action = ticketType ? modify : create;
 
 	function onNameChange(value) {
 		setName(value.charAt(0).toUpperCase() + value.slice(1).toLowerCase())
@@ -37,6 +39,20 @@ function ModalCreationTicketType({ open, setOpen, ticketTypes }) {
 		close();
 	}
 
+	async function modify() {
+		setSending(true);
+		await client.put(API_ROUTES.UPDATE_TICKET_TYPE + ticketType.ID, { "Name": name })
+				.then((response) => {
+					console.log(response.data)
+					toast.success('Ticket type successfully updated');
+				})
+				.catch((error) => {
+					toast.error('An error occured');
+				})
+		setSending(false);
+		close();
+	}
+
 	return (
 		<>
 			<Modal isOpen={open} onClose={close} placement="center" backdrop="opaque" size="xl" style={{ background:'#231f20', color: 'white' }}>
@@ -53,16 +69,16 @@ function ModalCreationTicketType({ open, setOpen, ticketTypes }) {
 
 					<ModalFooter>
 						<Button style={{ background: '#01babc', color: 'white' }}
-							onPress={ticketTypes.find((item) => item.Name === name) ? areYouSure : create}
+							onPress={ticketTypes.find((item) => item.Name === name) ? areYouSure : action}
 							isLoading={sending}
-						>Create</Button>
+						>Send</Button>
 						<Button style={{ background: '#e96a64', color: 'white' }} onPress={close}>Close</Button>
 					</ModalFooter>
 				</ModalContent>
 			</Modal>
 
 			<ModalConfirmation open={openModalConfirmation} setOpen={setOpenModalConfirmation}
-				action={create}
+				action={action}
 				text=<p><span style={{ color: '#01babc' }}>Are you sure</span> you want to create this ticket type?
 						<br />This ticket type name <span style={{ color: '#01babc' }}>already exsists</span>.
 					</p>
@@ -71,4 +87,4 @@ function ModalCreationTicketType({ open, setOpen, ticketTypes }) {
 	);
 }
 
-export default ModalCreationTicketType;
+export default ModalTicketType;
