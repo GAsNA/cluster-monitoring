@@ -7,12 +7,14 @@ import { APP_ROUTES, API_ROUTES } from '../../utils/constants.jsx';
 import { client } from '../../utils/common.jsx';
 import TicketsSort from './TicketsSort.js';
 import ManageTicketTypes from './ManageTicketTypes.js';
+import ManageClusters from './ManageClusters.js';
 
 function Admin() {
 	const user = JSON.parse(localStorage.getItem("user"))
 
 	const [tickets, setTickets] = useState([]);
 	const [issueTypes, setIssueTypes] = useState([]);
+	const [clusters, setClusters] = useState([]);
 	const [init, setInit] = useState(false);
 
 	const [windowHeight, setWindowHeight] = useState(window.innerHeight);
@@ -39,6 +41,17 @@ function Admin() {
 					toast.error('An error occured');
 				})
 	}
+
+	async function getClusters() {
+		await client.get(API_ROUTES.GET_CLUSTERS)
+				.then((response) => {
+					console.log(response.data);
+					setClusters(response.data);
+				})
+				.catch((error) => {
+					toast.error('An error occured');
+				})
+	}
 	
 	useLayoutEffect(() => {
 		function updateWindowHeight() {
@@ -51,7 +64,7 @@ function Admin() {
 	}, []);
 
 	useEffect(() => {
-		if (!init) { setInit(true); getAllTickets(); getIssueTypes(); }
+		if (!init) { setInit(true); getAllTickets(); getIssueTypes(); getClusters(); }
 	}, [init])
 
 	if (user && !user.IsStaff) {
@@ -79,7 +92,7 @@ function Admin() {
 					<Divider orientation="horizontal" />
 
 					<div style={{ height: (windowHeight * 43 / 100) + 'px', overflow: 'auto', marginTop: '2%' }}>
-						<ManageTicketTypes tickets={tickets} issueTypes={issueTypes} />
+						<ManageClusters tickets={tickets} clusters={clusters} />
 					</div>
 				</div>
 			</div>

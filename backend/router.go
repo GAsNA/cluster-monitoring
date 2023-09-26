@@ -29,6 +29,9 @@ func InitializeRouter() *mux.Router {
 
 		// CLUSTERS
 	router.Methods("GET", "OPTIONS").Path("/clusters").HandlerFunc(controllers.ClustersIndex)
+	router.Methods("POST").Path("/clusters").HandlerFunc(controllers.ClustersCreate)
+	router.Methods("PUT", "OPTIONS").Path("/clusters/{id}").HandlerFunc(controllers.ClustersUpdate)
+	router.Methods("DELETE").Path("/clusters/{id}").HandlerFunc(controllers.ClustersDelete)
 
 	/* POSSIBLE ROUTES */
 		// USERS
@@ -45,10 +48,7 @@ func InitializeRouter() *mux.Router {
 //	router.Methods("GET").Path("/tickes/{id}").HandlerFunc(controllers.TicketsShow)
 
 		// CLUSTERS
-//	router.Methods("POST").Path("/clusters").HandlerFunc(controllers.ClustersCreate)
 //	router.Methods("GET").Path("/clusters/{id}").HandlerFunc(controllers.ClustersShow)
-//	router.Methods("PUT").Path("/clusters/{id}").HandlerFunc(controllers.ClustersUpdate)
-//	router.Methods("DELETE").Path("/clusters/{id}").HandlerFunc(controllers.ClustersDelete)
 
 	return router
 }

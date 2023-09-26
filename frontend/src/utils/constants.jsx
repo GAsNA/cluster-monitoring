@@ -18,6 +18,9 @@ export const API_ROUTES = {
 	DELETE_TICKET: '/tickets/',
 	GET_TICKETS_SEAT: '/tickets/seat/',
 	GET_CLUSTERS: '/clusters',
+	CREATE_CLUSTER: '/clusters',
+	UPDATE_CLUSTER: '/clusters/',
+	DELETE_CLUSTER: '/clusters/',
 }
 
 export const APP_ROUTES = {
