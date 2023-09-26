@@ -31,7 +31,7 @@ function Admin() {
 	async function getIssueTypes() {
 		await client.get(API_ROUTES.GET_TICKET_TYPES)
 				.then((response) => {
-					console.log(response)
+					console.log(response.data)
 					var data = response.data
 					setIssueTypes(data)
 				})
@@ -42,7 +42,7 @@ function Admin() {
 	
 	useLayoutEffect(() => {
 		function updateWindowHeight() {
-			setWindowHeight(window.innerWeight);
+			setWindowHeight(window.innerHeight);
 		}
 
 		window.addEventListener('resize', updateWindowHeight);
@@ -66,20 +66,20 @@ function Admin() {
 			
 			<div className="flex h-auto items-center space-x-4">
 				<div style={{ width: '50%', height: (windowHeight * 92 / 100) + 'px', borderRight: 'grey 1px solid', padding: '.5% 1%' }}>
-					<TicketsSort tickets={tickets} issueTypes={issueTypes} />
+					<TicketsSort tickets={tickets} issueTypes={issueTypes} windowHeight={windowHeight} />
 				</div>
 				
 				<Divider orientation="vertical" />
 				
 				<div style={{ width: '50%', padding: '.5% 1%' }}>
-					<div>
+					<div style={{ maxHeight: (windowHeight * 44 / 100) + 'px', overflow: 'auto', marginBottom: '2%' }}>
 						<ManageTicketTypes tickets={tickets} issueTypes={issueTypes} />
 					</div>
 
 					<Divider orientation="horizontal" />
 
-					<div>
-						MANAGE CLUSTERS
+					<div style={{ maxHeight: (windowHeight * 44 / 100) + 'px', overflow: 'auto', marginTop: '2%' }}>
+						<ManageTicketTypes tickets={tickets} issueTypes={issueTypes} />
 					</div>
 				</div>
 			</div>
