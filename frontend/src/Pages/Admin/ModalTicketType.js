@@ -59,7 +59,11 @@ function ModalTicketType({ open, setOpen, ticketTypes, ticketType, setTicketType
 			<Modal isOpen={open} onClose={close} placement="center" backdrop="opaque" size="xl" style={{ background:'#231f20', color: 'white' }}>
 				<ModalContent>
 					<ModalHeader className="flex flex-col gap-1">
-						<p>Want to create a <span style={{ color: '#01babc' }}>new type?</span></p>
+						{ ticketType ?
+							<p>Want to modify this <span style={{ color: '#01babc' }}>type</span>?</p>
+							:
+							<p>Want to create a <span style={{ color: '#01babc' }}>new type</span>?</p>
+						}
 					</ModalHeader>
 
 					<ModalBody>

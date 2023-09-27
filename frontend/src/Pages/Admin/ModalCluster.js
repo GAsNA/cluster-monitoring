@@ -60,7 +60,11 @@ function ModalCluster({ open, setOpen, clusters, cluster, setCluster }) {
 			<Modal isOpen={open} onClose={close} placement="center" backdrop="opaque" size="xl" style={{ background:'#231f20', color: 'white' }}>
 				<ModalContent>
 					<ModalHeader className="flex flex-col gap-1">
-						<p>Want to create a <span style={{ color: '#01babc' }}>new cluster?</span></p>
+						{ cluster ?
+							<p>Want to modify this <span style={{ color: '#01babc' }}>cluster</span>?</p>
+							:
+							<p>Want to create a <span style={{ color: '#01babc' }}>new cluster</span>?</p>
+						}
 					</ModalHeader>
 
 					<ModalBody>
