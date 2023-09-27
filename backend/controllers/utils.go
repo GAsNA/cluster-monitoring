@@ -8,7 +8,14 @@ import (
 	"main/jwt"
 
 	ext_jwt "github.com/golang-jwt/jwt/v5"
+	"github.com/gorilla/websocket"
 )
+
+var upgrader = websocket.Upgrader {
+	ReadBufferSize:		1024,
+	WriteBufferSize:	1024,
+	CheckOrigin:		func(r *http.Request) bool { return true },
+}
 
 func addHeader(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
