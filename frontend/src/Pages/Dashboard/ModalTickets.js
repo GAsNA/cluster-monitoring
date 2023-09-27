@@ -1,5 +1,6 @@
 import React from 'react';
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Divider } from '@nextui-org/react';
+import { useMediaQuery } from 'react-responsive';
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Spacer } from '@nextui-org/react';
 import FormTicket from './FormTicket.js';
 import ListTickets from '../../Components/ListTickets.js';
 
@@ -9,23 +10,27 @@ function ModalTickets({ open, setOpen, seat, setSelectedSeat, issueTypes, ticket
 		setOpen(false);
 	}
 
+	const isMobile = useMediaQuery({ query: `(max-width: 800px)` });
+
 	return (
-		<Modal isOpen={open} onClose={close} placement="center" backdrop="opaque" size="5xl" style={{ background:'#231f20', color: 'white' }}>
+		<Modal isOpen={open} onClose={close} placement="center" backdrop="opaque" size="5xl"
+			style={{ background:'#231f20', color: 'white' }}
+		>
 			<ModalContent>
 				<ModalHeader className="flex flex-col gap-1">
 					<div>Report a technical issue on <span style={{ color: '#01babc' }}>{seat.id}</span></div>
 				</ModalHeader>
 
 				<ModalBody style={{ borderTop: 'solid white 1px', borderBottom: 'solid white 1px' }}>
-					<div className="flex h-auto items-center">
+					<div className="flex items-center flex-wrap">
 
-						<div style={{width: "40%", display: "inline-block", marginRight: '1%'}}>
+						<div style={{ width: isMobile ? '100%' : '39%', display: "inline-block" }}>
 							<FormTicket seat={seat} issueTypes={issueTypes} closeModal={close} />
 						</div>
 
-						<Divider orientation="vertical" />
+						<Spacer x={2}/>
 
-						<div style={{width: "60%", display: "inline-block", marginLeft: '1%', maxHeight: '340px', overflow: 'auto', padding: '1%'}}>
+						<div style={{ width: isMobile ? '100%' : '59%', display: "inline-block", maxHeight: '340px', overflow: 'auto', padding: '1%'}}>
 							<ListTickets tickets={tickets} />
 						</div>
 
