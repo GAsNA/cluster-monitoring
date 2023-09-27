@@ -47,7 +47,7 @@ function ManageClusters({ tickets, clusters }) {
 							<div>
 								<span style={{ color: '#01babc' }}>
 									{ (tickets.filter(ticket => ticket.Seat.toLowerCase().startsWith(item.Name.toLowerCase()))).length }
-								</span> asssociated tickets
+								</span> tickets
 							</div>
 
 							<OptionButton dropdownItems={[
