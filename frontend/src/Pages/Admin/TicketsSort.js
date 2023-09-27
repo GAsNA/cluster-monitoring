@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Input, Pagination, Select, SelectItem, RadioGroup, Radio } from '@nextui-org/react';
 import ListTickets from '../../Components/ListTickets.js';
 
-function TicketsSort({ tickets=[], issueTypes=[], windowHeight }) {
+function TicketsSort({ tickets=[], issueTypes=[] }) {
 	const [ticketsFiltered, setTicketsFiltered] = useState(tickets);
 	const [ticketsToShow, setTicketsToShow] = useState(ticketsFiltered);
 
@@ -30,7 +30,6 @@ function TicketsSort({ tickets=[], issueTypes=[], windowHeight }) {
 	const [getTicketTypes, setGetTicketTypes] = useState(false);
 	const [toRefreshFilteredTickets, setToRefreshFilteredTickets] = useState(true);
 
-	const [filterSectionHeight, setFilterSectionHeight] = useState();
 	const refFilterSection = useRef(null);	
 	
 	function onSeatChoiceChange(value) {
@@ -93,16 +92,6 @@ function TicketsSort({ tickets=[], issueTypes=[], windowHeight }) {
 		}
 	}, [getTickets, getTicketTypes, currentPage, ticketsFiltered, tickets, issueTypes, authorChoice, seatChoice, statusChoice, ticketTypeChoice, orderByDateChoice, toRefreshFilteredTickets]);
 
-	useLayoutEffect(() => {
-		function updateFilterSectionHeight() {
-			setFilterSectionHeight(refFilterSection.current.clientHeight);
-		}
-		
-		window.addEventListener('resize', updateFilterSectionHeight);
-		updateFilterSectionHeight();
-		return () => window.removeEventListener('resize', updateFilterSectionHeight);
-	}, []);
-
 	return (
 		<>
 			<div ref={refFilterSection} style={{ margin: '20px 0' }}>
@@ -153,7 +142,7 @@ function TicketsSort({ tickets=[], issueTypes=[], windowHeight }) {
 				}
 			</div>
 			
-			<div style={{ height: ((windowHeight - filterSectionHeight) * 82 / 100) + 'px', overflow: 'auto' }}>
+			<div>
 				<ListTickets tickets={ticketsToShow} displaySeat />
 			</div>
 		</>

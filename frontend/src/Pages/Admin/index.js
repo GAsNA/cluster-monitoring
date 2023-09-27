@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect, useEffect } from 'react';
-import { Divider } from '@nextui-org/react';
+import { Divider, Tabs, Tab } from '@nextui-org/react';
 import { Toaster, toast } from 'react-hot-toast';
 import { Navigate } from 'react-router-dom';
 import Navigator from '../../Components/Navigator.js';
@@ -77,25 +77,27 @@ function Admin() {
 
 			<Toaster toastOptions={{ style: { background: '#231f20', color: 'white' } }} />
 			
-			<div className="flex h-auto items-center space-x-4">
-				<div style={{ width: '50%', height: (windowHeight * 92 / 100) + 'px', borderRight: 'grey 1px solid', padding: '.5% 1%' }}>
-					<TicketsSort tickets={tickets} issueTypes={issueTypes} windowHeight={windowHeight} />
-				</div>
-				
-				<Divider orientation="vertical" />
-				
-				<div style={{ width: '50%', padding: '.5% 1%' }}>
-					<div style={{ height: (windowHeight * 43 / 100) + 'px', overflow: 'auto', marginBottom: '2%' }}>
-						<ManageTicketTypes tickets={tickets} issueTypes={issueTypes} />
+			<Tabs aria-label="Options">
+				<Tab key="tickets" title="Tickets">
+					<div style={{ maxWidth: '1000px', margin: 'auto' }}>
+						<TicketsSort tickets={tickets} issueTypes={issueTypes} />
 					</div>
+				</Tab>
 
-					<Divider orientation="horizontal" />
+				<Tab key="cluster-ticketTypes" title="Cluster/Ticket Types">
+					<div style={{ maxWidth: '1000px', margin: 'auto' }}>
+						<div style={{ height: (windowHeight*40/100) + 'px', overflow: 'auto', marginBottom: '2%' }}>
+							<ManageTicketTypes tickets={tickets} issueTypes={issueTypes} />
+						</div>
 
-					<div style={{ height: (windowHeight * 43 / 100) + 'px', overflow: 'auto', marginTop: '2%' }}>
-						<ManageClusters tickets={tickets} clusters={clusters} />
+						<Divider orientation="horizontal" />
+
+						<div style={{ height: (windowHeight*40/100) + 'px', overflow: 'auto', marginTop: '2%' }}>
+							<ManageClusters tickets={tickets} clusters={clusters} />
+						</div>
 					</div>
-				</div>
-			</div>
+				</Tab>
+			</Tabs>
 		</>
 	);
 }
