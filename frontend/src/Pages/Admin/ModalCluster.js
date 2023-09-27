@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input, Button, Spacer } from '@nextui-org/react';
 import { toast } from 'react-hot-toast';
 import { client } from '../../utils/common.jsx';
 import { API_ROUTES } from '../../utils/constants.jsx';
 import ModalConfirmation from '../../Components/ModalConfirmation.js';
 
-function ModalCluster({ open, setOpen, clusters, cluster, setCluster }) {
+function ModalCluster({ open, setOpen, clusters, cluster }) {
 	const [name, setName] = useState("");
 	const [link, setLink] = useState("");
 
@@ -19,7 +19,8 @@ function ModalCluster({ open, setOpen, clusters, cluster, setCluster }) {
 	}
 
 	function close() {
-		setCluster();
+		setName("");
+		setLink("");
 		setOpen(false);
 	}
 
@@ -55,6 +56,10 @@ function ModalCluster({ open, setOpen, clusters, cluster, setCluster }) {
 		close();
 	}
 
+	useEffect(() => {
+		if (cluster) { setName(cluster.Name); setLink(cluster.Link); }
+	}, [cluster]);
+
 	return (
 		<>
 			<Modal isOpen={open} onClose={close} placement="center" backdrop="opaque" size="xl" style={{ background:'#231f20', color: 'white' }}>
@@ -70,13 +75,13 @@ function ModalCluster({ open, setOpen, clusters, cluster, setCluster }) {
 					<ModalBody>
 						<div className="flex h-auto items-center" style={{ display: 'inline-block' }}>
 							<Input label="Name" style={{ color: 'black' }} onValueChange={onNameChange}
-								value={cluster ? cluster.Name : ""}
+								value={name}
 							/>
 							
 							<Spacer y={4} />
 
 							<Input label="Link of the SVG" style={{ color: 'black' }} onValueChange={setLink}
-								value={cluster ? cluster.Link : ""}
+								value={link}
 							/>
 						</div>
 					</ModalBody>

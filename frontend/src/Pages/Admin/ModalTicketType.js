@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input, Button } from '@nextui-org/react';
 import { toast } from 'react-hot-toast';
 import { client } from '../../utils/common.jsx';
 import { API_ROUTES } from '../../utils/constants.jsx';
 import ModalConfirmation from '../../Components/ModalConfirmation.js';
 
-function ModalTicketType({ open, setOpen, ticketTypes, ticketType, setTicketType }) {
+function ModalTicketType({ open, setOpen, ticketTypes, ticketType }) {
 	const [name, setName] = useState("");
 
 	const [openModalConfirmation, setOpenModalConfirmation] = useState(false);
@@ -18,7 +18,7 @@ function ModalTicketType({ open, setOpen, ticketTypes, ticketType, setTicketType
 	}
 
 	function close() {
-		setTicketType();
+		setName("");
 		setOpen(false);
 	}
 
@@ -54,6 +54,10 @@ function ModalTicketType({ open, setOpen, ticketTypes, ticketType, setTicketType
 		close();
 	}
 
+	useEffect(() => {
+		if (ticketType) { setName(ticketType.Name); }
+	}, [ticketType]);
+
 	return (
 		<>
 			<Modal isOpen={open} onClose={close} placement="center" backdrop="opaque" size="xl" style={{ background:'#231f20', color: 'white' }}>
@@ -69,7 +73,7 @@ function ModalTicketType({ open, setOpen, ticketTypes, ticketType, setTicketType
 					<ModalBody>
 						<div className="flex h-auto items-center">
 							<Input label="Name" style={{ color: 'black' }} onValueChange={onNameChange}
-								value={ticketType ? ticketType.Name : ""}
+								value={name}
 							/>
 						</div>
 					</ModalBody>
