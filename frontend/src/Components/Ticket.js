@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, CardHeader, CardBody, Chip, DropdownItem, User, Link } from '@nextui-org/react';
+import { Card, CardHeader, CardBody, Chip, DropdownItem, User, Link, Spacer } from '@nextui-org/react';
 import toast from 'react-hot-toast';
 import { client } from '../utils/common.jsx';
 import { URL_INTRA_PROFILES, API_ROUTES } from '../utils/constants.jsx';
@@ -47,16 +47,20 @@ function Ticket({ ticket, displaySeat=false }) {
 
 	return (
 		<Card style={{ padding: '2%', marginBottom: '2%', background: 'white', color: 'black' }}>
-			<CardHeader className="justify-between">
+			<CardHeader className="justify-between" style={{ display: 'flex', flexWrap: 'wrap' }}>
 				{ user && user.IsStaff && ticket.AuthorLogin &&
 					<Link href={ URL_INTRA_PROFILES + ticket.AuthorID } isExternal className="text-black">
 						<User name={ticket.AuthorLogin} avatarProps={{ src: ticket.AuthorImage }} />
 					</Link>
 				}
 
+				<Spacer />
+
 				{ displaySeat &&
 					<b><span style={{ color: '#01babc' }}>{ticket.Seat}</span></b>
 				}
+
+				<Spacer />
 
 				<div className="flex gap-5">
 					<div className="flex flex-col gap-1 items-start justify-center">
@@ -67,11 +71,15 @@ function Ticket({ ticket, displaySeat=false }) {
 					</div>
 				</div>
 
+				<Spacer />
+
 				{ ticket.Resolved ?
 					<Chip style={{ background: resolvedColor, color: 'white' }}>{resolvedText}</Chip>
 					:
 					<Chip style={{ background: inProgressColor, color: 'white' }}>{inProgressText}</Chip>
 				}
+
+				<Spacer />
 
 				{ user && user.IsStaff &&
 					<>
