@@ -11,11 +11,12 @@ Frontend is in React ; Backend is in Go.
 - Change the color of the seats depending on the number of tickets "in progress"
 - In form ticket, if keyboard is choose, select keys on virtual keyboard
 - Swagger
-- Mobile
+- Responsive ticket
 
 ### Questions
 - see for authorization header when option, options route, how manage ?
 - localstorage for user is good idea ?
+- tickets call by seat or filtered in front ? (dashboard page)
 
 ## Author
 [![rleseur's 42 stats](https://badge42.vercel.app/api/v2/cl7s08vet00110gmnrmm2benl/stats?cursusId=21&coalitionId=45)](https://github.com/JaeSeoKim/badge42)
