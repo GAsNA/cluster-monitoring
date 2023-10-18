@@ -49,18 +49,23 @@ function Ticket({ ticket, displaySeat=false }) {
 		<Card style={{ padding: '2%', marginBottom: '2%', background: 'white', color: 'black' }}>
 			<CardHeader className="justify-between" style={{ display: 'flex', flexWrap: 'wrap' }}>
 				{ user && user.IsStaff && ticket.AuthorLogin &&
-					<Link href={ URL_INTRA_PROFILES + ticket.AuthorID } isExternal className="text-black">
-						<User name={ticket.AuthorLogin} avatarProps={{ src: ticket.AuthorImage }} />
-					</Link>
+					<>
+						<Link href={ URL_INTRA_PROFILES + ticket.AuthorID } isExternal className="text-black">
+							<User name={ticket.AuthorLogin} avatarProps={{ src: ticket.AuthorImage }} />
+						</Link>
+				
+						<Spacer />
+					</>
 				}
 
-				<Spacer />
 
 				{ displaySeat &&
-					<b><span style={{ color: '#01babc' }}>{ticket.Seat}</span></b>
+					<>
+						<b><span style={{ color: '#01babc' }}>{ticket.Seat}</span></b>
+						
+						<Spacer />
+					</>
 				}
-
-				<Spacer />
 
 				<div className="flex gap-5">
 					<div className="flex flex-col gap-1 items-start justify-center">
@@ -79,16 +84,17 @@ function Ticket({ ticket, displaySeat=false }) {
 					<Chip style={{ background: inProgressColor, color: 'white' }}>{inProgressText}</Chip>
 				}
 
-				<Spacer />
-
 				{ user && user.IsStaff &&
 					<>
+						<Spacer />
+						
 						<ModalConfirmation open={openModalConfirmation} setOpen={setOpenModalConfirmation}
 							action={deleteTicket}
 							text=<p><span style={{ color: '#01babc' }}>Are you sure</span> you want to delete this ticket?
 								<br/>This action is irreversible.
 							</p>
 						/>
+						
 						<OptionButton background="white" dropdownItems={[
 							<DropdownItem textValue="set as" key="set_resolved" color={ !ticket.Resolved ? "success" : "default" }
 								onAction={changeStatus}
