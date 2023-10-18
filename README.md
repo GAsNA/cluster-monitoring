@@ -13,6 +13,7 @@ Frontend is in React ; Backend is in Go.
 - Swagger
 - Error when logout
 - Responsive ticket
+- close dropdown when modal is open (manage cluster/type)
 
 ### Questions
 - see for authorization header when option, options route, how manage ?
