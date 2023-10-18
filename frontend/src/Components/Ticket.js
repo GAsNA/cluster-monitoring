@@ -70,7 +70,11 @@ function Ticket({ ticket, displaySeat=false }) {
 				<div className="flex gap-5">
 					<div className="flex flex-col gap-1 items-start justify-center">
 						<h4 className="font-semibold leading-none">
-							{ticket.TicketTypeName}
+							{ ticket.TicketTypeName.length > 12 ?
+								ticket.TicketTypeName.slice(0, 9) + "..."
+								:
+								ticket.TicketTypeName
+							}
 							<span className="ml-2 text-small tracking-tight text-default-400">{getDateFormated(ticket.CreatedAt)}</span>
 						</h4>
 					</div>

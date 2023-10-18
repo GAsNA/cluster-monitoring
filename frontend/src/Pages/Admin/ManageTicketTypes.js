@@ -41,7 +41,11 @@ function ManageTicketTypes({ tickets, issueTypes }) {
 					<Card key={type.ID} style={{ padding: '1%', marginBottom: '2%', background: '#231f20', color: 'white', marginRight: '1%' }}>
 						<CardHeader className="justify-between">
 							<div>
-								{ type.Name }
+								{ type.Name.length > 12 ?
+									type.Name.slice(0, 9) + "..."
+									:
+									type.Name
+								}
 							</div>
 
 							<div>
