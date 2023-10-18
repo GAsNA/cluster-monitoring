@@ -11,6 +11,7 @@ Frontend is in React ; Backend is in Go.
 - Change the color of the seats depending on the number of tickets "in progress"
 - In form ticket, if keyboard is choose, select keys on virtual keyboard
 - Swagger
+- Error when logout
 - Responsive ticket
 
 ### Questions
