@@ -106,11 +106,11 @@ function ModalTicketType({ open, setOpen, ticketTypes, ticketType, setTicketType
 				</ModalContent>
 			</Modal>
 
-			<ModalConfirmation open={openModalConfirmation} action={action}
+			<ModalConfirmation open={openModalConfirmation} setOpen={setOpenModalConfirmation}
+				action={action}
 				text=<p><span style={{ color: '#01babc' }}>Are you sure</span> you want to create this ticket type?
 						<br />This ticket type name <span style={{ color: '#01babc' }}>already exsists</span>.
 					</p>
-				close={() => {setTicketType(); setOpenModalConfirmation(false)}}
 			/>
 		</>
 	);

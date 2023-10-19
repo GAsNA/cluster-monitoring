@@ -115,11 +115,11 @@ function ModalCluster({ open, setOpen, clusters, cluster, setCluster }) {
 				</ModalContent>
 			</Modal>
 
-			<ModalConfirmation open={openModalConfirmation} action={action}
+			<ModalConfirmation open={openModalConfirmation} setOpen={setOpenModalConfirmation}
+				action={action}
 				text=<p><span style={{ color: '#01babc' }}>Are you sure</span> you want to create this cluster?
 						<br />This cluster name <span style={{ color: '#01babc' }}>already exsists</span>.
 					</p>
-				close={() => {setCluster(); setOpenModalConfirmation(false);}}
 			/>
 		</>
 	);
