@@ -34,12 +34,21 @@ function FormTicket({ seat, issueTypes, closeModal }) {
 		setSending(false);
 		closeModal();
 	}
+	
+	const handleKeyPress = (event) => {
+		if (event.key === 'Enter') { send(); }
+	}
 
 	return (
 		<>
 		{ issueTypes ?
 			<>
-				<Select disallowEmptySelection defaultSelectedKeys={[defaultIssueTypeID]} placeholder="Select a issue type" labelPlacement="outside" label={<span style={{ color: 'white' }}>Type of issue</span>} style={{ color: 'black' }} onSelectionChange={setTicketType}>
+				<Select disallowEmptySelection defaultSelectedKeys={[defaultIssueTypeID]}
+					placeholder="Select a issue type" labelPlacement="outside"
+					label={<span style={{ color: 'white' }}>Type of issue</span>} style={{ color: 'black' }}
+					onSelectionChange={setTicketType}
+					autoFocus
+				>
 					{ issueTypes.map((issueType) => (
 						<SelectItem textValue={issueType.Name} key={issueType.ID}>{issueType.Name}</SelectItem>
 					)) }
@@ -49,11 +58,16 @@ function FormTicket({ seat, issueTypes, closeModal }) {
 
 				<Textarea label={<span style={{ color: 'white' }}>Comment</span>} maxRows={3}
 						labelPlacement="outside" placeholder="If you want to add something..." 
-						style={{ color: 'black' }} onValueChange={setComment} />
+						style={{ color: 'black' }} onValueChange={setComment} onKeyPress={handleKeyPress}
+				/>
 			
 				<Spacer y={4} />
 
-				<Button style={{ background: '#01babc', color: 'white' }} onPress={areYouSure} isLoading={sending}>Send Ticket</Button>
+				<Button style={{ background: '#01babc', color: 'white' }} onPress={areYouSure}
+					isLoading={sending}
+				>
+					Send Ticket
+				</Button>
 
 				<ModalConfirmation open={openModalConfirmation} setOpen={setOpenModalConfirmation}
 					action={send}

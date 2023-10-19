@@ -27,6 +27,16 @@ function ModalTicketType({ open, setOpen, ticketTypes, ticketType, setTicketType
 		setOpenModalConfirmation(true);
 	}
 
+	function send() {
+		if (name === "") { return }
+
+		if (ticketTypes.find((item) => item.Name === name)) {
+			areYouSure();
+		} else {
+			action();
+		}
+	}
+
 	async function create() {
 		setSending(true);
 		await client.post(API_ROUTES.CREATE_TICKET_TYPE, { "Name": name })
@@ -55,6 +65,10 @@ function ModalTicketType({ open, setOpen, ticketTypes, ticketType, setTicketType
 		close();
 	}
 
+	const handleKeyPress = (event) => {
+		if (event.key === 'Enter') { send(); }
+	}
+
 	useEffect(() => {
 		if (ticketType) { setName(ticketType.Name); }
 		else { setName(""); }
@@ -76,13 +90,15 @@ function ModalTicketType({ open, setOpen, ticketTypes, ticketType, setTicketType
 						<div className="flex h-auto items-center">
 							<Input label="Name" style={{ color: 'black' }} onValueChange={onNameChange}
 								value={name}
+								onKeyPress={handleKeyPress}
+								autoFocus
 							/>
 						</div>
 					</ModalBody>
 
 					<ModalFooter>
 						<Button style={{ background: '#01babc', color: 'white' }}
-							onPress={ticketTypes.find((item) => item.Name === name) ? areYouSure : action}
+							onPress={send}
 							isLoading={sending}
 						>Send</Button>
 						<Button style={{ background: '#e96a64', color: 'white' }} onPress={close}>Close</Button>

@@ -13,7 +13,6 @@ Frontend is in React ; Backend is in Go.
 - Swagger
 - Error when logout
 - Responsive ticket
-- Enter key
 
 ### Questions
 - see for authorization header when option, options route, how manage ?

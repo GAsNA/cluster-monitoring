@@ -29,6 +29,16 @@ function ModalCluster({ open, setOpen, clusters, cluster, setCluster }) {
 		setOpenModalConfirmation(true);
 	}
 
+	function send() {
+		if (name === "" || link === "") { return }
+		
+		if (clusters.find((item) => item.Name === name)) {
+			areYouSure();
+		} else {
+			action();
+		}
+	}
+
 	async function create() {
 		setSending(true);
 		await client.post(API_ROUTES.CREATE_CLUSTER, { "Name": name, "Link": link })
@@ -57,6 +67,10 @@ function ModalCluster({ open, setOpen, clusters, cluster, setCluster }) {
 		close();
 	}
 
+	const handleKeyPress= (event) => {
+		if (event.key === 'Enter') { send(); }
+	}
+
 	useEffect(() => {
 		if (cluster) { setName(cluster.Name); setLink(cluster.Link); }
 		else { setName(""); setLink(""); }
@@ -78,19 +92,22 @@ function ModalCluster({ open, setOpen, clusters, cluster, setCluster }) {
 						<div className="flex h-auto items-center" style={{ display: 'inline-block' }}>
 							<Input label="Name" style={{ color: 'black' }} onValueChange={onNameChange}
 								value={name}
+								onKeyPress={handleKeyPress}
+								autoFocus
 							/>
 							
 							<Spacer y={4} />
 
 							<Input label="Link of the SVG" style={{ color: 'black' }} onValueChange={setLink}
 								value={link}
+								onKeyPress={handleKeyPress}
 							/>
 						</div>
 					</ModalBody>
 
 					<ModalFooter>
 						<Button style={{ background: '#01babc', color: 'white' }}
-							onPress={clusters.find((item) => item.Name === name) ? areYouSure : action}
+							onPress={send}
 							isLoading={sending}
 						>Send</Button>
 						<Button style={{ background: '#e96a64', color: 'white' }} onPress={close}>Close</Button>
