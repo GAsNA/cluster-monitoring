@@ -14,6 +14,7 @@ Frontend is in React ; Backend is in Go.
 - Error when logout
 - Responsive ticket
 - ticket type and cluster always selected when try to delete but cancel
+- Enter key
 
 ### Questions
 - see for authorization header when option, options route, how manage ?
