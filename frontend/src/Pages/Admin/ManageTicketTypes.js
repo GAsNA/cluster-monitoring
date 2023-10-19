@@ -13,10 +13,6 @@ function ManageTicketTypes({ tickets, issueTypes }) {
 
 	const [ticketType, setTicketType] = useState();
 
-	function areYouSure() {
-		setOpenModalConfirmation(true);
-	}
-
 	async function deleteTicketType() {
 		await client.delete(API_ROUTES.DELETE_TICKET_TYPE + ticketType.ID)
 				.then((response) => {
@@ -25,6 +21,16 @@ function ManageTicketTypes({ tickets, issueTypes }) {
 				.catch((error) => {
 					toast.error('An error occured');
 				})
+	}
+
+	function actionsModify(type) {
+		setTicketType(type);
+		setOpenModalTicketType(true);
+	}
+
+	function actionsDelete(type) {
+		setTicketType(type);
+		setOpenModalConfirmation(true);
 	}
 
 	return (
@@ -55,13 +61,11 @@ function ManageTicketTypes({ tickets, issueTypes }) {
 							</div>
 
 							<OptionButton dropdownItems={[
-								<DropdownItem textValue="modify" key="modify" onPress={() => setTicketType(type)}
-									onAction={setOpenModalTicketType}
-								>
+								<DropdownItem textValue="modify" key="modify" onPress={() => actionsModify(type)}>
 									Modify
 								</DropdownItem>,
 								<DropdownItem textValue="delete" key="delete" style={{ color: '#e96a64' }}
-									onPress={() => setTicketType(type)} onAction={areYouSure}
+									onPress={() => actionsDelete(type)}
 								>
 									Delete
 								</DropdownItem>

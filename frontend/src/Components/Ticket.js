@@ -101,12 +101,12 @@ function Ticket({ ticket, displaySeat=false }) {
 						
 						<OptionButton background="white" dropdownItems={[
 							<DropdownItem textValue="set as" key="set_resolved" color={ !ticket.Resolved ? "success" : "default" }
-								onAction={changeStatus}
+								onPress={changeStatus}
 							>
 								Set as { !ticket.Resolved ? resolvedText : inProgressText }
 							</DropdownItem>,
 							<DropdownItem textValue="delete" key="delete" style={{ color: '#e96a64' }}
-								onAction={areYouSure}
+								onPress={areYouSure}
 							>
 								Delete
 							</DropdownItem>

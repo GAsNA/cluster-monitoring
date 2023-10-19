@@ -13,10 +13,6 @@ function ManageClusters({ tickets, clusters }) {
 
 	const [cluster, setCluster] = useState();
 
-	function areYouSure() {
-		setOpenModalConfirmation(true);
-	}
-
 	async function deleteCluster() {
 		await client.delete(API_ROUTES.DELETE_CLUSTER + cluster.ID)
 				.then((response) => {
@@ -25,6 +21,16 @@ function ManageClusters({ tickets, clusters }) {
 				.catch((error) => {
 					toast.error('An error occured');
 				})
+	}
+
+	function actionsModify(item) {
+		setCluster(item);
+		setOpenModalCluster(true);
+	}
+
+	function actionsDelete(item) {
+		setCluster(item);
+		setOpenModalConfirmation(true);
 	}
 
 	return (
@@ -51,13 +57,11 @@ function ManageClusters({ tickets, clusters }) {
 							</div>
 
 							<OptionButton dropdownItems={[
-								<DropdownItem textValue="modify" key="modify" onPress={() => setCluster(item)}
-									onAction={setOpenModalCluster}
-								>
+								<DropdownItem textValue="modify" key="modify" onPress={() => actionsModify(item)}>
 									Modify
 								</DropdownItem>,
 								<DropdownItem textValue="delete" key="delete" style={{ color: '#e96a64' }}
-									onPress={() => setCluster(item)} onAction={areYouSure}
+									onPress={() => actionsDelete(item)}
 								>
 									Delete
 								</DropdownItem>
