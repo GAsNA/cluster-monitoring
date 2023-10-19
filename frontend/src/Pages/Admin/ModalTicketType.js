@@ -5,7 +5,7 @@ import { client } from '../../utils/common.jsx';
 import { API_ROUTES } from '../../utils/constants.jsx';
 import ModalConfirmation from '../../Components/ModalConfirmation.js';
 
-function ModalTicketType({ open, setOpen, ticketTypes, ticketType }) {
+function ModalTicketType({ open, setOpen, ticketTypes, ticketType, setTicketType }) {
 	const [name, setName] = useState("");
 
 	const [openModalConfirmation, setOpenModalConfirmation] = useState(false);
@@ -18,6 +18,7 @@ function ModalTicketType({ open, setOpen, ticketTypes, ticketType }) {
 	}
 
 	function close() {
+		setTicketType();
 		setName("");
 		setOpen(false);
 	}
@@ -56,6 +57,7 @@ function ModalTicketType({ open, setOpen, ticketTypes, ticketType }) {
 
 	useEffect(() => {
 		if (ticketType) { setName(ticketType.Name); }
+		else { setName(""); }
 	}, [ticketType]);
 
 	return (
@@ -88,11 +90,11 @@ function ModalTicketType({ open, setOpen, ticketTypes, ticketType }) {
 				</ModalContent>
 			</Modal>
 
-			<ModalConfirmation open={openModalConfirmation} setOpen={setOpenModalConfirmation}
-				action={action}
+			<ModalConfirmation open={openModalConfirmation} action={action}
 				text=<p><span style={{ color: '#01babc' }}>Are you sure</span> you want to create this ticket type?
 						<br />This ticket type name <span style={{ color: '#01babc' }}>already exsists</span>.
 					</p>
+				close={() => {setTicketType(); setOpenModalConfirmation(false)}}
 			/>
 		</>
 	);

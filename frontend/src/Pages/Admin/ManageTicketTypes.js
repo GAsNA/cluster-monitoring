@@ -76,12 +76,12 @@ function ManageTicketTypes({ tickets, issueTypes }) {
 
 			</div>
 
-			<ModalConfirmation open={openModalConfirmation} setOpen={setOpenModalConfirmation}
-				action={deleteTicketType}
+			<ModalConfirmation open={openModalConfirmation} action={deleteTicketType}
 				text=<p><span style={{ color: '#01babc' }}>Are you sure</span> you want to delete this ticket type?
 					<br/>This will delete <b><span style={{ color: '#01babc' }}>ALL</span></b> associated tickets.
 					<br/>This action is irreversible.
 				</p>
+				close={() => {setTicketType(); setOpenModalConfirmation(false)}}
 			/>
 		</>
 	);

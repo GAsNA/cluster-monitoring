@@ -1,11 +1,7 @@
 import React from 'react';
 import { Modal, ModalContent, ModalBody, ModalFooter, Button } from '@nextui-org/react';
 
-function ModalConfirmation({ open, setOpen, action, text }) {
-	function close() {
-		setOpen(false);
-	}
-
+function ModalConfirmation({ open, setOpen, action, text, close=() => setOpen(false) }) {
 	function yesToSend() {
 		action();
 		close();

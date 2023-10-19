@@ -5,7 +5,7 @@ import { client } from '../../utils/common.jsx';
 import { API_ROUTES } from '../../utils/constants.jsx';
 import ModalConfirmation from '../../Components/ModalConfirmation.js';
 
-function ModalCluster({ open, setOpen, clusters, cluster }) {
+function ModalCluster({ open, setOpen, clusters, cluster, setCluster }) {
 	const [name, setName] = useState("");
 	const [link, setLink] = useState("");
 
@@ -19,6 +19,7 @@ function ModalCluster({ open, setOpen, clusters, cluster }) {
 	}
 
 	function close() {
+		setCluster();
 		setName("");
 		setLink("");
 		setOpen(false);
@@ -58,6 +59,7 @@ function ModalCluster({ open, setOpen, clusters, cluster }) {
 
 	useEffect(() => {
 		if (cluster) { setName(cluster.Name); setLink(cluster.Link); }
+		else { setName(""); setLink(""); }
 	}, [cluster]);
 
 	return (
@@ -96,11 +98,11 @@ function ModalCluster({ open, setOpen, clusters, cluster }) {
 				</ModalContent>
 			</Modal>
 
-			<ModalConfirmation open={openModalConfirmation} setOpen={setOpenModalConfirmation}
-				action={action}
+			<ModalConfirmation open={openModalConfirmation} action={action}
 				text=<p><span style={{ color: '#01babc' }}>Are you sure</span> you want to create this cluster?
 						<br />This cluster name <span style={{ color: '#01babc' }}>already exsists</span>.
 					</p>
+				close={() => {setCluster(); setOpenModalConfirmation(false);}}
 			/>
 		</>
 	);

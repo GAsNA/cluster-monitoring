@@ -72,12 +72,12 @@ function ManageClusters({ tickets, clusters }) {
 
 			</div>
 
-			<ModalConfirmation open={openModalConfirmation} setOpen={setOpenModalConfirmation}
-				action={deleteCluster}
+			<ModalConfirmation open={openModalConfirmation} action={deleteCluster}
 				text=<p><span style={{ color: '#01babc' }}>Are you sure</span> you want to delete this cluster?
 					<br/>This will delete <b><span style={{ color: '#01babc' }}>ALL</span></b> associated tickets.
 					<br/>This action is irreversible.
 				</p>
+				close={() => {setCluster(); setOpenModalConfirmation(false)}}
 			/>
 		</>
 	);
