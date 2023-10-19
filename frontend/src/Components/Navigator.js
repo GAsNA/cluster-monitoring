@@ -2,13 +2,10 @@ import React from 'react';
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Dropdown, DropdownTrigger, DropdownItem, DropdownMenu, Avatar, Link, Button } from '@nextui-org/react';
 import Cookies from 'js-cookie';
 import toast from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
 import { API_ROUTES, APP_ROUTES } from '../utils/constants.jsx';
 import { client } from '../utils/common.jsx';
 
 function Navigator() {
-	const navigate = useNavigate();
-
 	const user = JSON.parse(localStorage.getItem("user"))
 
 	async function logout() {
@@ -16,7 +13,7 @@ function Navigator() {
 				.then((response) => {
 					Cookies.remove("token")
 					localStorage.clear();
-					navigate(APP_ROUTES.HOME)
+					window.location.replace(APP_ROUTES.HOME);
 				})
 				.catch((error) => {
 					toast.error('An error occured');
