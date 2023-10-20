@@ -17,6 +17,7 @@ Frontend is in React ; Backend is in Go.
 - see for authorization header when option, options route, how manage ?
 - localstorage for user is good idea ?
 - tickets call by seat or filtered in front ? (dashboard page)
+- websocket or other way ? for instant modification or deletion
 
 ## Author
 [![rleseur's 42 stats](https://badge42.vercel.app/api/v2/cl7s08vet00110gmnrmm2benl/stats?cursusId=21&coalitionId=45)](https://github.com/JaeSeoKim/badge42)
