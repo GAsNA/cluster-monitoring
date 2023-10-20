@@ -1,5 +1,5 @@
-import React from 'react';
-import { Image, Button } from '@nextui-org/react';
+import React, { useState } from 'react';
+import { Image, Button, Checkbox } from '@nextui-org/react';
 import Cookies from 'js-cookie';
 import toast from 'react-hot-toast';
 import { Navigate, useSearchParams } from 'react-router-dom';
@@ -13,6 +13,8 @@ function Login() {
 	const [queryParameters] = useSearchParams();
 	const error = queryParameters.get("error");
 	const error_description = queryParameters.get("error_description");
+
+	const [staff, setStaff] = useState(false);
 
 	async function localStoreMe() {
 		await client.get(API_ROUTES.ME)
@@ -30,7 +32,7 @@ function Login() {
 	}
 
 	async function login() {
-		window.location.replace(URL_INTRA_AUTHORIZE + "?client_id=" + process.env.REACT_APP_UID + "&redirect_uri=" + API_ROUTES.ROOT + "/" + API_ROUTES.LOGIN + "&response_type=code&scope=public")
+		window.location.replace(URL_INTRA_AUTHORIZE + "?client_id=" + process.env.REACT_APP_UID + "&redirect_uri=" + API_ROUTES.ROOT + "/" + API_ROUTES.LOGIN + "&response_type=code&scope=public&state=" + staff)
 	}
 
 	return (
@@ -46,6 +48,9 @@ function Login() {
 					<ErrorCard title="Error:" description={error_description} />
 				</div>
 			}
+
+			{ /*PROVISIONAL: to delete when not needed anymore*/ }
+			<Checkbox isSelected={staff} onValueChange={setStaff}>Staff</Checkbox>
 		</div>
 	);
 }

