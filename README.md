@@ -12,6 +12,7 @@ Frontend is in React ; Backend is in Go.
 - In form ticket, if keyboard is choose, select keys on virtual keyboard
 - Swagger
 - Responsive ticket
+- Possibility to reoganisate order of cluster and ticket type ?
 
 ### Questions
 - see for authorization header when option, options route, how manage ?
