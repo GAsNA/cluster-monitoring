@@ -4,21 +4,27 @@ Little web application to monitoring 42Paris cluster.
 Frontend is in React ; Backend is in Go.
 
 ## TODO
-- SOCKET
 - Admin side (staff)
+    - new page for mac adress and serie num from pc - possibility to import pc with CSV ?
     - set post to unavailable/do not use
     - possibility to archieved ticket types and clusters ??
+    - possibility to reoganise order of cluster and ticket type ?
+    - multi selection for ticket
+- Id user autre que id intra
+- Anonymisation button
+- Ticket linked to cluster on db
+- Ticket linked to post NOT SEAT ?? (because ethernet for example)
+- Pagination on back for ticket (at least)
+- SOCKET - NOT SOCKET RESPONSE FROM BACK
 - Change the color of the seats depending on the number of tickets "in progress"
+    - get tickets in dasboard by cluster
 - In form ticket, if keyboard is choose, select keys on virtual keyboard
 - Swagger
 - Responsive ticket
-- Possibility to reoganisate order of cluster and ticket type ?
 
 ### Questions
 - see for authorization header when option, options route, how manage ?
 - localstorage for user is good idea ?
-- tickets call by seat or filtered in front ? (dashboard page)
-- websocket or other way ? for instant modification or deletion
 
 ## Author
 [![rleseur's 42 stats](https://badge42.vercel.app/api/v2/cl7s08vet00110gmnrmm2benl/stats?cursusId=21&coalitionId=45)](https://github.com/JaeSeoKim/badge42)

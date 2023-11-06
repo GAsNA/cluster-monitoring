@@ -22,7 +22,7 @@ func InitializeRouter() *mux.Router {
 
 		// TICKETS
 	//router.HandleFunc("/ws/tickets", controllers.WsTicketsIndex)
-	router.Methods("GET").Path("/ws/tickets").HandlerFunc(controllers.WsTicketsIndex)
+	//router.Methods("GET").Path("/ws/tickets").HandlerFunc(controllers.WsTicketsIndex)
 	router.Methods("GET").Path("/tickets").HandlerFunc(controllers.TicketsIndex)
 	router.Methods("POST", "OPTIONS").Path("/tickets").HandlerFunc(controllers.TicketsCreate)
 	router.Methods("PUT", "OPTIONS").Path("/tickets/{id}").HandlerFunc(controllers.TicketsUpdate)
