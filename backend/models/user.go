@@ -11,7 +11,8 @@ import (
 type User struct {
 	bun.BaseModel	`bun:"table:user"`
 
-	ID		int		`bun:"id,pk,notnull"`
+	ID		int		`bun:"id,pk,autoincrement,notnull,type:SERIAL"`
+	IDIntra	int		`bun:"id_intra,notnull"`
 	Login	string	`bun:"login,notnull"`
 	Image	string	`bun:"image,notnull"`
 	IsStaff	bool	`bun:"is_staff,notnull"`
@@ -44,6 +45,17 @@ func FindUserByID(id int) *User {
 	if err != nil { log.Fatal(err) }
 
 	if len(users) == 0 { log.Println("FindUserByID: no user found"); return (*User)(nil) }
+	return &users[0]
+}
+
+func FindUserByIDIntra(id int) *User {
+	var users	[]User
+	err := config.DB().NewSelect().Model(&users).
+				Where("id_intra = ?", id).
+				Scan(config.Ctx())
+	if err != nil { log.Fatal(err) }
+
+	if len(users) == 0 { log.Println("FindUserByIDIntra: no user found"); return (*User)(nil) }
 	return &users[0]
 }
 

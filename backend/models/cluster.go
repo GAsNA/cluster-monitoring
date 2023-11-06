@@ -11,7 +11,7 @@ import (
 type Cluster struct {
 	bun.BaseModel	`bun:"table:cluster"`
 
-	ID		int		`bun:"id,pk,autoincrement,type:SERIAL"`
+	ID		int		`bun:"id,pk,autoincrement,notnull,type:SERIAL"`
 	Name	string	`bun:"name,notnull"`
 	Link	string	`bun:"link,notnull"`
 }

@@ -14,10 +14,11 @@ type Ticket struct {
 	bun.BaseModel	`bun:"table:ticket"`
 
 	ID				int			`bun:"id,pk,autoincrement,type:SERIAL"`
-	Seat			string		`bun:"seat",notnull`
-	Type			int			`bun:"type,notnull"`
+	Seat			string		`bun:"seat,notnull"`
+	ClusterID		int			`bun:"cluster_id,notnull"`
+	TypeID			int			`bun:"type_id,notnull"`
 	Comment			string		`bun:"comment"`
-	AuthorID		int			`bun:"author_id",notnul`
+	AuthorID		int			`bun:"author_id",notnull`
 	CreatedAt		time.Time	`bun:"created_at,notnull"`
 	Resolved		bool		`bun:"resolved,notnull"`
 	ResolvedAt		time.Time	`bun:"resolved_at"`
@@ -34,6 +35,7 @@ type TicketWithTypeAndAuthor struct {
 	Ticket `bun:",extend"`
 
 	TicketTypeName	string		`bun:"ticket_type__name"`
+	AuthorIDIntra	string		`bun:"author__id_intra"`
 	AuthorLogin		string		`bun:"author__login"`
 	AuthorImage		string		`bun:"author__image"`
 }
@@ -43,7 +45,8 @@ func CreateTicketTable() {
 	_, err := config.DB().NewCreateTable().Model((*Ticket)(nil)).
 					ForeignKey(`("author_id") REFERENCES "user" ("id") ON DELETE CASCADE`).
 					ForeignKey(`("resolved_by_id") REFERENCES "user" ("id") ON DELETE CASCADE`).
-					ForeignKey(`("type") REFERENCES "ticket_type" ("id") ON DELETE CASCADE`).
+					ForeignKey(`("cluster_id") REFERENCES "cluster" ("id") ON DELETE CASCADE`).
+					ForeignKey(`("type_id") REFERENCES "ticket_type" ("id") ON DELETE CASCADE`).
 					IfNotExists().
 					Exec(config.Ctx())
 	if err != nil { log.Fatal(err) }
@@ -79,8 +82,8 @@ func AllTickets() []TicketWithTypeAndAuthor {
 	err := config.DB().NewSelect().Model(&tickets).
 				ColumnExpr("ticket.*").
 				ColumnExpr("tt.name AS ticket_type__name").
-				ColumnExpr("a.login AS author__login, a.image AS author__image").
-				Join("JOIN ticket_type AS tt ON tt.id = ticket.type").
+				ColumnExpr("a.id_intra AS authod__id_intra, a.login AS author__login, a.image AS author__image").
+				Join("JOIN ticket_type AS tt ON tt.id = ticket.type_id").
 				Join("JOIN public.\"user\" AS a ON a.id = ticket.author_id").
 				Scan(config.Ctx())
 	if err != nil { log.Fatal(err) }
@@ -95,8 +98,8 @@ func AllTicketsOfSeatWithTypeAndAuthor(seat, limit string) []TicketWithTypeAndAu
 					Where("seat = ?", seat).
 					ColumnExpr("ticket.*").
 					ColumnExpr("tt.name AS ticket_type__name").
-					ColumnExpr("a.login AS author__login, a.image AS author__image").
-					Join("JOIN ticket_type AS tt ON tt.id = ticket.type").
+					ColumnExpr("a.id_intra AS author__id_intra, a.login AS author__login, a.image AS author__image").
+					Join("JOIN ticket_type AS tt ON tt.id = ticket.type_id").
 					Join("JOIN public.\"user\" AS a ON a.id = ticket.author_id").
 					Order("ticket.created_at DESC")
 	

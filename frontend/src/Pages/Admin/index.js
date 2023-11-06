@@ -22,7 +22,7 @@ function Admin() {
 	async function getAllTickets() {
 		await client.get(API_ROUTES.GET_TICKETS)
 				.then((response) => {
-					setTickets(response.data);
+					if (response.data) { setTickets(response.data); }
 					console.log(response.data)
 				})
 				.catch((error) => {
@@ -33,9 +33,8 @@ function Admin() {
 	async function getIssueTypes() {
 		await client.get(API_ROUTES.GET_TICKET_TYPES)
 				.then((response) => {
+					if (response.data) { setIssueTypes(response.data); }
 					console.log(response.data)
-					var data = response.data
-					setIssueTypes(data)
 				})
 				.catch((error) => {
 					toast.error('An error occured');
@@ -45,8 +44,8 @@ function Admin() {
 	async function getClusters() {
 		await client.get(API_ROUTES.GET_CLUSTERS)
 				.then((response) => {
+					if (response.data) { setClusters(response.data); }
 					console.log(response.data);
-					setClusters(response.data);
 				})
 				.catch((error) => {
 					toast.error('An error occured');

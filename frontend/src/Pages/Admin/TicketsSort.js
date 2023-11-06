@@ -82,7 +82,7 @@ function TicketsSort({ tickets=[], issueTypes=[] }) {
 										: [];
 			}
 			setTicketsFiltered(newTicketsFiltered);
-			if (tickets.length > 0) { setToRefreshFilteredTickets(false); }
+			setToRefreshFilteredTickets(false);
 		}
 
 		if (ticketsFiltered) {

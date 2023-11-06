@@ -4,7 +4,7 @@ import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Space
 import FormTicket from './FormTicket.js';
 import ListTickets from '../../Components/ListTickets.js';
 
-function ModalTickets({ open, setOpen, seat, setSelectedSeat, issueTypes, tickets }) {
+function ModalTickets({ open, setOpen, seat, cluster, setSelectedSeat, issueTypes, tickets }) {
 	function close() {
 		setSelectedSeat();
 		setOpen(false);
@@ -25,7 +25,7 @@ function ModalTickets({ open, setOpen, seat, setSelectedSeat, issueTypes, ticket
 					<div className="flex items-center flex-wrap">
 
 						<div style={{ width: isMobile ? '100%' : '39%', display: "inline-block" }}>
-							<FormTicket seat={seat} issueTypes={issueTypes} closeModal={close} />
+							<FormTicket seat={seat} cluster={cluster} issueTypes={issueTypes} closeModal={close} />
 						</div>
 
 						<Spacer x={2}/>

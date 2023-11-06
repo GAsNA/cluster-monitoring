@@ -30,9 +30,6 @@ func main() {
 	tt = &models.TicketType{ Name: "Other" }
 	models.NewTicketType(tt)*/
 
-	// TABLE TICKET
-	models.CreateTicketTable()
-
 	// TABLE CLUSTER
 	models.CreateClusterTable()
 	/*c := &models.Cluster{ Name: "Bess-f1", Link: "https://cdn.intra.42.fr/cluster/image/182/BESS-f1.svg" }
@@ -57,6 +54,12 @@ func main() {
 	models.NewCluster(c)
 	c = &models.Cluster{ Name: "Made-f0D", Link: "https://cdn.intra.42.fr/cluster/image/231/MADE-f0D.svg" }
 	models.NewCluster(c)*/
+
+	// TABLE TICKET
+	models.CreateTicketTable()
+
+	// TABLE POST
+	models.CreatePostTable()
 
 	router := InitializeRouter()
 

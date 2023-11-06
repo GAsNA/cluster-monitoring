@@ -6,7 +6,7 @@ import { API_ROUTES } from '../../utils/constants.jsx';
 import ModalConfirmation from '../../Components/ModalConfirmation.js';
 import ErrorCard from '../../Components/ErrorCard.js';
 
-function FormTicket({ seat, issueTypes, closeModal }) {
+function FormTicket({ seat, cluster, issueTypes, closeModal }) {
 	const defaultIssueTypeID = issueTypes ? (issueTypes[0].ID).toString() : ""
 
 	const [ticketType, setTicketType] = useState(new Set([defaultIssueTypeID]));
@@ -22,7 +22,7 @@ function FormTicket({ seat, issueTypes, closeModal }) {
 
 	async function send() {
 		setSending(true);
-		await client.post(API_ROUTES.CREATE_TICKET, { "Seat": seat.id, "Type": parseInt([...ticketType][0]), "Comment": comment, })
+		await client.post(API_ROUTES.CREATE_TICKET, { "Seat": seat.id, "ClusterID": cluster.ID, "TypeID": parseInt([...ticketType][0]), "Comment": comment, })
 				.then((response) => {
 					console.log(response.data);
 					toast.success('Ticket successfully sent');
