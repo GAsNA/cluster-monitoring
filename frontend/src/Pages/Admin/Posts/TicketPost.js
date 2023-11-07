@@ -15,7 +15,7 @@ function TicketPost({ post, clusters, setPost, setOpenModalConfirmation }) {
 	const [initialSeat, setInitialSeat] = useState(post.Seat);
 	
 	return (
-		<Card style={{ padding: '2%', marginBottom: '2%', background: 'white', color: 'black' }}>
+		<Card style={{ padding: '2%', marginBottom: '1%', background: 'white', color: 'black' }}>
 			<CardHeader className="justify-between" style={{ display: 'flex', flexWrap: 'wrap' }}>
 				
 				<div style={{ maxWidth: '400px' }}>
