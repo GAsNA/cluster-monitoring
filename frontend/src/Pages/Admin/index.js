@@ -8,6 +8,7 @@ import { client } from '../../utils/common.jsx';
 import TicketsSort from './TicketsSort.js';
 import ManageTicketTypes from './TicketTypes/ManageTicketTypes.js';
 import ManageClusters from './Clusters/ManageClusters.js';
+import ManagePosts from './Posts/ManagePosts.js';
 
 function Admin() {
 	const user = JSON.parse(localStorage.getItem("user"))
@@ -15,6 +16,7 @@ function Admin() {
 	const [tickets, setTickets] = useState([]);
 	const [issueTypes, setIssueTypes] = useState([]);
 	const [clusters, setClusters] = useState([]);
+	const [posts, setPosts] = useState([]);
 	const [init, setInit] = useState(false);
 
 	const [windowHeight, setWindowHeight] = useState(window.innerHeight);
@@ -51,6 +53,17 @@ function Admin() {
 					toast.error('An error occured');
 				})
 	}
+
+	async function getPosts() {
+		await client.get(API_ROUTES.GET_POSTS)
+				.then((response) => {
+					if (response.data) { setPosts(response.data); }
+					console.log(response.data);
+				})
+				.catch((error) => {
+					toast.error('An error occured');
+				})
+	}
 	
 	useLayoutEffect(() => {
 		function updateWindowHeight() {
@@ -63,7 +76,7 @@ function Admin() {
 	}, []);
 
 	useEffect(() => {
-		if (!init) { setInit(true); getAllTickets(); getIssueTypes(); getClusters(); }
+		if (!init) { setInit(true); getAllTickets(); getIssueTypes(); getClusters(); getPosts(); }
 	}, [init])
 
 	if (user && !user.IsStaff) {
@@ -99,7 +112,7 @@ function Admin() {
 
 				<Tab key="posts" title="Posts">
 					<div style={{ maxWidth: '1000px', margin: 'auto' }}>
-						<TicketsSort tickets={tickets} issueTypes={issueTypes} />
+						<ManagePosts posts={posts} />
 					</div>
 				</Tab>
 			</Tabs>
