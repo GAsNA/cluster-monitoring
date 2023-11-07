@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Button, Card, CardHeader, DropdownItem } from '@nextui-org/react';
+import { Button } from '@nextui-org/react';
 import { toast } from 'react-hot-toast';
-import { client } from '../../utils/common.jsx';
-import { API_ROUTES } from '../../utils/constants.jsx';
+import { client } from '../../../utils/common.jsx';
+import { API_ROUTES } from '../../../utils/constants.jsx';
+import TicketCluster from './TicketCluster.js';
 import ModalCluster from './ModalCluster.js';
-import ModalConfirmation from '../../Components/ModalConfirmation.js';
-import OptionButton from '../../Components/OptionButton.js';
+import ModalConfirmation from '../../../Components/ModalConfirmation.js';
 
 function ManageClusters({ tickets, clusters }) {
 	const [openModalCluster, setOpenModalCluster] = useState(false);
@@ -23,16 +23,6 @@ function ManageClusters({ tickets, clusters }) {
 				})
 	}
 
-	function actionsModify(item) {
-		setCluster(item);
-		setOpenModalCluster(true);
-	}
-
-	function actionsDelete(item) {
-		setCluster(item);
-		setOpenModalConfirmation(true);
-	}
-
 	return (
 		<>
 			<Button color="primary" onPress={setOpenModalCluster}>Add a cluster</Button>
@@ -44,30 +34,12 @@ function ManageClusters({ tickets, clusters }) {
 			<div style={{ display: 'grid', gridTemplateColumns: 'auto auto', alignItems: 'start', marginTop: '1%' }}>
 
 				{ clusters.map((item) => (
-					<Card key={item.ID} style={{ padding: '1%', marginBottom: '2%', background: '#231f20', color: 'white', marginRight: '1%' }}>
-						<CardHeader className="justify-between">
-							<div>
-								{ item.Name }
-							</div>
-
-							<div>
-								<span style={{ color: '#01babc' }}>
-									{ (tickets.filter(ticket => ticket.Seat.toLowerCase().startsWith(item.Name.toLowerCase()))).length }
-								</span> tickets
-							</div>
-
-							<OptionButton dropdownItems={[
-								<DropdownItem textValue="modify" key="modify" onPress={() => actionsModify(item)}>
-									Modify
-								</DropdownItem>,
-								<DropdownItem textValue="delete" key="delete" style={{ color: '#e96a64' }}
-									onPress={() => actionsDelete(item)}
-								>
-									Delete
-								</DropdownItem>
-							]} />
-						</CardHeader>
-					</Card>
+					<div key={item.ID}>
+						<TicketCluster cluster={item} tickets={tickets} setCluster={setCluster}
+							setOpenModalCluster={setOpenModalCluster}
+							setOpenModalConfirmation={setOpenModalConfirmation}
+						/>
+					</div>
 				))}
 
 			</div>

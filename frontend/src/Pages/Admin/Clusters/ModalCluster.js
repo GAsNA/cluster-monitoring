@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input, Button, Spacer } from '@nextui-org/react';
 import { toast } from 'react-hot-toast';
-import { client } from '../../utils/common.jsx';
-import { API_ROUTES } from '../../utils/constants.jsx';
-import ModalConfirmation from '../../Components/ModalConfirmation.js';
+import { client } from '../../../utils/common.jsx';
+import { API_ROUTES } from '../../../utils/constants.jsx';
+import ModalConfirmation from '../../../Components/ModalConfirmation.js';
 
 function ModalCluster({ open, setOpen, clusters, cluster, setCluster }) {
 	const [name, setName] = useState("");
@@ -15,7 +15,7 @@ function ModalCluster({ open, setOpen, clusters, cluster, setCluster }) {
 	const action = cluster ? modify : create;
 
 	function onNameChange(value) {
-		setName(value.charAt(0).toUpperCase() + value.slice(1).toLowerCase())
+		setName(value.charAt(0).toUpperCase() + value.slice(1))
 	}
 
 	function close() {

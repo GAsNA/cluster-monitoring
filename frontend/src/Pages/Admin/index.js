@@ -6,8 +6,8 @@ import Navigator from '../../Components/Navigator.js';
 import { APP_ROUTES, API_ROUTES } from '../../utils/constants.jsx';
 import { client } from '../../utils/common.jsx';
 import TicketsSort from './TicketsSort.js';
-import ManageTicketTypes from './ManageTicketTypes.js';
-import ManageClusters from './ManageClusters.js';
+import ManageTicketTypes from './TicketTypes/ManageTicketTypes.js';
+import ManageClusters from './Clusters/ManageClusters.js';
 
 function Admin() {
 	const user = JSON.parse(localStorage.getItem("user"))

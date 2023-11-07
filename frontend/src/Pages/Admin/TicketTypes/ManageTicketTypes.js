@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Button, Card, CardHeader, DropdownItem } from '@nextui-org/react';
+import { Button } from '@nextui-org/react';
 import { toast } from 'react-hot-toast';
-import { client } from '../../utils/common.jsx';
-import { API_ROUTES } from '../../utils/constants.jsx';
+import { client } from '../../../utils/common.jsx';
+import { API_ROUTES } from '../../../utils/constants.jsx';
+import TicketTicketType from './TicketTicketType.js';
 import ModalTicketType from './ModalTicketType.js';
-import ModalConfirmation from '../../Components/ModalConfirmation.js';
-import OptionButton from '../../Components/OptionButton.js';
+import ModalConfirmation from '../../../Components/ModalConfirmation.js';
 
 function ManageTicketTypes({ tickets, issueTypes }) {
 	const [openModalTicketType, setOpenModalTicketType] = useState(false);
@@ -23,16 +23,6 @@ function ManageTicketTypes({ tickets, issueTypes }) {
 				})
 	}
 
-	function actionsModify(type) {
-		setTicketType(type);
-		setOpenModalTicketType(true);
-	}
-
-	function actionsDelete(type) {
-		setTicketType(type);
-		setOpenModalConfirmation(true);
-	}
-
 	return (
 		<>
 			<Button color="primary" onPress={setOpenModalTicketType}>Add a type</Button>
@@ -44,34 +34,12 @@ function ManageTicketTypes({ tickets, issueTypes }) {
 			<div style={{ display: 'grid', gridTemplateColumns: 'auto auto', alignItems: 'start', marginTop: '1%' }}>
 
 				{ issueTypes.map((type) => (
-					<Card key={type.ID} style={{ padding: '1%', marginBottom: '2%', background: '#231f20', color: 'white', marginRight: '1%' }}>
-						<CardHeader className="justify-between">
-							<div>
-								{ type.Name.length > 12 ?
-									type.Name.slice(0, 9) + "..."
-									:
-									type.Name
-								}
-							</div>
-
-							<div>
-								<span style={{ color: '#01babc' }}>
-									{ (tickets.filter(ticket => ticket.TypeID === type.ID)).length }
-								</span> tickets
-							</div>
-
-							<OptionButton dropdownItems={[
-								<DropdownItem textValue="modify" key="modify" onPress={() => actionsModify(type)}>
-									Modify
-								</DropdownItem>,
-								<DropdownItem textValue="delete" key="delete" style={{ color: '#e96a64' }}
-									onPress={() => actionsDelete(type)}
-								>
-									Delete
-								</DropdownItem>
-							]} />
-						</CardHeader>
-					</Card>
+					<div key={type.ID}>
+						<TicketTicketType ticketType={type} tickets={tickets} setTicketType={setTicketType}
+							setOpenModalTicketType={setOpenModalTicketType}
+							setOpenModalConfirmation={setOpenModalConfirmation}
+						/>
+					</div>
 				))}
 
 			</div>

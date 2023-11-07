@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input, Button } from '@nextui-org/react';
 import { toast } from 'react-hot-toast';
-import { client } from '../../utils/common.jsx';
-import { API_ROUTES } from '../../utils/constants.jsx';
-import ModalConfirmation from '../../Components/ModalConfirmation.js';
+import { client } from '../../../utils/common.jsx';
+import { API_ROUTES } from '../../../utils/constants.jsx';
+import ModalConfirmation from '../../../Components/ModalConfirmation.js';
 
 function ModalTicketType({ open, setOpen, ticketTypes, ticketType, setTicketType }) {
 	const [name, setName] = useState("");

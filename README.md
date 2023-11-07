@@ -10,6 +10,7 @@ Frontend is in React ; Backend is in Go.
     - possibility to archieved ticket types and clusters ??
     - possibility to reoganise order of cluster and ticket type ?
     - multi selection for ticket
+    - get cluster with ticket to filter nb ticket in this cluster
 - Anonymisation button
 - Ticket linked to post NOT SEAT ?? (because ethernet for example)
 - Pagination on back for ticket (at least) - so pagination in filters page is made in back too
