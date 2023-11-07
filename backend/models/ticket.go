@@ -82,7 +82,7 @@ func AllTickets() []TicketWithTypeAndAuthor {
 	err := config.DB().NewSelect().Model(&tickets).
 				ColumnExpr("ticket.*").
 				ColumnExpr("tt.name AS ticket_type__name").
-				ColumnExpr("a.id_intra AS authod__id_intra, a.login AS author__login, a.image AS author__image").
+				ColumnExpr("a.id_intra AS author__id_intra, a.login AS author__login, a.image AS author__image").
 				Join("JOIN ticket_type AS tt ON tt.id = ticket.type_id").
 				Join("JOIN public.\"user\" AS a ON a.id = ticket.author_id").
 				Scan(config.Ctx())

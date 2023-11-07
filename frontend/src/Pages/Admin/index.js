@@ -96,6 +96,12 @@ function Admin() {
 						</div>
 					</div>
 				</Tab>
+
+				<Tab key="posts" title="Posts">
+					<div style={{ maxWidth: '1000px', margin: 'auto' }}>
+						<TicketsSort tickets={tickets} issueTypes={issueTypes} />
+					</div>
+				</Tab>
 			</Tabs>
 		</>
 	);

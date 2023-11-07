@@ -56,7 +56,7 @@ function ManageTicketTypes({ tickets, issueTypes }) {
 
 							<div>
 								<span style={{ color: '#01babc' }}>
-									{ (tickets.filter(ticket => ticket.Type === type.ID)).length }
+									{ (tickets.filter(ticket => ticket.TypeID === type.ID)).length }
 								</span> tickets
 							</div>
 
