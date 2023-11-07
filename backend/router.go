@@ -35,6 +35,10 @@ func InitializeRouter() *mux.Router {
 	router.Methods("PUT", "OPTIONS").Path("/clusters/{id}").HandlerFunc(controllers.ClustersUpdate)
 	router.Methods("DELETE").Path("/clusters/{id}").HandlerFunc(controllers.ClustersDelete)
 
+		// POSTS
+	router.Methods("GET", "OPTIONS").Path("/posts").HandlerFunc(controllers.PostsIndex)
+	router.Methods("DELETE").Path("/posts/{id}").HandlerFunc(controllers.PostsDelete)
+
 	/* POSSIBLE ROUTES */
 		// USERS
 //	router.Methods("GET").Path("/users").HandlerFunc(controllers.UsersIndex)
@@ -51,6 +55,11 @@ func InitializeRouter() *mux.Router {
 
 		// CLUSTERS
 //	router.Methods("GET").Path("/clusters/{id}").HandlerFunc(controllers.ClustersShow)
+
+		// POSTS
+//	router.Methods("POST").Path("/posts").HandlerFunc(controllers.PostsCreate)
+//	router.Methods("PUT", "OPTIONS").Path("/posts/{id}").HandlerFunc(controllers.PostsUpdate)
+//	router.Methods("GET").Path("/posts/{id}").HandlerFunc(controllers.PostsShow)
 
 	return router
 }

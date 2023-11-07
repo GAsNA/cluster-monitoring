@@ -5,7 +5,7 @@ import { API_ROUTES } from '../../../utils/constants.jsx';
 import TicketPost from './TicketPost.js';
 import ModalConfirmation from '../../../Components/ModalConfirmation.js';
 
-function ManagePosts({ posts }) {
+function ManagePosts({ posts, clusters }) {
 	const [openModalConfirmation, setOpenModalConfirmation] = useState(false);
 
 	const [post, setPost] = useState();
@@ -26,7 +26,7 @@ function ManagePosts({ posts }) {
 
 				{ posts.map((item) => (
 					<div key={item.ID}>
-						<TicketPost post={item} setPost={setPost} setOpenModalConfirmation={setOpenModalConfirmation} />
+						<TicketPost post={item} clusters={clusters} setPost={setPost} setOpenModalConfirmation={setOpenModalConfirmation} />
 					</div>
 				))}
 
