@@ -99,7 +99,7 @@ function Ticket({ ticket, displaySeat=false }) {
 							</p>
 						/>
 						
-						<OptionButton background="white" dropdownItems={[
+						<OptionButton color="black" dropdownItems={[
 							<DropdownItem textValue="set as" key="set_resolved" color={ !ticket.Resolved ? "success" : "default" }
 								onPress={changeStatus}
 							>

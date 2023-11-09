@@ -1,14 +1,14 @@
 import React from 'react';
 import { Dropdown, DropdownTrigger, DropdownMenu, Button } from '@nextui-org/react';
-import {SettingIcon} from '../Icon/SettingIcon';
+import {VerticalDotsIcon} from '../Icon/VerticalDotsIcon';
 
-function OptionButton({ dropdownItems, background }) {
+function OptionButton({ dropdownItems, color="white" }) {
 
 	return (
 		<Dropdown placement="bottom-end">
 			<DropdownTrigger>
-				<Button isIconOnly variant="faded" aria-label="Settings" style={{ background: background }}>
-					<SettingIcon />
+				<Button isIconOnly variant="light" aria-label="Settings" size="sm">
+					<VerticalDotsIcon color={color} className="text-default-300" />
 				</Button>    
 			</DropdownTrigger>
 
