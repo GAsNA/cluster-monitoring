@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Input, Pagination, Select, SelectItem, RadioGroup, Radio } from '@nextui-org/react';
 import ListTickets from '../../Components/ListTickets.js';
 
-function TicketsSort({ tickets=[], issueTypes=[] }) {
+function TicketsSort({ tickets=[], ticketTypes=[] }) {
 	const [ticketsFiltered, setTicketsFiltered] = useState(tickets);
 	const [ticketsToShow, setTicketsToShow] = useState(ticketsFiltered);
 
@@ -20,14 +20,14 @@ function TicketsSort({ tickets=[], issueTypes=[] }) {
 		{ name: "Resolved", key: 'resolved' },
 		{ name: "In progress", key: 'inProgress' }
 	];
-	const [ticketTypes, setTicketTypes] = useState([]);
+	const [ticketTypesForSelect, setTicketTypesForSelect] = useState([]);
 	const orderByDate = [
 		{ name: "Desc", key: 'desc' }, 
 		{ name: "Asc", key: 'asc' },
 	];
 
 	const [getTickets, setGetTickets] = useState(false);
-	const [getTicketTypes, setGetTicketTypes] = useState(false);
+	const [getTicketTypesForSelect, setGetTicketTypesForSelect] = useState(false);
 	const [toRefreshFilteredTickets, setToRefreshFilteredTickets] = useState(true);
 
 	const refFilterSection = useRef(null);	
@@ -59,10 +59,10 @@ function TicketsSort({ tickets=[], issueTypes=[] }) {
 
 	useEffect(() => {
 		if (!getTickets && tickets.length > 0) { setGetTickets(true); setTicketsFiltered(tickets); }
-		if (!getTicketTypes && issueTypes.length > 0) { 
-			setGetTicketTypes(true); 
-			var data = [{ID: -1, Name: "All"}, ...issueTypes]
-			setTicketTypes(data);
+		if (!getTicketTypesForSelect && ticketTypes.length > 0) { 
+			setGetTicketTypesForSelect(true); 
+			var data = [{ID: -1, Name: "All"}, ...ticketTypes]
+			setTicketTypesForSelect(data);
 		}
 
 		if (toRefreshFilteredTickets) {
@@ -70,7 +70,7 @@ function TicketsSort({ tickets=[], issueTypes=[] }) {
 				ticket.Seat.toLowerCase().includes(seatChoice)
 				&& ticket.AuthorLogin.toLowerCase().includes(authorChoice)
 				&& (statusChoice === 'resolved' ? ticket.Resolved : (statusChoice === 'inProgress' ? !ticket.Resolved : ticket))
-				&& (Number(ticketTypeChoice) !== -1 ? (ticket.Type === Number(ticketTypeChoice)) : ticket)
+				&& (Number(ticketTypeChoice) !== -1 ? (ticket.TypeID === Number(ticketTypeChoice)) : ticket)
 			);
 			if (orderByDateChoice === 'desc') {
 				newTicketsFiltered = newTicketsFiltered ?
@@ -90,7 +90,7 @@ function TicketsSort({ tickets=[], issueTypes=[] }) {
 		} else {
 			setTicketsToShow([]);
 		}
-	}, [getTickets, getTicketTypes, currentPage, ticketsFiltered, tickets, issueTypes, authorChoice, seatChoice, statusChoice, ticketTypeChoice, orderByDateChoice, toRefreshFilteredTickets]);
+	}, [getTickets, getTicketTypesForSelect, currentPage, ticketsFiltered, tickets, ticketTypes, authorChoice, seatChoice, statusChoice, ticketTypeChoice, orderByDateChoice, toRefreshFilteredTickets]);
 
 	return (
 		<>
@@ -117,10 +117,10 @@ function TicketsSort({ tickets=[], issueTypes=[] }) {
 					</div>
 
 					<div style={{ width: '200px', margin: '15px 1%' }}>
-						{ ticketTypes && ticketTypes.length > 0 &&
-						<Select disallowEmptySelection defaultSelectedKeys={[(ticketTypes[0].ID).toString()]} label="Ticket types"
+						{ ticketTypesForSelect && ticketTypesForSelect.length > 0 &&
+						<Select disallowEmptySelection defaultSelectedKeys={[(ticketTypesForSelect[0].ID).toString()]} label="Ticket types"
 							labelPlacement="outside" onSelectionChange={onTicketTypeChoiceChange} >
-								{ ticketTypes.map((type) => (
+								{ ticketTypesForSelect.map((type) => (
 									<SelectItem textValue={type.Name} key={type.ID}>{type.Name}</SelectItem>
 								))}
 						</Select>

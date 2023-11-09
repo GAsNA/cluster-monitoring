@@ -14,7 +14,7 @@ function Admin() {
 	const user = JSON.parse(localStorage.getItem("user"))
 
 	const [tickets, setTickets] = useState([]);
-	const [issueTypes, setIssueTypes] = useState([]);
+	const [ticketTypes, setTicketTypes] = useState([]);
 	const [clusters, setClusters] = useState([]);
 	const [posts, setPosts] = useState([]);
 	const [init, setInit] = useState(false);
@@ -32,10 +32,10 @@ function Admin() {
 				})
 	}
 
-	async function getIssueTypes() {
+	async function getTicketTypes() {
 		await client.get(API_ROUTES.GET_TICKET_TYPES)
 				.then((response) => {
-					if (response.data) { setIssueTypes(response.data); }
+					if (response.data) { setTicketTypes(response.data); }
 					console.log(response.data)
 				})
 				.catch((error) => {
@@ -76,7 +76,7 @@ function Admin() {
 	}, []);
 
 	useEffect(() => {
-		if (!init) { setInit(true); getAllTickets(); getIssueTypes(); getClusters(); getPosts(); }
+		if (!init) { setInit(true); getAllTickets(); getTicketTypes(); getClusters(); getPosts(); }
 	}, [init])
 
 	if (user && !user.IsStaff) {
@@ -92,14 +92,14 @@ function Admin() {
 			<Tabs aria-label="Options">
 				<Tab key="tickets" title="Tickets">
 					<div style={{ maxWidth: '1000px', margin: 'auto' }}>
-						<TicketsSort tickets={tickets} setTickets={setTickets} issueTypes={issueTypes} />
+						<TicketsSort tickets={tickets} setTickets={setTickets} ticketTypes={ticketTypes} />
 					</div>
 				</Tab>
 
 				<Tab key="cluster-ticketTypes" title="Cluster/Ticket Types">
 					<div style={{ maxWidth: '1000px', margin: 'auto' }}>
 						<div style={{ height: (windowHeight*40/100) + 'px', overflow: 'auto', marginBottom: '2%' }}>
-							<ManageTicketTypes tickets={tickets} issueTypes={issueTypes} setIssueTypes={setIssueTypes} />
+							<ManageTicketTypes tickets={tickets} ticketTypes={ticketTypes} setTicketTypes={setTicketTypes} />
 						</div>
 
 						<Divider orientation="horizontal" />
