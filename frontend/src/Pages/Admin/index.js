@@ -112,7 +112,7 @@ function Admin() {
 
 				<Tab key="posts" title="Posts">
 					<div style={{ maxWidth: '1000px', margin: 'auto' }}>
-						<ManagePosts posts={posts} clusters={clusters} />
+						<ManagePosts posts={posts} setPosts={setPosts} clusters={clusters} />
 					</div>
 				</Tab>
 			</Tabs>

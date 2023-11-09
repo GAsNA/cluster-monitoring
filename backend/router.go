@@ -37,7 +37,7 @@ func InitializeRouter() *mux.Router {
 
 		// POSTS
 	router.Methods("GET", "OPTIONS").Path("/posts").HandlerFunc(controllers.PostsIndex)
-	router.Methods("DELETE").Path("/posts/{id}").HandlerFunc(controllers.PostsDelete)
+	router.Methods("DELETE", "OPTIONS").Path("/posts/{id}").HandlerFunc(controllers.PostsDelete)
 
 	/* POSSIBLE ROUTES */
 		// USERS
