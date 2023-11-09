@@ -7,15 +7,14 @@ Frontend is in React ; Backend is in Go.
 - Admin side (staff)
     - new page for mac adress and serie num from pc - possibility to import pc with CSV ?
     - set post to unavailable/do not use
+    - get cluster with ticket to filter nb ticket in this cluster
     - possibility to archieved ticket types and clusters ??
     - possibility to reoganise order of cluster and ticket type ?
-    - multi selection for ticket
-    - get cluster with ticket to filter nb ticket in this cluster
-    - tab for post (not ticket)
+    - multi selection for ticket and post
 - Anonymisation button
 - Ticket linked to post NOT SEAT ?? (because ethernet for example)
 - Pagination on back for ticket (at least) - so pagination in filters page is made in back too
-- SOCKET - NOT SOCKET RESPONSE FROM BACK
+- SOCKET - NOT SOCKET, RESPONSE FROM BACK
 - Change the color of the seats depending on the number of tickets "in progress"
     - get tickets in dasboard by cluster
 - In form ticket, if keyboard is choose, select keys on virtual keyboard
