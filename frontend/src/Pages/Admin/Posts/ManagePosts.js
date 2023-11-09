@@ -62,7 +62,7 @@ function ManagePosts({ posts, setPosts, clusters }) {
 				);
 			case "Actions":
 				return (
-					<div className="relative flex items-center gap-2" style={{ paddingLeft: '10px' }}>
+					<div className="relative flex items-center gap-2">
 						<Tooltip color="success" content="Save post">
 							<Button isIconOnly variant="light">
 								<span className="text-lg cursor-pointer active:opacity-50">

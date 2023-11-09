@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardBody } from '@nextui-org/react';
 import Ticket from './Ticket.js';
 
-function ListTickets({ tickets, displaySeat=false }) {
+function ListTickets({ tickets, setTickets, displaySeat=false }) {
 	
 	return (
 		<>
@@ -10,7 +10,7 @@ function ListTickets({ tickets, displaySeat=false }) {
 			tickets && tickets.length > 0 ?
 				tickets.map((ticket, index) => (
 					<div key={index}>
-						<Ticket ticket={ticket} displaySeat={displaySeat} />
+						<Ticket ticket={ticket} tickets={tickets} setTickets={setTickets} displaySeat={displaySeat} />
 					</div>
 				))
 			:

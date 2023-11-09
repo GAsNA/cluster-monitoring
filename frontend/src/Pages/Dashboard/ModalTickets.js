@@ -4,7 +4,7 @@ import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Space
 import FormTicket from './FormTicket.js';
 import ListTickets from '../../Components/ListTickets.js';
 
-function ModalTickets({ open, setOpen, seat, cluster, setSelectedSeat, issueTypes, tickets }) {
+function ModalTickets({ open, setOpen, seat, cluster, setSelectedSeat, issueTypes, tickets, setTickets }) {
 	function close() {
 		setSelectedSeat();
 		setOpen(false);
@@ -31,7 +31,7 @@ function ModalTickets({ open, setOpen, seat, cluster, setSelectedSeat, issueType
 						<Spacer x={2}/>
 
 						<div style={{ width: isMobile ? '100%' : '59%', display: "inline-block", maxHeight: '340px', overflow: 'auto', padding: '1%'}}>
-							<ListTickets tickets={tickets} />
+							<ListTickets tickets={tickets} setTickets={setTickets} />
 						</div>
 
 					</div>

@@ -124,7 +124,7 @@ function Dashboard() {
 			}
 
 			{ selectedSeat &&
-				<ModalTickets open={openModal} setOpen={setOpenModal} seat={selectedSeat} cluster={cluster} setSelectedSeat={setSelectedSeat} issueTypes={issueTypes} tickets={ticketsBySeat} />
+				<ModalTickets open={openModal} setOpen={setOpenModal} seat={selectedSeat} cluster={cluster} setSelectedSeat={setSelectedSeat} issueTypes={issueTypes} tickets={ticketsBySeat} setTickets={setTicketsBySeat} />
 			}
 		</>
 	);

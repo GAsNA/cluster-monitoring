@@ -6,7 +6,7 @@ import { URL_INTRA_PROFILES, API_ROUTES } from '../utils/constants.jsx';
 import ModalConfirmation from './ModalConfirmation';
 import OptionButton from './OptionButton';
 
-function Ticket({ ticket, displaySeat=false }) {
+function Ticket({ ticket, tickets, setTickets, displaySeat=false }) {
 	const user = JSON.parse(localStorage.getItem("user"))
 
 	const [openModalConfirmation, setOpenModalConfirmation] = useState(false);
@@ -28,6 +28,17 @@ function Ticket({ ticket, displaySeat=false }) {
 	async function changeStatus() {
 		await client.put(API_ROUTES.UPDATE_TICKET + ticket.ID, { "Resolved": !ticket.Resolved })
 			.then((response) => {
+				const newTicket = response.data
+				console.log(newTicket)
+				const newTickets = tickets.map((t) => {
+					if (t.ID === newTicket.ID) {
+						t.Resolved = newTicket.Resolved;
+						t.ResolvedAt = newTicket.ResolvedAt;
+						t.ResolvedByID = newTicket.ResolvedByID;
+					}
+					return t;
+				});
+				setTickets(newTickets);
 				toast.success('Ticket status changed!');
 			})
 			.catch((error) => {
@@ -38,6 +49,7 @@ function Ticket({ ticket, displaySeat=false }) {
 	async function deleteTicket() {
 		await client.delete(API_ROUTES.DELETE_TICKET + ticket.ID)
 			.then((response) => {
+				setTickets(tickets.filter(function(t) { return t.ID !== ticket.ID }))
 				toast.success('Ticket deleted!');
 			})
 			.catch((error) => {

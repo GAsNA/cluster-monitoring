@@ -143,7 +143,7 @@ function TicketsSort({ tickets=[], issueTypes=[] }) {
 			</div>
 			
 			<div>
-				<ListTickets tickets={ticketsToShow} displaySeat />
+				<ListTickets tickets={ticketsToShow} setTickets={setTicketsToShow} displaySeat />
 			</div>
 		</>
 	);

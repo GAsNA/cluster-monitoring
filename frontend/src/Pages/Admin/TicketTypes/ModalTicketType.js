@@ -42,6 +42,7 @@ function ModalTicketType({ open, setOpen, ticketTypes, ticketType, setTicketType
 		await client.post(API_ROUTES.CREATE_TICKET_TYPE, { "Name": name })
 				.then((response) => {
 					console.log(response.data)
+					ticketTypes.push(response.data)
 					toast.success('Ticket type successfully created');
 				})
 				.catch((error) => {

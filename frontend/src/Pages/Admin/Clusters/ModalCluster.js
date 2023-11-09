@@ -44,6 +44,7 @@ function ModalCluster({ open, setOpen, clusters, cluster, setCluster }) {
 		await client.post(API_ROUTES.CREATE_CLUSTER, { "Name": name, "Link": link })
 				.then((response) => {
 					console.log(response.data)
+					clusters.push(response.data)
 					toast.success('Cluster successfully created');
 				})
 				.catch((error) => {

@@ -7,7 +7,7 @@ import TicketTicketType from './TicketTicketType.js';
 import ModalTicketType from './ModalTicketType.js';
 import ModalConfirmation from '../../../Components/ModalConfirmation.js';
 
-function ManageTicketTypes({ tickets, issueTypes }) {
+function ManageTicketTypes({ tickets, issueTypes, setIssueTypes }) {
 	const [openModalTicketType, setOpenModalTicketType] = useState(false);
 	const [openModalConfirmation, setOpenModalConfirmation] = useState(false);
 
@@ -16,6 +16,7 @@ function ManageTicketTypes({ tickets, issueTypes }) {
 	async function deleteTicketType() {
 		await client.delete(API_ROUTES.DELETE_TICKET_TYPE + ticketType.ID)
 				.then((response) => {
+					setIssueTypes(issueTypes.filter(function(tt) { return tt.ID !== ticketType.ID }))
 					toast.success('Ticket type deleted!');
 				})
 				.catch((error) => {

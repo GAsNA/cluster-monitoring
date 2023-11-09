@@ -92,20 +92,20 @@ function Admin() {
 			<Tabs aria-label="Options">
 				<Tab key="tickets" title="Tickets">
 					<div style={{ maxWidth: '1000px', margin: 'auto' }}>
-						<TicketsSort tickets={tickets} issueTypes={issueTypes} />
+						<TicketsSort tickets={tickets} setTickets={setTickets} issueTypes={issueTypes} />
 					</div>
 				</Tab>
 
 				<Tab key="cluster-ticketTypes" title="Cluster/Ticket Types">
 					<div style={{ maxWidth: '1000px', margin: 'auto' }}>
 						<div style={{ height: (windowHeight*40/100) + 'px', overflow: 'auto', marginBottom: '2%' }}>
-							<ManageTicketTypes tickets={tickets} issueTypes={issueTypes} />
+							<ManageTicketTypes tickets={tickets} issueTypes={issueTypes} setIssueTypes={setIssueTypes} />
 						</div>
 
 						<Divider orientation="horizontal" />
 
 						<div style={{ height: (windowHeight*40/100) + 'px', overflow: 'auto', marginTop: '2%' }}>
-							<ManageClusters tickets={tickets} clusters={clusters} />
+							<ManageClusters tickets={tickets} clusters={clusters} setClusters={setClusters} />
 						</div>
 					</div>
 				</Tab>

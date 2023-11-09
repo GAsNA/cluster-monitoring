@@ -7,7 +7,7 @@ import TicketCluster from './TicketCluster.js';
 import ModalCluster from './ModalCluster.js';
 import ModalConfirmation from '../../../Components/ModalConfirmation.js';
 
-function ManageClusters({ tickets, clusters }) {
+function ManageClusters({ tickets, clusters, setClusters }) {
 	const [openModalCluster, setOpenModalCluster] = useState(false);
 	const [openModalConfirmation, setOpenModalConfirmation] = useState(false);
 
@@ -16,6 +16,7 @@ function ManageClusters({ tickets, clusters }) {
 	async function deleteCluster() {
 		await client.delete(API_ROUTES.DELETE_CLUSTER + cluster.ID)
 				.then((response) => {
+					setClusters(clusters.filter(function(c) { return c.ID !== cluster.ID }))
 					toast.success('Cluster deleted!');
 				})
 				.catch((error) => {
