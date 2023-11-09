@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Card, CardHeader, CardBody, Chip, DropdownItem, User, Link, Spacer } from '@nextui-org/react';
-import toast from 'react-hot-toast';
-import { client } from '../utils/common.jsx';
-import { URL_INTRA_PROFILES, API_ROUTES } from '../utils/constants.jsx';
+import { URL_INTRA_PROFILES } from '../utils/constants.jsx';
+import { changeStatusTicket, deleteTicket } from '../utils/functionsAction.js';
 import ModalConfirmation from './ModalConfirmation';
 import OptionButton from './OptionButton';
 
@@ -23,38 +22,6 @@ function Ticket({ ticket, tickets, setTickets, displaySeat=false }) {
 
 	function areYouSure() {
 		setOpenModalConfirmation(true);
-	}
-
-	async function changeStatus() {
-		await client.put(API_ROUTES.UPDATE_TICKET + ticket.ID, { "Resolved": !ticket.Resolved })
-			.then((response) => {
-				const newTicket = response.data
-				console.log(newTicket)
-				const newTickets = tickets.map((t) => {
-					if (t.ID === newTicket.ID) {
-						t.Resolved = newTicket.Resolved;
-						t.ResolvedAt = newTicket.ResolvedAt;
-						t.ResolvedByID = newTicket.ResolvedByID;
-					}
-					return t;
-				});
-				setTickets(newTickets);
-				toast.success('Ticket status changed!');
-			})
-			.catch((error) => {
-				toast.error('An error occured');
-			})
-	}
-
-	async function deleteTicket() {
-		await client.delete(API_ROUTES.DELETE_TICKET + ticket.ID)
-			.then((response) => {
-				setTickets(tickets.filter(function(t) { return t.ID !== ticket.ID }))
-				toast.success('Ticket deleted!');
-			})
-			.catch((error) => {
-				toast.error('An error occured');
-			})
 	}
 
 	return (
@@ -105,7 +72,7 @@ function Ticket({ ticket, tickets, setTickets, displaySeat=false }) {
 						<Spacer />
 						
 						<ModalConfirmation open={openModalConfirmation} setOpen={setOpenModalConfirmation}
-							action={deleteTicket}
+							action={() => deleteTicket(ticket, tickets, setTickets)}
 							text=<p><span style={{ color: '#01babc' }}>Are you sure</span> you want to delete this ticket?
 								<br/>This action is irreversible.
 							</p>
@@ -113,7 +80,7 @@ function Ticket({ ticket, tickets, setTickets, displaySeat=false }) {
 						
 						<OptionButton color="black" dropdownItems={[
 							<DropdownItem textValue="set as" key="set_resolved" color={ !ticket.Resolved ? "success" : "default" }
-								onPress={changeStatus}
+								onPress={() => changeStatusTicket(ticket, tickets, setTickets)}
 							>
 								Set as { !ticket.Resolved ? resolvedText : inProgressText }
 							</DropdownItem>,

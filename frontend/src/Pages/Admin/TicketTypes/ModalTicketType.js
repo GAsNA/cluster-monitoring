@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input, Button } from '@nextui-org/react';
-import { toast } from 'react-hot-toast';
-import { client } from '../../../utils/common.jsx';
-import { API_ROUTES } from '../../../utils/constants.jsx';
+import { createTicketType, modifyTicketType } from '../../../utils/functionsAction.js';
 import ModalConfirmation from '../../../Components/ModalConfirmation.js';
 
 function ModalTicketType({ open, setOpen, ticketTypes, ticketType, setTicketType }) {
@@ -11,7 +9,10 @@ function ModalTicketType({ open, setOpen, ticketTypes, ticketType, setTicketType
 	const [openModalConfirmation, setOpenModalConfirmation] = useState(false);
 	const [sending, setSending] = useState(false);
 
-	const action = ticketType ? modify : create;
+	const action = ticketType ?
+					() => modifyTicketType(ticketType, name, setSending, close)
+					:
+					() => createTicketType(name, ticketTypes, setSending, close);
 
 	function onNameChange(value) {
 		setName(value.charAt(0).toUpperCase() + value.slice(1).toLowerCase())
@@ -35,35 +36,6 @@ function ModalTicketType({ open, setOpen, ticketTypes, ticketType, setTicketType
 		} else {
 			action();
 		}
-	}
-
-	async function create() {
-		setSending(true);
-		await client.post(API_ROUTES.CREATE_TICKET_TYPE, { "Name": name })
-				.then((response) => {
-					console.log(response.data)
-					ticketTypes.push(response.data)
-					toast.success('Ticket type successfully created');
-				})
-				.catch((error) => {
-					toast.error('An error occured');
-				})
-		setSending(false);
-		close();
-	}
-
-	async function modify() {
-		setSending(true);
-		await client.put(API_ROUTES.UPDATE_TICKET_TYPE + ticketType.ID, { "Name": name })
-				.then((response) => {
-					console.log(response.data)
-					toast.success('Ticket type successfully updated');
-				})
-				.catch((error) => {
-					toast.error('An error occured');
-				})
-		setSending(false);
-		close();
 	}
 
 	const handleKeyPress = (event) => {

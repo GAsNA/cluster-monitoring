@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Select, SelectItem, Textarea, Spacer, Button } from '@nextui-org/react';
-import toast from 'react-hot-toast';
-import { client } from '../../utils/common.jsx';
-import { API_ROUTES } from '../../utils/constants.jsx';
+import { createTicket } from '../../utils/functionsAction.js';
 import ModalConfirmation from '../../Components/ModalConfirmation.js';
 import ErrorCard from '../../Components/ErrorCard.js';
 
@@ -19,24 +17,9 @@ function FormTicket({ seat, cluster, issueTypes, closeModal }) {
 	function areYouSure() {
 		setOpenModalConfirmation(true);
 	}
-
-	async function send() {
-		setSending(true);
-		await client.post(API_ROUTES.CREATE_TICKET, { "Seat": seat.id, "ClusterID": cluster.ID, "TypeID": parseInt([...ticketType][0]), "Comment": comment, })
-				.then((response) => {
-					console.log(response.data);
-					toast.success('Ticket successfully sent');
-				})
-				.catch((error) => {
-					toast.error('An error occured');
-				});
-
-		setSending(false);
-		closeModal();
-	}
 	
 	const handleKeyPress = (event) => {
-		if (event.key === 'Enter') { send(); }
+		if (event.key === 'Enter') { createTicket(seat, cluster, ticketType, comment, setSending, closeModal); }
 	}
 
 	return (
@@ -70,7 +53,7 @@ function FormTicket({ seat, cluster, issueTypes, closeModal }) {
 				</Button>
 
 				<ModalConfirmation open={openModalConfirmation} setOpen={setOpenModalConfirmation}
-					action={send}
+					action={() => createTicket(seat, cluster, ticketType, comment, setSending, closeModal)}
 					text=<p><span style={{ color: '#01babc' }}>Are you sure</span>you want to send this ticket?</p>
 				/>
 			</>

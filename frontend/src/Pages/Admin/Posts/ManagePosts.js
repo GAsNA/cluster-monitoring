@@ -1,8 +1,6 @@
 import React from 'react';
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Input, Select, SelectItem, Tooltip, Button } from '@nextui-org/react';
-import { toast } from 'react-hot-toast';
-import { client } from '../../../utils/common.jsx';
-import { API_ROUTES } from '../../../utils/constants.jsx';
+import { deletePost } from '../../../utils/functionsAction.js';
 import { DeleteIcon } from '../../../Icon/DeleteIcon';
 import { SaveIcon } from '../../../Icon/SaveIcon';
 
@@ -14,17 +12,6 @@ function ManagePosts({ posts, setPosts, clusters }) {
 		{ key: "ClusterID", label: "CLUSTER", },
 		{ key: "Actions", label: "ACTIONS", },
 	];
-
-	async function deletePost(post) {
-		await client.delete(API_ROUTES.DELETE_POST + post.ID)
-				.then((response) => {
-					setPosts(posts.filter(function(p) { return p.ID !== post.ID }))
-					toast.success('Post deleted!');
-				})
-				.catch((error) => {
-					toast.error('An error occured');
-				})
-	}
 
 	function renderCell(item, columnKey) {
 		const cellValue = item[columnKey];
@@ -71,7 +58,7 @@ function ManagePosts({ posts, setPosts, clusters }) {
 							</Button>
 						</Tooltip>
 						<Tooltip color="danger" content="Delete post">
-							<Button isIconOnly variant="light" onPress={() => deletePost(item)}>
+							<Button isIconOnly variant="light" onPress={() => deletePost(item, posts, setPosts)}>
 								<span className="text-lg text-danger cursor-pointer active:opacity-50">
 									<DeleteIcon />
 								</span>

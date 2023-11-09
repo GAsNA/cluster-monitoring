@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input, Button, Spacer } from '@nextui-org/react';
-import { toast } from 'react-hot-toast';
-import { client } from '../../../utils/common.jsx';
-import { API_ROUTES } from '../../../utils/constants.jsx';
+import { createCluster, modifyCluster } from '../../../utils/functionsAction.js';
 import ModalConfirmation from '../../../Components/ModalConfirmation.js';
 
 function ModalCluster({ open, setOpen, clusters, cluster, setCluster }) {
@@ -12,7 +10,10 @@ function ModalCluster({ open, setOpen, clusters, cluster, setCluster }) {
 	const [openModalConfirmation, setOpenModalConfirmation] = useState(false);
 	const [sending, setSending] = useState(false);
 
-	const action = cluster ? modify : create;
+	const action = cluster ? 
+					() => modifyCluster(cluster, name, link, setSending, close)
+					:
+					() => createCluster(name, link, clusters, setSending, close);
 
 	function onNameChange(value) {
 		setName(value.charAt(0).toUpperCase() + value.slice(1))
@@ -37,35 +38,6 @@ function ModalCluster({ open, setOpen, clusters, cluster, setCluster }) {
 		} else {
 			action();
 		}
-	}
-
-	async function create() {
-		setSending(true);
-		await client.post(API_ROUTES.CREATE_CLUSTER, { "Name": name, "Link": link })
-				.then((response) => {
-					console.log(response.data)
-					clusters.push(response.data)
-					toast.success('Cluster successfully created');
-				})
-				.catch((error) => {
-					toast.error('An error occured');
-				})
-		setSending(false);
-		close();
-	}
-
-	async function modify() {
-		setSending(true);
-		await client.put(API_ROUTES.UPDATE_CLUSTER + cluster.ID, { "Name": name, "Link": link })
-				.then((response) => {
-					console.log(response.data)
-					toast.success('Cluster successfully updated');
-				})
-				.catch((error) => {
-					toast.error('An error occured');
-				})
-		setSending(false);
-		close();
 	}
 
 	const handleKeyPress= (event) => {

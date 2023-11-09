@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from '@nextui-org/react';
-import { toast } from 'react-hot-toast';
-import { client } from '../../../utils/common.jsx';
-import { API_ROUTES } from '../../../utils/constants.jsx';
+import { deleteTicketType } from '../../../utils/functionsAction.js';
 import TicketTicketType from './TicketTicketType.js';
 import ModalTicketType from './ModalTicketType.js';
 import ModalConfirmation from '../../../Components/ModalConfirmation.js';
@@ -12,17 +10,6 @@ function ManageTicketTypes({ tickets, issueTypes, setIssueTypes }) {
 	const [openModalConfirmation, setOpenModalConfirmation] = useState(false);
 
 	const [ticketType, setTicketType] = useState();
-
-	async function deleteTicketType() {
-		await client.delete(API_ROUTES.DELETE_TICKET_TYPE + ticketType.ID)
-				.then((response) => {
-					setIssueTypes(issueTypes.filter(function(tt) { return tt.ID !== ticketType.ID }))
-					toast.success('Ticket type deleted!');
-				})
-				.catch((error) => {
-					toast.error('An error occured');
-				})
-	}
 
 	return (
 		<>
@@ -45,7 +32,7 @@ function ManageTicketTypes({ tickets, issueTypes, setIssueTypes }) {
 
 			</div>
 
-			<ModalConfirmation open={openModalConfirmation} action={deleteTicketType}
+			<ModalConfirmation open={openModalConfirmation} action={() => deleteTicketType(ticketType, issueTypes, setIssueTypes)}
 				text=<p><span style={{ color: '#01babc' }}>Are you sure</span> you want to delete this ticket type?
 					<br/>This will delete <b><span style={{ color: '#01babc' }}>ALL</span></b> associated tickets.
 					<br/>This action is irreversible.

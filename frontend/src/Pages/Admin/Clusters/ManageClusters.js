@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from '@nextui-org/react';
-import { toast } from 'react-hot-toast';
-import { client } from '../../../utils/common.jsx';
-import { API_ROUTES } from '../../../utils/constants.jsx';
+import { deleteCluster } from '../../../utils/functionsAction.js';
 import TicketCluster from './TicketCluster.js';
 import ModalCluster from './ModalCluster.js';
 import ModalConfirmation from '../../../Components/ModalConfirmation.js';
@@ -12,17 +10,6 @@ function ManageClusters({ tickets, clusters, setClusters }) {
 	const [openModalConfirmation, setOpenModalConfirmation] = useState(false);
 
 	const [cluster, setCluster] = useState();
-
-	async function deleteCluster() {
-		await client.delete(API_ROUTES.DELETE_CLUSTER + cluster.ID)
-				.then((response) => {
-					setClusters(clusters.filter(function(c) { return c.ID !== cluster.ID }))
-					toast.success('Cluster deleted!');
-				})
-				.catch((error) => {
-					toast.error('An error occured');
-				})
-	}
 
 	return (
 		<>
@@ -45,7 +32,7 @@ function ManageClusters({ tickets, clusters, setClusters }) {
 
 			</div>
 
-			<ModalConfirmation open={openModalConfirmation} action={deleteCluster}
+			<ModalConfirmation open={openModalConfirmation} action={() => deleteCluster(cluster, clusters, setClusters)}
 				text=<p><span style={{ color: '#01babc' }}>Are you sure</span> you want to delete this cluster?
 					<br/>This will delete <b><span style={{ color: '#01babc' }}>ALL</span></b> associated tickets.
 					<br/>This action is irreversible.

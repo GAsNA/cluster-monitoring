@@ -11,7 +11,7 @@ Frontend is in React ; Backend is in Go.
     - possibility to archieved ticket types and clusters ??
     - possibility to reoganise order of cluster and ticket type ?
     - multi selection for ticket and post
-- Functions actions clusters/ticket type/ticket/post etc in another separate file
+- MODIF FOR CLUSTERS AND TICKET TYPES NOT SEE DIRECTLY + see rework modif ticket
 - CHOOSE BETWEEN Ticket type AND Isseu type IN FRONT
 - Anonymisation button
 - Ticket linked to post NOT SEAT ?? (because ethernet for example)
