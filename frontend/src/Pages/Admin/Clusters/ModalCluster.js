@@ -3,7 +3,7 @@ import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input, Button
 import { createCluster, modifyCluster } from '../../../utils/functionsAction.js';
 import ModalConfirmation from '../../../Components/ModalConfirmation.js';
 
-function ModalCluster({ open, setOpen, clusters, cluster, setCluster }) {
+function ModalCluster({ open, setOpen, clusters, setClusters, cluster, setCluster }) {
 	const [name, setName] = useState("");
 	const [link, setLink] = useState("");
 
@@ -11,7 +11,7 @@ function ModalCluster({ open, setOpen, clusters, cluster, setCluster }) {
 	const [sending, setSending] = useState(false);
 
 	const action = cluster ? 
-					() => modifyCluster(cluster, name, link, setSending, close)
+					() => modifyCluster(cluster, name, link, clusters, setClusters, setSending, close)
 					:
 					() => createCluster(name, link, clusters, setSending, close);
 

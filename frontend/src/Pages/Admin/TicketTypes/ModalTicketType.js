@@ -3,14 +3,14 @@ import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input, Button
 import { createTicketType, modifyTicketType } from '../../../utils/functionsAction.js';
 import ModalConfirmation from '../../../Components/ModalConfirmation.js';
 
-function ModalTicketType({ open, setOpen, ticketTypes, ticketType, setTicketType }) {
+function ModalTicketType({ open, setOpen, ticketTypes, setTicketTypes, ticketType, setTicketType }) {
 	const [name, setName] = useState("");
 
 	const [openModalConfirmation, setOpenModalConfirmation] = useState(false);
 	const [sending, setSending] = useState(false);
 
 	const action = ticketType ?
-					() => modifyTicketType(ticketType, name, setSending, close)
+					() => modifyTicketType(ticketType, name, ticketTypes, setTicketTypes, setSending, close)
 					:
 					() => createTicketType(name, ticketTypes, setSending, close);
 

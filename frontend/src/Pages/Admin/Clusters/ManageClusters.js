@@ -16,7 +16,7 @@ function ManageClusters({ tickets, clusters, setClusters }) {
 			<Button color="primary" onPress={setOpenModalCluster}>Add a cluster</Button>
 
 			<ModalCluster open={openModalCluster} setOpen={setOpenModalCluster} clusters={clusters}
-				cluster={cluster} setCluster={setCluster}
+				setClusters={setClusters} cluster={cluster} setCluster={setCluster}
 			/>
 
 			<div style={{ display: 'grid', gridTemplateColumns: 'auto auto', alignItems: 'start', marginTop: '1%' }}>

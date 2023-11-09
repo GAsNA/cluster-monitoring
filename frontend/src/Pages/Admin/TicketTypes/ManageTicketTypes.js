@@ -16,7 +16,7 @@ function ManageTicketTypes({ tickets, issueTypes, setIssueTypes }) {
 			<Button color="primary" onPress={setOpenModalTicketType}>Add a type</Button>
 
 			<ModalTicketType open={openModalTicketType} setOpen={setOpenModalTicketType} ticketTypes={issueTypes}
-				ticketType={ticketType} setTicketType={setTicketType}
+				setTicketTypes={setIssueTypes} ticketType={ticketType} setTicketType={setTicketType}
 			/>
 
 			<div style={{ display: 'grid', gridTemplateColumns: 'auto auto', alignItems: 'start', marginTop: '1%' }}>
