@@ -12,14 +12,6 @@ import (
 	"main/models"
 )
 
-func WsTicketsIndex(w http.ResponseWriter, r *http.Request) {
-	ws, err := upgrader.Upgrade(w, r, nil)
-	if err != nil { log.Fatal(err) }
-
-	err = ws.WriteJSON(models.AllTickets())
-	if err != nil { log.Fatal(err) }
-}
-
 func TicketsIndex(w http.ResponseWriter, r *http.Request) {
 	addHeader(&w)
 
