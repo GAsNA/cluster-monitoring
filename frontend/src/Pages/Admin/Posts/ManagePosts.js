@@ -79,6 +79,7 @@ function ManagePosts({ posts, setPosts, clusters }) {
 }
 
 function MacCell({ item, newPosts, setNewPosts }) {
+	const itemInNewPosts = newPosts.find(p => { return p.ID === item.ID })
 
 	function change(val) {
 		const arr = newPosts.map(p => {
@@ -89,13 +90,13 @@ function MacCell({ item, newPosts, setNewPosts }) {
 
 	return (
 		<div style={{ maxWidth: '200px' }}>
-			<Input value={newPosts.find(p => { return p.ID === item.ID }).Mac}
-				onValueChange={change} variant="underlined" />
+			<Input value={itemInNewPosts.Mac} onValueChange={change} variant="underlined" />
 		</div>
 	);
 }
 
 function SerialCell({ item, newPosts, setNewPosts }) {
+	const itemInNewPosts = newPosts.find(p => { return p.ID === item.ID })
 	
 	function change(val) {
 		const arr = newPosts.map(p => {
@@ -106,13 +107,13 @@ function SerialCell({ item, newPosts, setNewPosts }) {
 
 	return (
 		<div style={{ maxWidth: '200px' }}>
-			<Input value={newPosts.find(p => { return p.ID === item.ID }).Serial}
-				onValueChange={change} variant="underlined"/>
+			<Input value={itemInNewPosts.Serial} onValueChange={change} variant="underlined"/>
 		</div>
 	);
 }
 
 function SeatCell({ item, newPosts, setNewPosts }) {
+	const itemInNewPosts = newPosts.find(p => { return p.ID === item.ID })
 	
 	function change(val) {
 		const arr = newPosts.map(p => {
@@ -123,13 +124,13 @@ function SeatCell({ item, newPosts, setNewPosts }) {
 
 	return (
 		<div style={{ maxWidth: '200px' }}>
-			<Input value={newPosts.find(p => { return p.ID === item.ID }).Seat}
-				onValueChange={change} variant="underlined"/>
+			<Input value={itemInNewPosts.Seat} onValueChange={change} variant="underlined"/>
 		</div>
 	);
 }
 
 function ClusterIDCell({ item, clusters, newPosts, setNewPosts }) {
+	const itemInNewPosts = newPosts.find(p => { return p.ID === item.ID })
 
 	function change(val) {
 		const arr = newPosts.map(p => {
@@ -138,9 +139,17 @@ function ClusterIDCell({ item, clusters, newPosts, setNewPosts }) {
 		setNewPosts(arr);
 	}
 
+	const seatOfTheItem = itemInNewPosts.Seat
+	React.useEffect(() => {
+		const newCluster = clusters.find(c => { return seatOfTheItem.toLowerCase().startsWith(c.Name.toLowerCase()) })
+		if (newCluster)
+			setNewPosts(newPosts.map(p => {return p.ID === item.ID ? { ...p, ClusterID: newCluster.ID } : p;}));
+		// eslint-disable-next-line
+	}, [seatOfTheItem, clusters, item.ID, setNewPosts])
+
 	return (
 		<div style={{ width: '200px' }}>
-			<Select defaultSelectedKeys={item.ClusterID !== 0 ? [item.ClusterID.toString()] : []}
+			<Select selectedKeys={itemInNewPosts.ClusterID !== 0 ? [itemInNewPosts.ClusterID.toString()] : []}
 				variant="underlined" size="sm" onSelectionChange={change}
 			>
 				{ clusters.map((cluster) => (
