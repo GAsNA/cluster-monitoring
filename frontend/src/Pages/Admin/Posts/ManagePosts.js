@@ -125,8 +125,11 @@ function ClusterIDCell({ item, clusters, newPosts, setNewPosts }) {
 	const seatOfTheItem = itemInNewPosts.Seat
 	React.useEffect(() => {
 		const newCluster = clusters.find(c => { return seatOfTheItem.toLowerCase().startsWith(c.Name.toLowerCase()) })
-		if (newCluster)
+		if (newCluster) {
 			setNewPosts(newPosts.map(p => {return p.ID === item.ID ? { ...p, ClusterID: newCluster.ID } : p;}));
+		} else {
+			setNewPosts(newPosts.map(p => {return p.ID === item.ID ? { ...p, ClusterID: 0 } : p;}));
+		}
 		// eslint-disable-next-line
 	}, [seatOfTheItem, clusters, item.ID, setNewPosts])
 
