@@ -22,11 +22,11 @@ function ManagePosts({ posts, setPosts, clusters }) {
 			case "Mac":
 				return (<MacCell item={item} newPosts={newPosts} setNewPosts={setNewPosts} />);
 			case "Serial":
-				return (<SerialCell item={item} />);
+				return (<SerialCell item={item} newPosts={newPosts} setNewPosts={setNewPosts} />);
 			case "Seat":
-				return (<SeatCell item={item} />);
+				return (<SeatCell item={item} newPosts={newPosts} setNewPosts={setNewPosts} />);
 			case "ClusterID":
-				return (<ClusterIDCell item={item} clusters={clusters} />);
+				return (<ClusterIDCell item={item} clusters={clusters} newPosts={newPosts} setNewPosts={setNewPosts} />);
 			case "Actions":
 				return (
 					<div className="relative flex items-center gap-2">
@@ -61,8 +61,8 @@ function ManagePosts({ posts, setPosts, clusters }) {
 					}
 				</TableHeader>
 
-				<TableBody items={newPosts} emptyContent={"No registered posts."}>
-					{(item) => (
+				<TableBody emptyContent={"No registered posts."}>
+					{newPosts.map((item) => (
 						<TableRow key={item.ID}>
 							{ (columnKey) => (
 								<TableCell style={{ maxWidth: '200px' }}>
@@ -70,7 +70,7 @@ function ManagePosts({ posts, setPosts, clusters }) {
 								</TableCell>
 							)}
 						</TableRow>
-					)}
+					))}
 				</TableBody>
 			</Table>
 
@@ -80,49 +80,68 @@ function ManagePosts({ posts, setPosts, clusters }) {
 
 function MacCell({ item, newPosts, setNewPosts }) {
 
-	const [mac, setMac] = useState(newPosts.find(p => { return p.ID === item.ID }).Mac)
-
 	function change(val) {
 		const arr = newPosts.map(p => {
-			if (p.ID === item.ID) {
-				return { ...p, Mac: val };
-			} else {
-				return p;
-			}
+			return p.ID === item.ID ? { ...p, Mac: val } : p;
 		});
-		console.log(arr);
 		setNewPosts(arr);
-		setMac(val);
 	}
 
 	return (
 		<div style={{ maxWidth: '200px' }}>
-			<Input value={mac} onValueChange={(val) => change(val)} variant="underlined" />
+			<Input value={newPosts.find(p => { return p.ID === item.ID }).Mac}
+				onValueChange={change} variant="underlined" />
 		</div>
 	);
 }
 
-function SerialCell({ item }) {
+function SerialCell({ item, newPosts, setNewPosts }) {
+	
+	function change(val) {
+		const arr = newPosts.map(p => {
+			return p.ID === item.ID ? { ...p, Serial: val } : p;
+		});
+		setNewPosts(arr);
+	}
+
 	return (
 		<div style={{ maxWidth: '200px' }}>
-			<Input defaultValue={item.Serial} variant="underlined"/>
+			<Input value={newPosts.find(p => { return p.ID === item.ID }).Serial}
+				onValueChange={change} variant="underlined"/>
 		</div>
 	);
 }
 
-function SeatCell({ item }) {
+function SeatCell({ item, newPosts, setNewPosts }) {
+	
+	function change(val) {
+		const arr = newPosts.map(p => {
+			return p.ID === item.ID ? { ...p, Seat: val } : p;
+		});
+		setNewPosts(arr);
+	}
+
 	return (
 		<div style={{ maxWidth: '200px' }}>
-			<Input defaultValue={item.Seat} variant="underlined"/>
+			<Input value={newPosts.find(p => { return p.ID === item.ID }).Seat}
+				onValueChange={change} variant="underlined"/>
 		</div>
 	);
 }
 
-function ClusterIDCell({ item, clusters }) {
+function ClusterIDCell({ item, clusters, newPosts, setNewPosts }) {
+
+	function change(val) {
+		const arr = newPosts.map(p => {
+			return p.ID === item.ID ? { ...p, ClusterID: Number([...val][0]) } : p;
+		});
+		setNewPosts(arr);
+	}
+
 	return (
 		<div style={{ width: '200px' }}>
 			<Select defaultSelectedKeys={item.ClusterID !== 0 ? [item.ClusterID.toString()] : []}
-				variant="underlined" size="sm"
+				variant="underlined" size="sm" onSelectionChange={change}
 			>
 				{ clusters.map((cluster) => (
 					<SelectItem texteValue={cluster.Name} key={cluster.ID}>{cluster.Name}</SelectItem>
