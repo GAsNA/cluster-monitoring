@@ -22,6 +22,7 @@ export const API_ROUTES = {
 	UPDATE_CLUSTER: '/clusters/',
 	DELETE_CLUSTER: '/clusters/',
 	GET_POSTS: '/posts',
+	UPDATE_POST: '/posts/',
 	DELETE_POST: '/posts/',
 }
 

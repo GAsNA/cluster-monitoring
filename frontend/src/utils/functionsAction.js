@@ -88,10 +88,10 @@ export async function modifyTicketType(ticketType, name, ticketTypes, setTicketT
 	close();
 }
 
-export async function deleteTicketType(ticketType, issueTypes, setIssueTypes) {
+export async function deleteTicketType(ticketType, ticketTypes, setTicketTypes) {
 	await client.delete(API_ROUTES.DELETE_TICKET_TYPE + ticketType.ID)
 			.then((response) => {
-				setIssueTypes(issueTypes.filter(function(tt) { return tt.ID !== ticketType.ID }))
+				setTicketTypes(ticketTypes.filter(function(tt) { return tt.ID !== ticketType.ID }))
 				toast.success('Ticket type deleted!');
 			})
 			.catch((error) => {
@@ -100,6 +100,23 @@ export async function deleteTicketType(ticketType, issueTypes, setIssueTypes) {
 }
 
 /* -------------- POSTS -------------- */
+export async function modifyPost(post, newPosts, posts, setPosts) {
+	await client.put(API_ROUTES.UPDATE_POST + post.ID, newPosts.find((p) => { return p.ID === post.ID }))
+			.then((response) => {
+				const newPost = response.data
+				console.log(newPost)
+				const newAllPosts = posts.map((p) => {
+					if (p.ID === newPost.ID) {return newPost;}
+					return p;
+				});
+				setPosts(newAllPosts);
+				toast.success('Post successfully updated');
+			})
+			.catch((error) => {
+				toast.error('An error occured');
+			})
+}
+
 export async function deletePost(post, posts, setPosts) {
 	await client.delete(API_ROUTES.DELETE_POST + post.ID)
 			.then((response) => {

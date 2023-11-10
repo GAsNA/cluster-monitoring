@@ -14,8 +14,8 @@ type Post struct {
 	ID			int		`bun:"id,pk,autoincrement,type:SERIAL"`
 	Mac			string	`bun:"mac_address,notnull"`
 	Serial		string	`bun:"serial_number,notnull"`
-	Seat		string	`bun:"seat"`
-	ClusterID	int		`bun:"cluster_id"`
+	Seat		string	`bun:"seat,nullzero"`
+	ClusterID	int		`bun:"cluster_id,nullzero"`
 }
 
 // CREATE TABLE
@@ -28,10 +28,10 @@ func CreatePostTable() {
 }
 
 // ACTIONS
-func NewPost(c *Post) {
-	if c == nil { return }
+func NewPost(p *Post) {
+	if p == nil { return }
 
-	_, err := config.DB().NewInsert().Model(c).
+	_, err := config.DB().NewInsert().Model(p).
 					Ignore().
 					Exec(config.Ctx())
 	if err != nil { log.Fatal(err) }
@@ -59,11 +59,11 @@ func AllPosts() []Post {
 }
 
 	// Update
-func UpdatePost(c *Post) {
-	if c == nil { return }
+func UpdatePost(p *Post) {
+	if p == nil { return }
 
-	_, err := config.DB().NewUpdate().Model(c).
-				Where("id = ?", c.ID).
+	_, err := config.DB().NewUpdate().Model(p).
+				Where("id = ?", p.ID).
 				Exec(config.Ctx())
 	if err != nil { log.Fatal(err) }
 }

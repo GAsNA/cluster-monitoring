@@ -65,8 +65,7 @@ func main() {
 	p = &models.Post{ Mac: "D6:C2:12:45:A4:B8", Serial: "984653484", Seat: "bess-f1r6s4", ClusterID: 1 }
 	models.NewPost(p)
 	p = &models.Post{ Mac: "A4:D2:24:79:C1:D3", Serial: "84664815", Seat: "bess-f4r3s11", ClusterID: 4 }
-	models.NewPost(p)
-	*/
+	models.NewPost(p)*/
 
 	router := InitializeRouter()
 
