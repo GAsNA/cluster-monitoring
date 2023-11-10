@@ -5,7 +5,7 @@ import { Navigate } from 'react-router-dom';
 import Navigator from '../../Components/Navigator.js';
 import { APP_ROUTES, API_ROUTES } from '../../utils/constants.jsx';
 import { client } from '../../utils/common.jsx';
-import TicketsSort from './TicketsSort.js';
+import TicketsSort from './Tickets/TicketsSort.js';
 import ManageTicketTypes from './TicketTypes/ManageTicketTypes.js';
 import ManageClusters from './Clusters/ManageClusters.js';
 import ManagePosts from './Posts/ManagePosts.js';

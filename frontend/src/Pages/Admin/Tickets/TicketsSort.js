@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Input, Pagination, Select, SelectItem, RadioGroup, Radio } from '@nextui-org/react';
-import ListTickets from '../../Components/ListTickets.js';
+import ListTickets from '../../../Components/ListTickets.js';
 
 function TicketsSort({ tickets=[], ticketTypes=[] }) {
 	const [ticketsFiltered, setTicketsFiltered] = useState(tickets);

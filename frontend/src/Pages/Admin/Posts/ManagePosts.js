@@ -28,24 +28,7 @@ function ManagePosts({ posts, setPosts, clusters }) {
 			case "ClusterID":
 				return (<ClusterIDCell item={item} clusters={clusters} newPosts={newPosts} setNewPosts={setNewPosts} />);
 			case "Actions":
-				return (
-					<div className="relative flex items-center gap-2">
-						<Tooltip color="success" content="Save post">
-							<Button isIconOnly variant="light" onPress={() => modifyPost(item, newPosts, posts, setPosts)}>
-								<span className="text-lg cursor-pointer active:opacity-50">
-									<SaveIcon />
-								</span>
-							</Button>
-						</Tooltip>
-						<Tooltip color="danger" content="Delete post">
-							<Button isIconOnly variant="light" onPress={() => deletePost(item, posts, setPosts)}>
-								<span className="text-lg text-danger cursor-pointer active:opacity-50">
-									<DeleteIcon />
-								</span>
-							</Button>
-						</Tooltip>
-					</div>
-				);
+				return (<ActionsCell item={item} newPosts={newPosts} posts={posts} setPosts={setPosts} />);
 			default:
 				return cellValue;
 		}
@@ -156,6 +139,27 @@ function ClusterIDCell({ item, clusters, newPosts, setNewPosts }) {
 					<SelectItem texteValue={cluster.Name} key={cluster.ID}>{cluster.Name}</SelectItem>
 				))}
 			</Select>
+		</div>
+	);
+}
+
+function ActionsCell({ item, newPosts, posts, setPosts }) {
+	return (
+		<div className="relative flex items-center gap-2">
+			<Tooltip color="success" content="Save">
+				<Button isIconOnly variant="light" onPress={() => modifyPost(item, newPosts, posts, setPosts)}>
+					<span className="text-lg cursor-pointer active:opacity-50">
+						<SaveIcon />
+					</span>
+				</Button>
+			</Tooltip>
+			<Tooltip color="danger" content="Delete">
+				<Button isIconOnly variant="light" onPress={() => deletePost(item, posts, setPosts)}>
+					<span className="text-lg text-danger cursor-pointer active:opacity-50">
+						<DeleteIcon />
+					</span>
+				</Button>
+			</Tooltip>
 		</div>
 	);
 }
