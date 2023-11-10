@@ -6,6 +6,10 @@ Frontend is in React ; Backend is in Go.
 ## TODO
 - Admin side (staff)
     - new page for mac adress and serie num from pc - possibility to import pc with CSV ?
+        - creation modal (one post but cans click on "+" / add button for csv)
+        - confirmation modal on delete post
+        - search bar for post
+        - on tabulation press, focus on next input / on enter press, save line
     - set post to unavailable/do not use
     - get cluster with ticket to filter nb ticket in this cluster
     - possibility to archieved ticket types and clusters ??
