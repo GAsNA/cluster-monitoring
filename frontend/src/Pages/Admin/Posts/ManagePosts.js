@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Input, Select, SelectItem, Tooltip, Button } from '@nextui-org/react';
+import ModalPosts from './ModalPosts.js';
 import { modifyPost, deletePost } from '../../../utils/functionsAction.js';
 import { DeleteIcon } from '../../../Icon/DeleteIcon';
 import { SaveIcon } from '../../../Icon/SaveIcon';
 
 function ManagePosts({ posts, setPosts, clusters }) {
 	const [newPosts, setNewPosts] = useState(posts);
+
+	const [openModalPosts, setOpenModalPosts] = useState(false);
 
 	const columns = [
 		{ key: "Mac", label: "MAC ADDRESS", },
@@ -35,29 +38,37 @@ function ManagePosts({ posts, setPosts, clusters }) {
 	}
 
 	return (
-		<div style={{ margin: '20px 0' }}>
+		<>
+			<div style={{ margin: '20px 0' }}>
+			
+				<Button color="primary" onPress={setOpenModalPosts}>Add posts</Button>
 
-			<Table>
-				<TableHeader columns={columns}>
-					{(column) => 
-						<TableColumn key={column.key}>{column.label}</TableColumn>
-					}
-				</TableHeader>
+				<div style={{ marginTop: '1%' }}>
+					<Table>
+						<TableHeader columns={columns}>
+							{(column) => 
+								<TableColumn key={column.key}>{column.label}</TableColumn>
+							}
+						</TableHeader>
 
-				<TableBody emptyContent={"No registered posts."}>
-					{newPosts.map((item) => (
-						<TableRow key={item.ID}>
-							{ (columnKey) => (
-								<TableCell style={{ maxWidth: '200px' }}>
-									{renderCell(item, columnKey)}
-								</TableCell>
-							)}
-						</TableRow>
-					))}
-				</TableBody>
-			</Table>
+						<TableBody emptyContent={"No registered posts."}>
+							{newPosts.map((item) => (
+								<TableRow key={item.ID}>
+									{ (columnKey) => (
+										<TableCell style={{ maxWidth: '200px' }}>
+											{renderCell(item, columnKey)}
+										</TableCell>
+									)}
+								</TableRow>
+							))}
+						</TableBody>
+					</Table>
+				</div>
 
-		</div>
+			</div>
+
+			<ModalPosts open={openModalPosts} setOpen={setOpenModalPosts} />
+		</>
 	);
 }
 
