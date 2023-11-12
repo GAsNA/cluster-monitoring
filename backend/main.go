@@ -4,6 +4,9 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"math/rand"
+	"strconv"
+	"time"
 
 	"main/config"
 	"main/models"
@@ -66,6 +69,28 @@ func main() {
 	models.NewPost(p)
 	p = &models.Post{ Mac: "A4:D2:24:79:C1:D3", Serial: "84664815", Seat: "bess-f4r3s11", ClusterID: 4 }
 	models.NewPost(p)*/
+	/*rand.Seed(time.Now().UnixNano())
+	for i := 0; i < 10; i++ {
+		const bytesMac = "0123456789ABCDEF"
+		mac := make([]byte, 17)
+    	for j := range mac {
+			if j % 3 == 2 { mac[j] = ':'; continue }
+        	mac[j] = bytesMac[rand.Intn(len(bytesMac))]
+    	}
+		
+		serial := strconv.Itoa(rand.Intn(1000000000 - 1000000) + 1000000)
+
+		ifSeat := rand.Intn(2)
+		seat := ""
+		clusterID := 0
+		if ifSeat == 1 {
+			seat = "something"
+			clusterID = rand.Intn(12 - 1) + 1
+		}
+
+		p := &models.Post{ Mac: string(mac), Serial: serial, Seat: seat, ClusterID: clusterID }
+		models.NewPost(p)
+	}*/
 
 	router := InitializeRouter()
 
