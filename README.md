@@ -24,6 +24,7 @@ Frontend is in React ; Backend is in Go.
 - In form ticket, if keyboard is choose, select keys on virtual keyboard
 - Swagger
 - Responsive ticket
+- Button "add ..." on admin page will be in separated component
 
 ### Questions
 - see for authorization header when option, options route, how manage ?
