@@ -44,7 +44,7 @@ function ManagePosts({ posts, setPosts, clusters }) {
 				<Button color="primary" onPress={setOpenModalPosts}>Add posts</Button>
 
 				<div style={{ marginTop: '1%' }}>
-					<Table>
+					<Table aria-label="table posts">
 						<TableHeader columns={columns}>
 							{(column) => 
 								<TableColumn key={column.key}>{column.label}</TableColumn>
@@ -133,7 +133,7 @@ function ClusterIDCell({ item, clusters, postsModified, setPostsModified }) {
 		setPostsModified(arr);
 	}
 
-	const seatOfTheItem = itemInPostsModified.Seat
+	/*const seatOfTheItem = itemInPostsModified.Seat
 	React.useEffect(() => {
 		const newCluster = clusters.find(c => { return seatOfTheItem.toLowerCase().startsWith(c.Name.toLowerCase()) })
 		if (newCluster) {
@@ -142,12 +142,12 @@ function ClusterIDCell({ item, clusters, postsModified, setPostsModified }) {
 			setPostsModified(postsModified.map(p => {return p.ID === item.ID ? { ...p, ClusterID: 0 } : p;}));
 		}
 		// eslint-disable-next-line
-	}, [seatOfTheItem, clusters])
+	}, [seatOfTheItem, clusters])*/
 
 	return (
 		<div style={{ width: '200px' }}>
 			<Select selectedKeys={itemInPostsModified.ClusterID !== 0 ? [itemInPostsModified.ClusterID.toString()] : []}
-				variant="underlined" size="sm" onSelectionChange={change}
+				variant="underlined" size="sm" onSelectionChange={change} aria-label="select cluster"
 			>
 				{ clusters.map((cluster) => (
 					<SelectItem texteValue={cluster.Name} key={cluster.ID}>{cluster.Name}</SelectItem>
