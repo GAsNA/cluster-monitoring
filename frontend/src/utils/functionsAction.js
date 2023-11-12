@@ -117,10 +117,11 @@ export async function modifyPost(post, newPosts, posts, setPosts) {
 			})
 }
 
-export async function deletePost(post, posts, setPosts) {
+export async function deletePost(post, postsModified, setPostsModified, posts, setPosts) {
 	await client.delete(API_ROUTES.DELETE_POST + post.ID)
 			.then((response) => {
 				setPosts(posts.filter(function(p) { return p.ID !== post.ID }))
+				setPostsModified(postsModified.filter(function(p) { return p.ID !== post.ID }))
 				toast.success('Post deleted!');
 			})
 			.catch((error) => {
