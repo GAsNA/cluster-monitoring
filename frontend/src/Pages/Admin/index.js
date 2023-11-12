@@ -9,6 +9,7 @@ import TicketsSort from './Tickets/TicketsSort.js';
 import ManageTicketTypes from './TicketTypes/ManageTicketTypes.js';
 import ManageClusters from './Clusters/ManageClusters.js';
 import ManagePosts from './Posts/ManagePosts.js';
+import ManagePosts2 from './Posts/ManagePosts2.js';
 
 function Admin() {
 	const user = JSON.parse(localStorage.getItem("user"))
@@ -113,6 +114,12 @@ function Admin() {
 				<Tab key="posts" title="Posts">
 					<div style={{ maxWidth: '1000px', margin: 'auto' }}>
 						<ManagePosts posts={posts} setPosts={setPosts} clusters={clusters} />
+					</div>
+				</Tab>
+
+				<Tab key="posts2" title="Posts2">
+					<div style={{ maxWidth: '1000px', margin: 'auto' }}>
+						<ManagePosts2 posts={posts} setPosts={setPosts} clusters={clusters} />
 					</div>
 				</Tab>
 			</Tabs>
