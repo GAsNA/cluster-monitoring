@@ -10,6 +10,7 @@ Frontend is in React ; Backend is in Go.
         - confirmation modal on delete post
         - search bar for post
         - on tabulation press, focus on next input / on enter press, save line
+        - setPostsModified TOO MUCH USED, make every input lag. How to fix because cant made row in subcomponent
     - set post to unavailable/do not use
     - get cluster with ticket to filter nb ticket in this cluster
     - possibility to archieved ticket types and clusters ??
