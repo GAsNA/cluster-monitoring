@@ -4,9 +4,9 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"math/rand"
-	"strconv"
-	"time"
+//	"math/rand"
+//	"strconv"
+//	"time"
 
 	"main/config"
 	"main/models"

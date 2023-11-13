@@ -100,8 +100,8 @@ export async function deleteTicketType(ticketType, ticketTypes, setTicketTypes) 
 }
 
 /* -------------- POSTS -------------- */
-export async function modifyPost(post, newPosts, posts, setPosts) {
-	await client.put(API_ROUTES.UPDATE_POST + post.ID, newPosts.find((p) => { return p.ID === post.ID }))
+export async function modifyPost(post, posts, setPosts) {
+	await client.put(API_ROUTES.UPDATE_POST + post.ID, post)
 			.then((response) => {
 				const newPost = response.data
 				console.log(newPost)

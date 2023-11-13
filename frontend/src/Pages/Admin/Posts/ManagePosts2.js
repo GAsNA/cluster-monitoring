@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Input, Select, SelectItem, Tooltip, Button } from '@nextui-org/react';
 import ModalPosts from './ModalPosts.js';
-import { modifyPost, deletePost } from '../../../utils/functionsAction.js';
+import { modifyPost } from '../../../utils/functionsAction.js';
 import { DeleteIcon } from '../../../Icon/DeleteIcon';
 import { SaveIcon } from '../../../Icon/SaveIcon';
 
 function ManagePosts2({ posts, setPosts, clusters }) {
-	const [postsModified, setPostsModified] = useState(posts);
-
 	const [openModalPosts, setOpenModalPosts] = useState(false);
 
 	const columns = [
@@ -33,11 +31,11 @@ function ManagePosts2({ posts, setPosts, clusters }) {
 						</TableHeader>
 
 						<TableBody emptyContent={"No registered posts."}>
-							{postsModified.map((item) => (
+							{posts.map((item) => (
 								<TableRow key={item.ID}>
 									{ columns.map((column) => (
 										<TableCell style={{ maxWidth: '200px' }}>
-											<RenderCell item={item} column={column} clusters={clusters} postsModified={postsModified} setPostsModified={setPostsModified} posts={posts} setPosts={setPosts}/>
+											<RenderCell item={item} column={column} clusters={clusters} posts={posts} setPosts={setPosts}/>
 										</TableCell>
 									))}
 								</TableRow>
@@ -53,74 +51,78 @@ function ManagePosts2({ posts, setPosts, clusters }) {
 	);
 }
 
-function RenderCell({item, column, clusters, postsModified, setPostsModified, posts, setPosts}) {
+function RenderCell({item, column, clusters, posts, setPosts}) {
 	const cellValue = item[column.key];
+
+	const [mac, setMac] = useState(item.Mac);
+	const [serial, setSerial] = useState(item.Serial);
+	const [seat, setSeat] = useState(item.Seat);
+	const [clusterID, setClusterID] = useState(item.ClusterID);
+
+
+	function changeClusterID(val) {
+		setClusterID(Number([...val][0]))
+	}
+
+	function sendToModifyPost() {
+		const p = { ID: item.ID, Mac: mac, Serial: serial, Seat: seat, ClusterID: clusterID }
+		modifyPost(p, posts, setPosts)
+	}
 
 	switch (column.key) {
 		case "Mac":
-			return (<MacCell item={item} postsModified={postsModified} setPostsModified={setPostsModified} />);
+			return (
+				<div style={{ maxWidth: '200px' }}>
+					<Input value={mac} onValueChange={setMac} variant="underlined" />
+				</div>
+			);
 		case "Serial":
-			return (<SerialCell item={item} postsModified={postsModified} setPostsModified={setPostsModified} />);
+			return (
+				<div style={{ maxWidth: '200px' }}>
+					<Input value={serial} onValueChange={setSerial} variant="underlined"/>
+				</div>
+			);
 		case "Seat":
-			return (<SeatCell item={item} postsModified={postsModified} setPostsModified={setPostsModified} />);
+			return (
+				<div style={{ maxWidth: '200px' }}>
+					<Input value={seat} onValueChange={setSeat} variant="underlined"/>
+				</div>
+			);
 		case "ClusterID":
-			return (<ClusterIDCell item={item} clusters={clusters} postsModified={postsModified} setPostsModified={setPostsModified} />);
+			return (
+				<div style={{ width: '200px' }}>
+					<Select selectedKeys={clusterID !== 0 ? [clusterID.toString()] : []}
+						variant="underlined" size="sm" onSelectionChange={changeClusterID}
+						aria-label="select cluster"
+					>
+						{ clusters.map((cluster) => (
+							<SelectItem texteValue={cluster.Name} key={cluster.ID}>{cluster.Name}</SelectItem>
+						))}
+					</Select>
+				</div>
+			);
 		case "Actions":
-			return (<ActionsCell item={item} postsModified={postsModified} setPostsModified={setPostsModified} posts={posts} setPosts={setPosts} />);
+			return (
+				<div className="relative flex items-center gap-2">
+					<Tooltip color="success" content="Save">
+						<Button isIconOnly variant="light" onPress={sendToModifyPost}>
+							<span className="text-lg cursor-pointer active:opacity-50">
+								<SaveIcon />
+							</span>
+						</Button>
+					</Tooltip>
+					<Tooltip color="danger" content="Delete">
+						<Button isIconOnly variant="light">
+							<span className="text-lg text-danger cursor-pointer active:opacity-50">
+								<DeleteIcon />
+							</span>
+						</Button>
+					</Tooltip>
+				</div>
+			);
 		default:
 			return cellValue;
 	}
-}
-
-function MacCell({ item, postsModified, setPostsModified }) {
-	const itemInPostsModified = postsModified.find(p => { return p.ID === item.ID })
-
-	function change(val) {
-		const arr = postsModified.map(p => {
-			return p.ID === item.ID ? { ...p, Mac: val } : p;
-		});
-		setPostsModified(arr);
-	}
-
-	return (
-		<div style={{ maxWidth: '200px' }}>
-			<Input value={itemInPostsModified.Mac} onValueChange={change} variant="underlined" />
-		</div>
-	);
-}
-
-function SerialCell({ item, postsModified, setPostsModified }) {
-	const itemInPostsModified = postsModified.find(p => { return p.ID === item.ID })
-	
-	function change(val) {
-		const arr = postsModified.map(p => {
-			return p.ID === item.ID ? { ...p, Serial: val } : p;
-		});
-		setPostsModified(arr);
-	}
-
-	return (
-		<div style={{ maxWidth: '200px' }}>
-			<Input value={itemInPostsModified.Serial} onValueChange={change} variant="underlined"/>
-		</div>
-	);
-}
-
-function SeatCell({ item, postsModified, setPostsModified }) {
-	const itemInPostsModified = postsModified.find(p => { return p.ID === item.ID })
-	
-	function change(val) {
-		const arr = postsModified.map(p => {
-			return p.ID === item.ID ? { ...p, Seat: val } : p;
-		});
-		setPostsModified(arr);
-	}
-
-	return (
-		<div style={{ maxWidth: '200px' }}>
-			<Input value={itemInPostsModified.Seat} onValueChange={change} variant="underlined"/>
-		</div>
-	);
 }
 
 function ClusterIDCell({ item, clusters, postsModified, setPostsModified }) {
@@ -153,27 +155,6 @@ function ClusterIDCell({ item, clusters, postsModified, setPostsModified }) {
 					<SelectItem texteValue={cluster.Name} key={cluster.ID}>{cluster.Name}</SelectItem>
 				))}
 			</Select>
-		</div>
-	);
-}
-
-function ActionsCell({ item, postsModified, setPostsModified, posts, setPosts }) {
-	return (
-		<div className="relative flex items-center gap-2">
-			<Tooltip color="success" content="Save">
-				<Button isIconOnly variant="light" onPress={() => modifyPost(item, postsModified, posts, setPosts)}>
-					<span className="text-lg cursor-pointer active:opacity-50">
-						<SaveIcon />
-					</span>
-				</Button>
-			</Tooltip>
-			<Tooltip color="danger" content="Delete">
-				<Button isIconOnly variant="light" onPress={() => deletePost(item, postsModified, setPostsModified, posts, setPosts)}>
-					<span className="text-lg text-danger cursor-pointer active:opacity-50">
-						<DeleteIcon />
-					</span>
-				</Button>
-			</Tooltip>
 		</div>
 	);
 }
