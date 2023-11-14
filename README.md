@@ -1,5 +1,5 @@
 # Cluster Monitoring
-Little web application to monitoring 42Paris cluster.
+Little web application to monitoring 42Paris clusters.
 
 Frontend is in React ; Backend is in Go.
 
