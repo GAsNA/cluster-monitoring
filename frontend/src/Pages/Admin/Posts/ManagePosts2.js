@@ -1,20 +1,12 @@
 import React, { useState } from 'react';
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Input, Select, SelectItem, Tooltip, Button } from '@nextui-org/react';
+import { Button } from '@nextui-org/react';
 import ModalPosts from './ModalPosts.js';
-import { modifyPost } from '../../../utils/functionsAction.js';
-import { DeleteIcon } from '../../../Icon/DeleteIcon';
-import { SaveIcon } from '../../../Icon/SaveIcon';
+import { Card, Typography } from "@material-tailwind/react";
 
 function ManagePosts2({ posts, setPosts, clusters }) {
 	const [openModalPosts, setOpenModalPosts] = useState(false);
 
-	const columns = [
-		{ key: "Mac", label: "MAC ADDRESS", },
-		{ key: "Serial", label: "SERIAL NUMBER", },
-		{ key: "Seat", label: "SEAT", },
-		{ key: "ClusterID", label: "CLUSTER", },
-		{ key: "Actions", label: "ACTIONS", },
-	];
+	const columns = ["MAC ADDRESS", "SERIAL NUMBER", "SEAT", "CLUSTER", "ACTIONS"];
 
 	return (
 		<>
@@ -23,7 +15,56 @@ function ManagePosts2({ posts, setPosts, clusters }) {
 				<Button color="primary" onPress={setOpenModalPosts}>Add posts</Button>
 
 				<div style={{ marginTop: '1%' }}>
-					<Table aria-label="table posts">
+					<Card className="h-full w-full overflow-scroll"
+						style={{ background: '#18181b', borderRadius: "0.5rem", padding: '10px' }}
+					>
+						<table className="w-full min-w-max table-auto text-left" style={{ fontSize: "0.875rem", lineHeight: "1.25rem" }}>
+							<thead style={{ fontSize: "0.75rem", lineHeight: "1rem" }}>
+								<tr>
+									{columns.map((head) => (
+										<th key={head} className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+											<Typography variant="small" color="blue-gray"
+												className="font-normal leading-none opacity-70"
+											>
+												{head}
+											</Typography>
+										</th>
+									))}
+								</tr>
+							</thead>
+							<tbody>
+								{posts.map((item, index) => {
+									const classes = "p-4"; 
+									return (
+										<tr key={item.ID}>
+											<td className={classes}>
+												<Typography variant="small" color="blue-gray" className="font-normal">
+													{item.Mac}
+												</Typography>
+											</td>
+											<td className={classes}>
+												<Typography variant="small" color="blue-gray" className="font-normal">
+													{item.Serial}
+												</Typography>
+											</td>
+											<td className={classes}>
+												<Typography variant="small" color="blue-gray" className="font-normal">
+													{item.Seat}
+												</Typography>
+											</td>
+											<td className={classes}>
+												<Typography variant="small" color="blue-gray" className="font-normal">
+													{item.ClusterID}
+												</Typography>
+											</td>
+										</tr>
+									);
+								})}
+							</tbody>
+						</table>
+					</Card>
+
+					{/*<Table aria-label="table posts">
 						<TableHeader columns={columns}>
 							{(column) => 
 								<TableColumn key={column.key}>{column.label}</TableColumn>
@@ -41,7 +82,7 @@ function ManagePosts2({ posts, setPosts, clusters }) {
 								</TableRow>
 							))}
 						</TableBody>
-					</Table>
+					</Table>*/}
 				</div>
 
 			</div>
@@ -49,9 +90,9 @@ function ManagePosts2({ posts, setPosts, clusters }) {
 			<ModalPosts open={openModalPosts} setOpen={setOpenModalPosts} />
 		</>
 	);
-}
+} 
 
-function RenderCell({item, column, clusters, posts, setPosts}) {
+/*function RenderCell({item, column, clusters, posts, setPosts}) {
 	const cellValue = item[column.key];
 
 	const [mac, setMac] = useState(item.Mac);
@@ -146,7 +187,7 @@ function ClusterIDCell({ item, clusters, postsModified, setPostsModified }) {
 		// eslint-disable-next-line
 	}, [seatOfTheItem, clusters])*/
 
-	return (
+/*	return (
 		<div style={{ width: '200px' }}>
 			<Select selectedKeys={itemInPostsModified.ClusterID !== 0 ? [itemInPostsModified.ClusterID.toString()] : []}
 				variant="underlined" size="sm" onSelectionChange={change} aria-label="select cluster"
@@ -157,6 +198,6 @@ function ClusterIDCell({ item, clusters, postsModified, setPostsModified }) {
 			</Select>
 		</div>
 	);
-}
+}*/
 
 export default ManagePosts2;
