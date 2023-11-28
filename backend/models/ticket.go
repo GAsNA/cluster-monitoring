@@ -119,7 +119,7 @@ func AllTicketsOfSeatWithType(seat, limit string) []TicketWithType {
 					Where("seat = ?", seat).
 					ColumnExpr("ticket.*").
 					ColumnExpr("tt.name AS ticket_type__name").
-					Join("JOIN ticket_type AS tt ON tt.id = ticket.type").
+					Join("JOIN ticket_type AS tt ON tt.id = ticket.type_id").
 					Order("ticket.created_at DESC")
 	
 	limit_int, err := strconv.Atoi(limit)
