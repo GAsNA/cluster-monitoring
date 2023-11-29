@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input, Button, Spacer, Select, SelectItem } from '@nextui-org/react';
 import { PlusIcon } from '../../../Icon/PlusIcon';
+import { CrossIcon } from '../../../Icon/CrossIcon';
 
 function ModalPosts({ open, setOpen, clusters }) {
 	const [postsToCreate, setPostsToCreate] = useState([]);
@@ -28,7 +29,7 @@ function ModalPosts({ open, setOpen, clusters }) {
 					</ModalHeader>
 
 					<ModalBody>
-						<div className="flex h-auto items-center" style={{ display: 'inline-block', maxHeight: '400px', overflow: 'auto', marginBottom: '1%' }}>
+						<div className="flex h-auto items-center" style={{ display: 'inline-block', maxHeight: '415px', overflow: 'auto', marginBottom: '1%' }}>
 							{[...Array(nbPosts)].map((e, i) =>
 								<>
 									<RowPost index={i + 1} clusters={clusters} />
@@ -58,38 +59,53 @@ function ModalPosts({ open, setOpen, clusters }) {
 
 function RowPost({ index, clusters }) {
 	return (
-		<div style={{ display: 'flex', flexWrap: 'wrap' }}>
+		<tr>
+			<td>
+				<span style={{ color: '#01babc' }}>{index}</span>
+			</td>
+
+			<Spacer x={7} />
+
+			<td>
+				<div style={{ maxWidth: '300px' }}>
+					<Input label="MAC ADDRESS" variant="underlined" style={{ color: 'white' }} autoFocus/>
+				</div>
+			</td>
+
+			<Spacer x={7} />
 			
-			<span style={{ color: '#01babc' }}>{index}</span>
+			<td>
+				<div style={{ maxWidth: '300px' }}>
+					<Input label="SERIAL NUMBER" variant="underlined" style={{ color: 'white' }} />
+				</div>
+			</td>
 
-			<Spacer x={10} />
+			<Spacer x={7} />
+			
+			<td>
+				<div style={{ maxWidth: '300px' }}>
+					<Input label="SEAT" variant="underlined" style={{ color: 'white' }} />
+				</div>
+			</td>
 
-			<div style={{ maxWidth: '300px' }}>
-				<Input label="MAC ADDRESS" variant="underlined" style={{ color: 'white' }} autoFocus/>
-			</div>
-					
-			<Spacer x={10} />
+			<Spacer x={7} />
+			
+			<td>
+				<div style={{ width: '200px' }}>
+					<Select variant="underlined" size="sm" label="CLUSTERS">
+						{ clusters.map((cluster) => (
+							<SelectItem texteValue={cluster.Name} key={cluster.ID}>{cluster.Name}</SelectItem>
+						))}
+					</Select>
+				</div>
+			</td>
 
-			<div style={{ maxWidth: '300px' }}>
-				<Input label="SERIAL NUMBER" variant="underlined" style={{ color: 'white' }} autoFocus/>
-			</div>
+			<Spacer x={7} />
 
-			<Spacer x={10} />
-
-			<div style={{ maxWidth: '300px' }}>
-				<Input label="SEAT" variant="underlined" style={{ color: 'white' }} autoFocus/>
-			</div>
-
-			<Spacer x={10} />
-
-			<div style={{ width: '200px' }}>
-				<Select variant="underlined" size="sm" label="CLUSTERS">
-					{ clusters.map((cluster) => (
-						<SelectItem texteValue={cluster.Name} key={cluster.ID}>{cluster.Name}</SelectItem>
-					))}
-				</Select>
-			</div>
-		</div>
+			<td>
+				<Button isIconOnly style={{ backgroundColor: 'rgba(0, 0, 0, 0)' }}><CrossIcon /></Button>
+			</td>
+		</tr>
 	);
 }
 
