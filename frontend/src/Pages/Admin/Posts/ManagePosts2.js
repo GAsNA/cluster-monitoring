@@ -50,7 +50,7 @@ function ManagePosts2({ posts, setPosts, clusters }) {
 
 			</div>
 
-			<ModalPosts open={openModalPosts} setOpen={setOpenModalPosts} />
+			<ModalPosts open={openModalPosts} setOpen={setOpenModalPosts} clusters={clusters} />
 		</>
 	);
 } 
@@ -62,6 +62,7 @@ function RowPost({ post, clusters, posts, setPosts }) {
 	const [clusterID, setClusterID] = useState(post.ClusterID);
 
 	function changeSeat(val) {
+		// autocompletion for cluster
 		const newCluster = clusters.find(c => { return val.toLowerCase().startsWith(c.Name.toLowerCase()) })
 		if (newCluster) {
 			setClusterID(newCluster.ID);
