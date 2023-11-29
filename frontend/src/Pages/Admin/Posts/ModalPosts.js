@@ -92,7 +92,7 @@ function RowPost({ index, clusters }) {
 			
 			<td>
 				<div style={{ width: '200px' }}>
-					<Select variant="underlined" size="sm" label="CLUSTERS">
+					<Select variant="underlined" size="sm" label="CLUSTERS" color="white">
 						{ clusters.map((cluster) => (
 							<SelectItem texteValue={cluster.Name} key={cluster.ID}>{cluster.Name}</SelectItem>
 						))}
