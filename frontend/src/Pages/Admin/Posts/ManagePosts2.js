@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import { Button } from '@nextui-org/react';
-import ModalPosts from './ModalPosts.js';
+import { Button, Input, Select, SelectItem, Tooltip } from '@nextui-org/react';
 import { Card, Typography } from "@material-tailwind/react";
+import ModalPosts from './ModalPosts.js';
+import { modifyPost, deletePost } from '../../../utils/functionsAction.js';
+import { DeleteIcon } from '../../../Icon/DeleteIcon';
+import { SaveIcon } from '../../../Icon/SaveIcon';
 
 function ManagePosts2({ posts, setPosts, clusters }) {
 	const [openModalPosts, setOpenModalPosts] = useState(false);
@@ -16,73 +19,33 @@ function ManagePosts2({ posts, setPosts, clusters }) {
 
 				<div style={{ marginTop: '1%' }}>
 					<Card className="h-full w-full overflow-scroll"
-						style={{ background: '#18181b', borderRadius: "0.5rem", padding: '10px' }}
+						style={{ background: '#18181b', borderRadius: "0.5rem", padding: '10px 15px 15px 15px' }}
 					>
-						<table className="w-full min-w-max table-auto text-left" style={{ fontSize: "0.875rem", lineHeight: "1.25rem" }}>
+						<table className="w-full min-w-max table-auto text-left"
+							style={{ fontSize: "0.875rem", lineHeight: "1.25rem" }}
+						>
 							<thead style={{ fontSize: "0.75rem", lineHeight: "1rem" }}>
 								<tr>
-									{columns.map((head) => (
-										<th key={head} className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+									{columns.map((column) => (
+										<th key={column}
+											className="border-b border-blue-gray-100 bg-blue-gray-50 p-4"
+										>
 											<Typography variant="small" color="blue-gray"
 												className="font-normal leading-none opacity-70"
 											>
-												{head}
+												{column}
 											</Typography>
 										</th>
 									))}
 								</tr>
 							</thead>
 							<tbody>
-								{posts.map((item, index) => {
-									const classes = "p-4"; 
-									return (
-										<tr key={item.ID}>
-											<td className={classes}>
-												<Typography variant="small" color="blue-gray" className="font-normal">
-													{item.Mac}
-												</Typography>
-											</td>
-											<td className={classes}>
-												<Typography variant="small" color="blue-gray" className="font-normal">
-													{item.Serial}
-												</Typography>
-											</td>
-											<td className={classes}>
-												<Typography variant="small" color="blue-gray" className="font-normal">
-													{item.Seat}
-												</Typography>
-											</td>
-											<td className={classes}>
-												<Typography variant="small" color="blue-gray" className="font-normal">
-													{item.ClusterID}
-												</Typography>
-											</td>
-										</tr>
-									);
-								})}
+								{posts.map((post) => (
+									<RowPost post={post} clusters={clusters} posts={posts} setPosts={setPosts} />
+								))}
 							</tbody>
 						</table>
 					</Card>
-
-					{/*<Table aria-label="table posts">
-						<TableHeader columns={columns}>
-							{(column) => 
-								<TableColumn key={column.key}>{column.label}</TableColumn>
-							}
-						</TableHeader>
-
-						<TableBody emptyContent={"No registered posts."}>
-							{posts.map((item) => (
-								<TableRow key={item.ID}>
-									{ columns.map((column) => (
-										<TableCell style={{ maxWidth: '200px' }}>
-											<RenderCell item={item} column={column} clusters={clusters} posts={posts} setPosts={setPosts}/>
-										</TableCell>
-									))}
-								</TableRow>
-							))}
-						</TableBody>
-					</Table>*/}
 				</div>
 
 			</div>
@@ -92,58 +55,53 @@ function ManagePosts2({ posts, setPosts, clusters }) {
 	);
 } 
 
-/*function RenderCell({item, column, clusters, posts, setPosts}) {
-	const cellValue = item[column.key];
+function RowPost({ post, clusters, posts, setPosts }) {
+	const [mac, setMac] = useState(post.Mac);
+	const [serial, setSerial] = useState(post.Serial);
+	const [seat, setSeat] = useState(post.Seat);
+	const [clusterID, setClusterID] = useState(post.ClusterID);
 
-	const [mac, setMac] = useState(item.Mac);
-	const [serial, setSerial] = useState(item.Serial);
-	const [seat, setSeat] = useState(item.Seat);
-	const [clusterID, setClusterID] = useState(item.ClusterID);
+	function changeSeat(val) {
+		const newCluster = clusters.find(c => { return val.toLowerCase().startsWith(c.Name.toLowerCase()) })
+		if (newCluster) {
+			setClusterID(newCluster.ID);
+		} else {
+			setClusterID(0);
+		}
 
+		setSeat(val);
+	}
 
 	function changeClusterID(val) {
 		setClusterID(Number([...val][0]))
 	}
 
 	function sendToModifyPost() {
-		const p = { ID: item.ID, Mac: mac, Serial: serial, Seat: seat, ClusterID: clusterID }
-		modifyPost(p, posts, setPosts)
+		const newPost = { ID: post.ID, Mac: mac, Serial: serial, Seat: seat, ClusterID: clusterID }
+		modifyPost(newPost, posts, setPosts)
 	}
 
-	switch (column.key) {
-		case "Mac":
-			return (
-				<div style={{ maxWidth: '200px' }}>
-					<Input value={mac} onValueChange={setMac} variant="underlined" />
-				</div>
-			);
-		case "Serial":
-			return (
-				<div style={{ maxWidth: '200px' }}>
-					<Input value={serial} onValueChange={setSerial} variant="underlined"/>
-				</div>
-			);
-		case "Seat":
-			return (
-				<div style={{ maxWidth: '200px' }}>
-					<Input value={seat} onValueChange={setSeat} variant="underlined"/>
-				</div>
-			);
-		case "ClusterID":
-			return (
-				<div style={{ width: '200px' }}>
-					<Select selectedKeys={clusterID !== 0 ? [clusterID.toString()] : []}
-						variant="underlined" size="sm" onSelectionChange={changeClusterID}
-						aria-label="select cluster"
-					>
-						{ clusters.map((cluster) => (
-							<SelectItem texteValue={cluster.Name} key={cluster.ID}>{cluster.Name}</SelectItem>
-						))}
-					</Select>
-				</div>
-			);
-		case "Actions":
-			return (
+	return (
+		<tr key={post.ID}>
+			<td className="p-2" style={{ maxWidth: "200px" }}>
+				<Input value={mac} onValueChange={setMac} variant="underlined" />
+			</td>
+			<td className="p2" style={{ maxWidth: "200px" }}>
+				<Input value={serial} onValueChange={setSerial} variant="underlined" />
+			</td>
+			<td className="p-2" style={{ maxWidth: "200px" }}>
+				<Input value={seat} onValueChange={changeSeat} variant="underlined" />
+			</td>
+			<td className="p-2" style={{ width: "200px" }}>
+				<Select selectedKeys={clusterID !== 0 ? [clusterID.toString()] : []} variant="underlined"
+					size="sm" onSelectionChange={changeClusterID} aria-label="select cluster"
+				>
+					{ clusters.map((cluster) => (
+						<SelectItem texteValue={cluster.Name} key={cluster.ID}>{cluster.Name}</SelectItem>
+					))}
+				</Select>
+			</td>
+			<td>
 				<div className="relative flex items-center gap-2">
 					<Tooltip color="success" content="Save">
 						<Button isIconOnly variant="light" onPress={sendToModifyPost}>
@@ -153,51 +111,16 @@ function ManagePosts2({ posts, setPosts, clusters }) {
 						</Button>
 					</Tooltip>
 					<Tooltip color="danger" content="Delete">
-						<Button isIconOnly variant="light">
+						<Button isIconOnly variant="light" onPress={() => deletePost(post, posts, setPosts)}>
 							<span className="text-lg text-danger cursor-pointer active:opacity-50">
 								<DeleteIcon />
 							</span>
 						</Button>
 					</Tooltip>
 				</div>
-			);
-		default:
-			return cellValue;
-	}
-}
-
-function ClusterIDCell({ item, clusters, postsModified, setPostsModified }) {
-	const itemInPostsModified = postsModified.find(p => { return p.ID === item.ID })
-
-	function change(val) {
-		const arr = postsModified.map(p => {
-			return p.ID === item.ID ? { ...p, ClusterID: Number([...val][0]) } : p;
-		});
-		setPostsModified(arr);
-	}
-
-	/*const seatOfTheItem = itemInPostsModified.Seat
-	React.useEffect(() => {
-		const newCluster = clusters.find(c => { return seatOfTheItem.toLowerCase().startsWith(c.Name.toLowerCase()) })
-		if (newCluster) {
-			setPostsModified(postsModified.map(p => {return p.ID === item.ID ? { ...p, ClusterID: newCluster.ID } : p;}));
-		} else {
-			setPostsModified(postsModified.map(p => {return p.ID === item.ID ? { ...p, ClusterID: 0 } : p;}));
-		}
-		// eslint-disable-next-line
-	}, [seatOfTheItem, clusters])*/
-
-/*	return (
-		<div style={{ width: '200px' }}>
-			<Select selectedKeys={itemInPostsModified.ClusterID !== 0 ? [itemInPostsModified.ClusterID.toString()] : []}
-				variant="underlined" size="sm" onSelectionChange={change} aria-label="select cluster"
-			>
-				{ clusters.map((cluster) => (
-					<SelectItem texteValue={cluster.Name} key={cluster.ID}>{cluster.Name}</SelectItem>
-				))}
-			</Select>
-		</div>
+			</td>
+		</tr>
 	);
-}*/
+}
 
 export default ManagePosts2;
