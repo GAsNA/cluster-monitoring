@@ -50,7 +50,7 @@ function ManagePosts2({ posts, setPosts, clusters }) {
 
 			</div>
 
-			<ModalPosts open={openModalPosts} setOpen={setOpenModalPosts} clusters={clusters} />
+			<ModalPosts posts={posts} setPosts={setPosts} open={openModalPosts} setOpen={setOpenModalPosts} clusters={clusters} />
 		</>
 	);
 } 
