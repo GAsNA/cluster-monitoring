@@ -103,19 +103,20 @@ export async function deleteTicketType(ticketType, ticketTypes, setTicketTypes) 
 export async function createPosts(postsToCreate, setPostsToCreate, posts, setPosts) {
 	postsToCreate = postsToCreate.filter(p => p.Mac !== "" && p.Serial !== "")
 
-	postsToCreate.forEach(async function(post) {
+	await Promise.all(postsToCreate.map(async (post) => {
 		await client.post(API_ROUTES.CREATE_POST, post)
 			.then((response) => {
 				const newPost = response.data
-				setPosts([...posts, newPost]);
+				posts = [...posts, newPost];
 				postsToCreate = postsToCreate.filter(p => p.Mac !== newPost.Mac && p.Serial !== newPost.Serial )
 				toast.success('Post successfully created!');
 			})
 			.catch((error) => {
 				toast.error('An error occured');
 			})
-	})
+	}))
 
+	setPosts(posts);
 	setPostsToCreate(postsToCreate)
 }
 
