@@ -18,14 +18,15 @@ function ModalPosts({ posts, setPosts, open, setOpen, clusters }) {
 	}
 
 	function send() {
-		// if one of the element have mac or serial empty, return. But if both empty, ok
-		// DOESNT WORK ALL THE TIME
+		// Send only if both element Mac and Serie are completed or empty
 		if (postsToCreate.every((item) =>
-			(item.Mac === "" && item.Serial !== "") || (item.Serial === "" && item.Mac !== "")
-		)) { console.log("SOME PROBLEME"); return; }
-		
-		// send
-		createPosts(postsToCreate, setPostsToCreate, posts, setPosts);
+			(item.Mac === "" && item.Serial === "") || (item.Mac !== "" && item.Serial !== "")
+		)) {
+			createPosts(postsToCreate, setPostsToCreate, posts, setPosts);
+			return;
+		}
+
+		console.log("SOME PROBLEME");
 	}
 
 	return (
