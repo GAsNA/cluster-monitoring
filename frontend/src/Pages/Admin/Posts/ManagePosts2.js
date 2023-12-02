@@ -40,9 +40,22 @@ function ManagePosts2({ posts, setPosts, clusters }) {
 								</tr>
 							</thead>
 							<tbody>
-								{posts.map((post) => (
-									<RowPost post={post} clusters={clusters} posts={posts} setPosts={setPosts} />
-								))}
+								{ posts && posts.length > 0 ?
+									posts.map((post) => (
+										<RowPost post={post} clusters={clusters} posts={posts} setPosts={setPosts} />
+									))
+									:
+									<tr>
+										<td colspan="5">
+											<Typography variant="small" color="blue-gray"
+												className="text-center font-normal leading-none opacity-70"
+												style={{ marginTop: '1%' }}
+											>
+												No registered post.
+											</Typography>
+										</td>
+									</tr>
+								}
 							</tbody>
 						</table>
 					</Card>
