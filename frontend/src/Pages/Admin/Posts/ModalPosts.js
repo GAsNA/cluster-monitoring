@@ -22,7 +22,7 @@ function ModalPosts({ posts, setPosts, open, setOpen, clusters }) {
 		if (postsToCreate.every((item) =>
 			(item.Mac === "" && item.Serial === "") || (item.Mac !== "" && item.Serial !== "")
 		)) {
-			createPosts(postsToCreate, setPostsToCreate, posts, setPosts);
+			createPosts(postsToCreate, setPostsToCreate, posts, setPosts, setSending);
 			return;
 		}
 
@@ -68,7 +68,6 @@ function ModalPosts({ posts, setPosts, open, setOpen, clusters }) {
 
 function RowPost({ index, clusters, postsToCreate, setPostsToCreate }) {
 	const item = postsToCreate[index - 1]
-	console.log(`ELEM ${index}:`, item)
 
 	function changeValue(val) {
 		let newPostsToCreate = [...postsToCreate];

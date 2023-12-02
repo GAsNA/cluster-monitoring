@@ -100,13 +100,16 @@ export async function deleteTicketType(ticketType, ticketTypes, setTicketTypes) 
 }
 
 /* -------------- POSTS -------------- */
-export async function createPosts(postsToCreate, setPostsToCreate, posts, setPosts) {
+export async function createPosts(postsToCreate, setPostsToCreate, posts, setPosts, setSending) {
 	postsToCreate = postsToCreate.filter(p => p.Mac !== "" && p.Serial !== "")
+
+	setSending(true);
 
 	await Promise.all(postsToCreate.map(async (post) => {
 		await client.post(API_ROUTES.CREATE_POST, post)
 			.then((response) => {
 				const newPost = response.data
+				console.log(newPost)
 				posts = [...posts, newPost];
 				postsToCreate = postsToCreate.filter(p => p.Mac !== newPost.Mac && p.Serial !== newPost.Serial )
 				toast.success('Post successfully created!');
@@ -118,6 +121,8 @@ export async function createPosts(postsToCreate, setPostsToCreate, posts, setPos
 
 	setPosts(posts);
 	setPostsToCreate(postsToCreate)
+	
+	setSending(false);
 }
 
 export async function modifyPost(post, posts, setPosts) {
@@ -140,6 +145,7 @@ export async function modifyPost(post, posts, setPosts) {
 export async function deletePost(post, posts, setPosts) {
 	await client.delete(API_ROUTES.DELETE_POST + post.ID)
 			.then((response) => {
+				console.log(response.data)
 				setPosts(posts.filter(function(p) { return p.ID !== post.ID }))
 				toast.success('Post deleted!');
 			})
