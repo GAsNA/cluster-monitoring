@@ -38,14 +38,13 @@ function ModalPosts({ posts, setPosts, open, setOpen, clusters }) {
 					</ModalHeader>
 
 					<ModalBody>
-						<div className="flex h-auto items-center" style={{ display: 'inline-block', maxHeight: '415px', overflow: 'auto', marginBottom: '1%' }}>
-							{[...Array(postsToCreate.length)].map((e, i) =>
-								<>
-									<RowPost index={i + 1} clusters={clusters} postsToCreate={postsToCreate} setPostsToCreate={setPostsToCreate} />
-									<Spacer y={4}/>
-								</>
-							)}
-						</div>
+						<table className="flex h-auto items-center" style={{ display: 'inline-block', maxHeight: '415px', overflow: 'auto', marginBottom: '1%' }}>
+							<tbody>
+								{[...Array(postsToCreate.length)].map((e, i) =>
+									<RowPost key={i} index={i + 1} clusters={clusters} postsToCreate={postsToCreate} setPostsToCreate={setPostsToCreate} />
+								)}
+							</tbody>
+						</table>
 						
 						<Button size="sm" radius="full" onPress={addPost}
 							style={{ background: '#6e6e77', width: '50%', margin: 'auto', opacity: '0.5' }}
@@ -76,12 +75,12 @@ function RowPost({ index, clusters, postsToCreate, setPostsToCreate }) {
 	}
 
 	return (
-		<tr>
+		<tr key={index}>
 			<td>
 				<span style={{ color: '#01babc' }}>{index}</span>
 			</td>
 
-			<Spacer x={7} />
+			<td><Spacer x={7} /></td>
 
 			<td>
 				<div style={{ maxWidth: '300px' }}>
@@ -90,7 +89,7 @@ function RowPost({ index, clusters, postsToCreate, setPostsToCreate }) {
 				</div>
 			</td>
 
-			<Spacer x={7} />
+			<td><Spacer x={7} /></td>
 			
 			<td>
 				<div style={{ maxWidth: '300px' }}>
@@ -99,7 +98,7 @@ function RowPost({ index, clusters, postsToCreate, setPostsToCreate }) {
 				</div>
 			</td>
 
-			<Spacer x={7} />
+			<td><Spacer x={7} /></td>
 			
 			<td>
 				<div style={{ maxWidth: '300px' }}>
@@ -108,7 +107,7 @@ function RowPost({ index, clusters, postsToCreate, setPostsToCreate }) {
 				</div>
 			</td>
 
-			<Spacer x={7} />
+			<td><Spacer x={7} /></td>
 			
 			<td>
 				<div style={{ width: '200px' }}>
@@ -122,11 +121,13 @@ function RowPost({ index, clusters, postsToCreate, setPostsToCreate }) {
 				</div>
 			</td>
 
-			<Spacer x={7} />
+			<td><Spacer x={7} /></td>
 
 			<td>
 				<Button isIconOnly style={{ backgroundColor: 'rgba(0, 0, 0, 0)' }}><CrossIcon /></Button>
 			</td>
+
+			<td><Spacer y={4}/></td>
 		</tr>
 	);
 }

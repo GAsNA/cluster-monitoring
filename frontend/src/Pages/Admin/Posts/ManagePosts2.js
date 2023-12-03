@@ -42,10 +42,10 @@ function ManagePosts2({ posts, setPosts, clusters }) {
 							<tbody>
 								{ posts && posts.length > 0 ?
 									posts.map((post) => (
-										<RowPost post={post} clusters={clusters} posts={posts} setPosts={setPosts} />
+										<RowPost key={post.ID} post={post} clusters={clusters} posts={posts} setPosts={setPosts} />
 									))
 									:
-									<tr>
+									<tr key="noPost">
 										<td colspan="5">
 											<Typography variant="small" color="blue-gray"
 												className="text-center font-normal leading-none opacity-70"
