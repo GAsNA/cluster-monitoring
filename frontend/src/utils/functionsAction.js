@@ -143,9 +143,10 @@ export async function modifyPost(post, posts, setPosts) {
 }
 
 export async function deletePost(post, posts, setPosts) {
+	console.log("ID:", post.ID)
+	console.log("POSTS:", posts)
 	await client.delete(API_ROUTES.DELETE_POST + post.ID)
 			.then((response) => {
-				console.log(response.data)
 				setPosts(posts.filter(function(p) { return p.ID !== post.ID }))
 				toast.success('Post deleted!');
 			})
