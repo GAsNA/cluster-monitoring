@@ -124,7 +124,8 @@ function RowPost({ index, clusters, postsToCreate, setPostsToCreate }) {
 			<td><Spacer x={7} /></td>
 
 			<td>
-				<Button isIconOnly style={{ backgroundColor: 'rgba(0, 0, 0, 0)' }}><CrossIcon /></Button>
+				<Button isIconOnly onPress={() => setPostsToCreate(postsToCreate.filter((_, i) => i !== index - 1))}
+					style={{ backgroundColor: 'rgba(0, 0, 0, 0)' }}><CrossIcon /></Button>
 			</td>
 
 			<td><Spacer y={4}/></td>
