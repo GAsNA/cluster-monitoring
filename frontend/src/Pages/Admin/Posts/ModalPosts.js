@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input, Button, Spacer, Select, SelectItem } from '@nextui-org/react';
+import Papa from "papaparse";
 import { createPosts } from '../../../utils/functionsAction.js';
 import { PlusIcon } from '../../../Icon/PlusIcon';
 import { CrossIcon } from '../../../Icon/CrossIcon';
@@ -22,6 +23,33 @@ function ModalPosts({ posts, setPosts, open, setOpen, clusters }) {
 		if (file.type !== "text/csv") { return }
 
 		console.log("FILE:", file)
+		Papa.parse(file, {
+			header: true,
+			skipEmptyLines: true,
+			complete: function (results) {
+				const rowsArray = [];
+				const valuesArray = [];
+
+				// Iterating data to get column name and their values
+				results.data.forEach((d) => {
+					rowsArray.push(Object.keys(d));
+					valuesArray.push(Object.values(d));
+				});
+
+				console.log("DATA:", results.data);
+				console.log("ROWS:", rowsArray[0]);
+				console.log("VALUES:", valuesArray);
+
+				// Parsed Data Response in array format
+				//setParsedData(results.data);
+
+				// Filtered Column Names
+				//setTableRows(rowsArray[0]);
+
+				// Filtered Values
+				//setValues(valuesArray);
+			},
+		});
 
 		e.target.value = null;
 	}
