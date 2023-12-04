@@ -6,7 +6,7 @@ Frontend is in React ; Backend is in Go.
 ## TODO
 - Admin side (staff)
     - new page for mac adress and serie num from pc - possibility to import pc with CSV ?
-        - creation modal (one post but cans click on "+" / add button for csv)
+        - creation modal (add button for csv)
         - confirmation modal on delete post
         - search bar for post
         - on enter press, save line

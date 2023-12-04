@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input, Button, Spacer, Select, SelectItem } from '@nextui-org/react';
 import { createPosts } from '../../../utils/functionsAction.js';
 import { PlusIcon } from '../../../Icon/PlusIcon';
@@ -8,6 +8,23 @@ function ModalPosts({ posts, setPosts, open, setOpen, clusters }) {
 	const [postsToCreate, setPostsToCreate] = useState([{Mac: "", Serial: "", Seat: "", ClusterID: 0}]);
 
 	const [sending, setSending] = useState(false);
+
+	const inputFileRef = useRef(null);
+
+	function handleClickFile() {
+		inputFileRef.current.click();
+	}
+
+	function handleFileChange(e) {
+		const file = e.target.files && e.target.files[0]
+		if (!file) { return }
+
+		if (file.type !== "text/csv") { return }
+
+		console.log("FILE:", file)
+
+		e.target.value = null;
+	}
 
 	function addPost() {
 		setPostsToCreate([...postsToCreate, {Mac: "", Serial: "", Seat: "", ClusterID: 0}]);
@@ -38,6 +55,13 @@ function ModalPosts({ posts, setPosts, open, setOpen, clusters }) {
 					</ModalHeader>
 
 					<ModalBody>
+						<input ref={inputFileRef} onChange={handleFileChange} accept=".csv" type="file" id="csv_posts"
+							hidden />
+						<Button onPress={handleClickFile}
+							style={{ background: '#2ac974', color: 'white', width: '100px', marginLeft: 'auto' }}>
+							Upload CSV
+						</Button>
+
 						<table className="flex h-auto items-center" style={{ display: 'inline-block', maxHeight: '415px', overflow: 'auto', marginBottom: '1%' }}>
 							<tbody>
 								{[...Array(postsToCreate.length)].map((e, i) =>
