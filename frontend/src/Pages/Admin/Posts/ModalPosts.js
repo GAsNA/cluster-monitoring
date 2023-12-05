@@ -37,8 +37,11 @@ function ModalPosts({ posts, setPosts, open, setOpen, clusters }) {
 				});
 
 				console.log("DATA:", results.data);
-				console.log("ROWS:", rowsArray[0]);
-				console.log("VALUES:", valuesArray);
+
+				setPostsToCreate([...postsToCreate, ...results.data])
+
+				//console.log("ROWS:", rowsArray[0]);
+				//console.log("VALUES:", valuesArray);
 
 				// Parsed Data Response in array format
 				//setParsedData(results.data);
@@ -90,7 +93,7 @@ function ModalPosts({ posts, setPosts, open, setOpen, clusters }) {
 							Upload CSV
 						</Button>
 
-						<table className="flex h-auto items-center" style={{ display: 'inline-block', maxHeight: '415px', overflow: 'auto', marginBottom: '1%' }}>
+						<table className="flex h-auto items-center" style={{ display: 'inline-block', maxHeight: '395px', overflow: 'auto', marginBottom: '1%' }}>
 							<tbody>
 								{[...Array(postsToCreate.length)].map((e, i) =>
 									<RowPost key={i} index={i + 1} clusters={clusters} postsToCreate={postsToCreate} setPostsToCreate={setPostsToCreate} />
