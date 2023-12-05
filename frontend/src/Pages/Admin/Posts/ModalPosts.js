@@ -10,6 +10,7 @@ import ExampleFilePosts from './example_file_posts.csv';
 function ModalPosts({ posts, setPosts, open, setOpen, clusters }) {
 	const [postsToCreate, setPostsToCreate] = useState([{Mac: "", Serial: "", Seat: "", ClusterID: 0}]);
 
+	const [errorSendingMessage, setErrorSendingMessage] = useState(null); 
 	const [sending, setSending] = useState(false);
 
 	const [errorFileMessage, setErrorFileMessage] = useState(null);
@@ -97,10 +98,12 @@ function ModalPosts({ posts, setPosts, open, setOpen, clusters }) {
 			(item.Mac === "" && item.Serial === "") || (item.Mac !== "" && item.Serial !== "")
 		)) {
 			createPosts(postsToCreate, setPostsToCreate, posts, setPosts, setSending);
+			setErrorSendingMessage(null);
 			return;
 		}
 
-		console.log("SOME PROBLEME");
+		// If problem with the postsToCreate
+		setErrorSendingMessage("Some data are not well formatted. Please check the mac addresses and serial numbers.")
 	}
 
 	return (
@@ -153,6 +156,10 @@ function ModalPosts({ posts, setPosts, open, setOpen, clusters }) {
 				</ModalBody>
 
 				<ModalFooter>
+					{ errorSendingMessage &&
+						<p style={{ color: '#e96a64', marginLeft: 'auto' }}>{errorSendingMessage}</p>
+					}
+
 					<Button style={{ background: '#01babc', color: 'white' }} onPress={send} isLoading={sending}>
 						Send
 					</Button>
