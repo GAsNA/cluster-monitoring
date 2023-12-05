@@ -173,6 +173,16 @@ function ModalPosts({ posts, setPosts, open, setOpen, clusters }) {
 function RowPost({ index, clusters, postsToCreate, setPostsToCreate }) {
 	const item = postsToCreate[index - 1]
 
+	// autocompletion for cluster
+	function changeSeat(val) {
+		const newCluster = clusters.find(c => { return val.toLowerCase().startsWith(c.Name.toLowerCase()) })
+		if (newCluster) {
+			item.ClusterID = newCluster.ID;
+		} else {
+			item.ClusterID = 0;
+		}
+	}
+
 	function changeValue(val) {
 		let newPostsToCreate = [...postsToCreate];
 		newPostsToCreate[index - 1] = val;
@@ -207,7 +217,7 @@ function RowPost({ index, clusters, postsToCreate, setPostsToCreate }) {
 			
 			<td>
 				<div style={{ maxWidth: '300px' }}>
-					<Input value={item.Seat} onValueChange={(v)=>{item.Seat = v; changeValue(item)}}
+					<Input value={item.Seat} onValueChange={(v)=>{item.Seat = v; changeSeat(v); changeValue(item)}}
 						label="SEAT" variant="underlined" style={{ color: 'white' }} />
 				</div>
 			</td>

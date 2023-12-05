@@ -74,8 +74,8 @@ function RowPost({ post, clusters, posts, setPosts }) {
 	const [seat, setSeat] = useState(post.Seat);
 	const [clusterID, setClusterID] = useState(post.ClusterID);
 
+	// autocompletion for cluster
 	function changeSeat(val) {
-		// autocompletion for cluster
 		const newCluster = clusters.find(c => { return val.toLowerCase().startsWith(c.Name.toLowerCase()) })
 		if (newCluster) {
 			setClusterID(newCluster.ID);
