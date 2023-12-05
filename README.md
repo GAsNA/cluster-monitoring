@@ -4,6 +4,7 @@ Little web application to monitoring 42Paris clusters.
 Frontend is in React ; Backend is in Go.
 
 ## TODO
+- When cookie and jwt expires..
 - Admin side (staff)
     - new page for mac adress and serie num from pc - possibility to import pc with CSV ?
         - creation modal (add button for csv)

@@ -10,7 +10,9 @@ function ModalPosts({ posts, setPosts, open, setOpen, clusters }) {
 
 	const [sending, setSending] = useState(false);
 
+	const [errorFileMessage, setErrorFileMessage] = useState(null);
 	const inputFileRef = useRef(null);
+	const [filesUploaded, setFilesUploaded] = useState([]);
 
 	function handleClickFile() {
 		inputFileRef.current.click();
@@ -22,7 +24,6 @@ function ModalPosts({ posts, setPosts, open, setOpen, clusters }) {
 
 		if (file.type !== "text/csv") { return }
 
-		console.log("FILE:", file)
 		Papa.parse(file, {
 			header: true,
 			skipEmptyLines: true,
@@ -30,27 +31,50 @@ function ModalPosts({ posts, setPosts, open, setOpen, clusters }) {
 				const rowsArray = [];
 				const valuesArray = [];
 
+				// Check if the file has already been uploaded. Modal confimation ??
+				if (filesUploaded.find((f) => f.name === file.name)) {
+					setErrorFileMessage("This file has already been uploaded."); return;
+				}
+
+				let error = false;
+
 				// Iterating data to get column name and their values
-				results.data.forEach((d) => {
+				results.data.forEach((d, i) => {
+					if (error) { return; }
+
 					rowsArray.push(Object.keys(d));
 					valuesArray.push(Object.values(d));
-				});
 
-				console.log("DATA:", results.data);
+					// If there is the good header
+					if (!(rowsArray[i].length === 4
+						&& rowsArray[i].find((r) => r.toLowerCase().includes("mac"))
+						&& rowsArray[i].find((r) => r.toLowerCase().includes("serial"))
+						&& rowsArray[i].find((r) => r.toLowerCase().includes("seat"))
+						&& rowsArray[i].find((r) => r.toLowerCase().includes("cluster"))
+					)) {
+							error = true;
+							return;
+					}
+
+					// Cluster name to corresponding id
+					let cluster = clusters.find(c => { return d.Cluster.toLowerCase() === c.Name.toLowerCase() })
+					if (cluster) {
+						d.ClusterID = cluster.ID;
+					} else {
+						d.ClusterID = 0;
+					}
+					delete d.Cluster;
+				});
+					
+				if (error) {
+					setErrorFileMessage("An error occured in the file. Please check the example file.");
+					return;
+				}
 
 				setPostsToCreate([...postsToCreate, ...results.data])
 
-				//console.log("ROWS:", rowsArray[0]);
-				//console.log("VALUES:", valuesArray);
-
-				// Parsed Data Response in array format
-				//setParsedData(results.data);
-
-				// Filtered Column Names
-				//setTableRows(rowsArray[0]);
-
-				// Filtered Values
-				//setValues(valuesArray);
+				setFilesUploaded([...filesUploaded, file])
+				setErrorFileMessage(null);
 			},
 		});
 
@@ -92,6 +116,10 @@ function ModalPosts({ posts, setPosts, open, setOpen, clusters }) {
 							style={{ background: '#2ac974', color: 'white', width: '100px', marginLeft: 'auto' }}>
 							Upload CSV
 						</Button>
+
+						{ errorFileMessage &&
+							<p style={{ color: '#e96a64', marginLeft: 'auto' }}>{errorFileMessage}</p>
+						}
 
 						<table className="flex h-auto items-center" style={{ display: 'inline-block', maxHeight: '395px', overflow: 'auto', marginBottom: '1%' }}>
 							<tbody>
@@ -167,7 +195,7 @@ function RowPost({ index, clusters, postsToCreate, setPostsToCreate }) {
 			<td>
 				<div style={{ width: '200px' }}>
 					<Select selectedKeys={item.ClusterID !== 0 ? [item.ClusterID.toString()] : []} onSelectionChange={(v)=>{item.ClusterID = Number([...v][0]) | 0; changeValue(item)}}
-						variant="underlined" size="sm" label="CLUSTERS" color="white"
+						variant="underlined" size="sm" label="CLUSTER" color="white"
 					>
 						{ clusters.map((cluster) => (
 							<SelectItem texteValue={cluster.Name} key={cluster.ID}>{cluster.Name}</SelectItem>
