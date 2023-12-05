@@ -104,59 +104,62 @@ function ModalPosts({ posts, setPosts, open, setOpen, clusters }) {
 	}
 
 	return (
-		<>
-			<Modal isOpen={open} onClose={close} placement="center" backdrop="opaque" size="5xl" style={{ background:'#231f20', color: 'white', maxHeight: '70%' }}>
-				<ModalContent>
-					<ModalHeader className="flex flex-col gap-1">
-						<p>Want to create some <span style={{ color: '#01babc' }}>posts</span>?</p>
-					</ModalHeader>
+		<Modal isOpen={open} onClose={close} placement="center" backdrop="opaque" size="5xl"
+			style={{ background:'#231f20', color: 'white', maxHeight: '70%' }}
+		>
+			<ModalContent>
+				<ModalHeader className="flex flex-col gap-1">
+					<p>Want to create some <span style={{ color: '#01babc' }}>posts</span>?</p>
+				</ModalHeader>
 
-					<ModalBody>
-						<div style={{ marginLeft: 'auto' }}>
-							<input ref={inputFileRef} onChange={handleFileChange} accept=".csv" type="file"
-								id="csv_posts" hidden />
-							<Button onPress={handleClickFile}
-								style={{ background: '#2ac974', color: 'white', width: '100px' }}
-							>
-								Upload CSV
-							</Button>
-							<Tooltip content="Exemple csv file">
-								<Link href={ExampleFilePosts} download target="_blank" rel="noreferrer">
-									<Button isIconOnly style={{ backgroundColor: 'rgba(0, 0, 0, 0)' }}>
-										<DownloadIcon />
-									</Button>
-								</Link>
-							</Tooltip>
-						</div>
-
-						{ errorFileMessage &&
-							<p style={{ color: '#e96a64', marginLeft: 'auto' }}>{errorFileMessage}</p>
-						}
-
-						<table className="flex h-auto items-center" style={{ display: 'inline-block', maxHeight: '395px', overflow: 'auto', marginBottom: '1%' }}>
-							<tbody>
-								{[...Array(postsToCreate.length)].map((e, i) =>
-									<RowPost key={i} index={i + 1} clusters={clusters} postsToCreate={postsToCreate} setPostsToCreate={setPostsToCreate} />
-								)}
-							</tbody>
-						</table>
-						
-						<Button size="sm" radius="full" onPress={addPost}
-							style={{ background: '#6e6e77', width: '50%', margin: 'auto', opacity: '0.5' }}
+				<ModalBody>
+					<div style={{ marginLeft: 'auto' }}>
+						<input ref={inputFileRef} onChange={handleFileChange} accept=".csv" type="file" id="csv_posts"
+							hidden />
+						<Button onPress={handleClickFile}
+							style={{ background: '#2ac974', color: 'white', width: '100px' }}
 						>
-							<PlusIcon />
+							Upload CSV
 						</Button>
-					</ModalBody>
+						<Tooltip content="Exemple csv file">
+							<Link href={ExampleFilePosts} download target="_blank" rel="noreferrer">
+								<Button isIconOnly style={{ backgroundColor: 'rgba(0, 0, 0, 0)' }}>
+									<DownloadIcon />
+								</Button>
+							</Link>
+						</Tooltip>
+					</div>
 
-					<ModalFooter>
-						<Button style={{ background: '#01babc', color: 'white' }} onPress={send} isLoading={sending}>
-							Send
-						</Button>
-						<Button style={{ background: '#e96a64', color: 'white' }} onPress={close}>Close</Button>
-					</ModalFooter>
-				</ModalContent>
-			</Modal>
-		</>
+					{ errorFileMessage &&
+						<p style={{ color: '#e96a64', marginLeft: 'auto' }}>{errorFileMessage}</p>
+					}
+
+					<table className="flex h-auto items-center"
+						style={{ display: 'inline-block', maxHeight: '395px', overflow: 'auto', marginBottom: '1%' }}
+					>
+						<tbody>
+							{[...Array(postsToCreate.length)].map((e, i) =>
+								<RowPost key={i} index={i + 1} clusters={clusters} postsToCreate={postsToCreate}
+									setPostsToCreate={setPostsToCreate} />
+							)}
+						</tbody>
+					</table>
+						
+					<Button size="sm" radius="full" onPress={addPost}
+						style={{ background: '#6e6e77', width: '50%', margin: 'auto', opacity: '0.5' }}
+					>
+						<PlusIcon />
+					</Button>
+				</ModalBody>
+
+				<ModalFooter>
+					<Button style={{ background: '#01babc', color: 'white' }} onPress={send} isLoading={sending}>
+						Send
+					</Button>
+					<Button style={{ background: '#e96a64', color: 'white' }} onPress={close}>Close</Button>
+				</ModalFooter>
+			</ModalContent>
+		</Modal>
 	);
 }
 
