@@ -1,9 +1,11 @@
 import React, { useState, useRef } from 'react';
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input, Button, Spacer, Select, SelectItem } from '@nextui-org/react';
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input, Button, Spacer, Select, SelectItem, Tooltip, Link } from '@nextui-org/react';
 import Papa from "papaparse";
 import { createPosts } from '../../../utils/functionsAction.js';
 import { PlusIcon } from '../../../Icon/PlusIcon';
 import { CrossIcon } from '../../../Icon/CrossIcon';
+import { DownloadIcon } from '../../../Icon/DownloadIcon';
+import ExampleFilePosts from './example_file_posts.csv';
 
 function ModalPosts({ posts, setPosts, open, setOpen, clusters }) {
 	const [postsToCreate, setPostsToCreate] = useState([{Mac: "", Serial: "", Seat: "", ClusterID: 0}]);
@@ -110,12 +112,22 @@ function ModalPosts({ posts, setPosts, open, setOpen, clusters }) {
 					</ModalHeader>
 
 					<ModalBody>
-						<input ref={inputFileRef} onChange={handleFileChange} accept=".csv" type="file" id="csv_posts"
-							hidden />
-						<Button onPress={handleClickFile}
-							style={{ background: '#2ac974', color: 'white', width: '100px', marginLeft: 'auto' }}>
-							Upload CSV
-						</Button>
+						<div style={{ marginLeft: 'auto' }}>
+							<input ref={inputFileRef} onChange={handleFileChange} accept=".csv" type="file"
+								id="csv_posts" hidden />
+							<Button onPress={handleClickFile}
+								style={{ background: '#2ac974', color: 'white', width: '100px' }}
+							>
+								Upload CSV
+							</Button>
+							<Tooltip content="Exemple csv file">
+								<Link href={ExampleFilePosts} download target="_blank" rel="noreferrer">
+									<Button isIconOnly style={{ backgroundColor: 'rgba(0, 0, 0, 0)' }}>
+										<DownloadIcon />
+									</Button>
+								</Link>
+							</Tooltip>
+						</div>
 
 						{ errorFileMessage &&
 							<p style={{ color: '#e96a64', marginLeft: 'auto' }}>{errorFileMessage}</p>
