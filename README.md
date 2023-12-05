@@ -4,10 +4,11 @@ Little web application to monitoring 42Paris clusters.
 Frontend is in React ; Backend is in Go.
 
 ## TODO
+- HOW TO GET RIDE OF THE '../../..' etc LINKS IN FILES?
 - When cookie and jwt expires..
 - Admin side (staff)
-    - new page for mac adress and serie num from pc - possibility to import pc with CSV ?
-        - creation modal (add button for csv)
+    - page for mac adress and serie num from pc
+        - autocompletion merge? (2 fucntions in two files for now)
         - confirmation modal on delete post
         - search bar for post
         - on enter press, save line
