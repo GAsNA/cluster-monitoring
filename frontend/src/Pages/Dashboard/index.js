@@ -33,8 +33,6 @@ function Dashboard() {
 					});
 					clusters[0].IsActive = true;
 
-					console.log(clusters);
-	
 					setAllClusters(clusters);
 					setCluster(clusters[0]);
 				})
@@ -46,7 +44,6 @@ function Dashboard() {
 	async function getTicketTypes() {
 		await client.get(API_ROUTES.GET_TICKET_TYPES)
 				.then((response) => {
-					console.log(response);
 					setIssueTypes(response.data)
 				})
 				.catch((error) => {
@@ -58,7 +55,6 @@ function Dashboard() {
 		await client.get(API_ROUTES.GET_TICKETS_SEAT + seat + "?limit=10")
 				.then((response) => {
 					const sorted = response.data ? [...response.data].sort((a, b) => a.CreatedAt > b.CreatedAt ? -1 : 1,) : [];
-					console.log(sorted)
 					setTicketsBySeat(sorted)
 				})
 				.catch((error) => {
