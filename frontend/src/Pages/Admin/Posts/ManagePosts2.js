@@ -95,19 +95,24 @@ function RowPost({ post, clusters, posts, setPosts }) {
 
 	function sendToModifyPost() {
 		const newPost = { ID: post.ID, Mac: mac, Serial: serial, Seat: seat, ClusterID: clusterID }
+		// TODO IF MAC OR SERIAL ARE EMPTY
 		modifyPost(newPost, posts, setPosts)
+	}
+	
+	const handleKeyPress = (event) => {
+		if (event.key === 'Enter') { sendToModifyPost(); }
 	}
 
 	return (
 		<tr key={post.ID}>
 			<td className="p-2" style={{ maxWidth: "200px" }}>
-				<Input value={mac} onValueChange={setMac} variant="underlined" />
+				<Input value={mac} onKeyPress={handleKeyPress} onValueChange={setMac} variant="underlined" />
 			</td>
 			<td className="p2" style={{ maxWidth: "200px" }}>
-				<Input value={serial} onValueChange={setSerial} variant="underlined" />
+				<Input value={serial} onKeyPress={handleKeyPress} onValueChange={setSerial} variant="underlined" />
 			</td>
 			<td className="p-2" style={{ maxWidth: "200px" }}>
-				<Input value={seat} onValueChange={changeSeat} variant="underlined" />
+				<Input value={seat} onKeyPress={handleKeyPress} onValueChange={changeSeat} variant="underlined" />
 			</td>
 			<td className="p-2" style={{ width: "200px" }}>
 				<Select selectedKeys={clusterID !== 0 ? [clusterID.toString()] : []} variant="underlined"
