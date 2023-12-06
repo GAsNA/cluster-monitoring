@@ -8,9 +8,7 @@ Frontend is in React ; Backend is in Go.
 - When cookie and jwt expires..
 - Admin side (staff)
     - page for mac adress and serie num from pc
-        - autocompletion merge? (2 fucntions in two files for now)
         - search bar for post
-        - verif mac and serial in table
     - set post to unavailable/do not use
     - get cluster with ticket to filter nb ticket in this cluster
     - possibility to archieved ticket types and clusters ??

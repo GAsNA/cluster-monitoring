@@ -94,8 +94,9 @@ function RowPost({ post, clusters, posts, setPosts }) {
 	}
 
 	function sendToModifyPost() {
+		if (mac === "" || serial === "") { return; }
+
 		const newPost = { ID: post.ID, Mac: mac, Serial: serial, Seat: seat, ClusterID: clusterID }
-		// TODO IF MAC OR SERIAL ARE EMPTY
 		modifyPost(newPost, posts, setPosts)
 	}
 	
@@ -106,10 +107,10 @@ function RowPost({ post, clusters, posts, setPosts }) {
 	return (
 		<tr key={post.ID}>
 			<td className="p-2" style={{ maxWidth: "200px" }}>
-				<Input value={mac} onKeyPress={handleKeyPress} onValueChange={setMac} variant="underlined" />
+				<Input value={mac} isInvalid={mac === ""} onKeyPress={handleKeyPress} onValueChange={setMac} variant="underlined" />
 			</td>
 			<td className="p2" style={{ maxWidth: "200px" }}>
-				<Input value={serial} onKeyPress={handleKeyPress} onValueChange={setSerial} variant="underlined" />
+				<Input value={serial} isInvalid={serial === ""} onKeyPress={handleKeyPress} onValueChange={setSerial} variant="underlined" />
 			</td>
 			<td className="p-2" style={{ maxWidth: "200px" }}>
 				<Input value={seat} onKeyPress={handleKeyPress} onValueChange={changeSeat} variant="underlined" />
