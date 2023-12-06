@@ -92,6 +92,7 @@ function ModalPosts({ posts, setPosts, open, setOpen, clusters }) {
 		)) {
 			createPosts(postsToCreate, setPostsToCreate, posts, setPosts, setSending);
 			setErrorSendingMessage(null);
+			setErrorFileMessage(null);
 			return;
 		}
 
@@ -109,7 +110,13 @@ function ModalPosts({ posts, setPosts, open, setOpen, clusters }) {
 				</ModalHeader>
 
 				<ModalBody>
-					<div style={{ marginLeft: 'auto' }}>
+					<div style={{ marginLeft: 'auto', display: 'flex', flexWrap: 'wrap' }}>
+						{ errorFileMessage &&
+							<p style={{ marginTop: '10px', color: '#e96a64' }}>{errorFileMessage}</p>
+						}
+
+						<Spacer x={2} />
+
 						<input ref={inputFileRef} onChange={handleFileChange} accept=".csv" type="file" id="csv_posts"
 							hidden />
 						<Button onPress={handleClickFile}
@@ -117,6 +124,7 @@ function ModalPosts({ posts, setPosts, open, setOpen, clusters }) {
 						>
 							Upload CSV
 						</Button>
+
 						<Tooltip content="Exemple csv file">
 							<Link href={ExampleFilePosts} download target="_blank" rel="noreferrer">
 								<Button isIconOnly style={{ backgroundColor: 'rgba(0, 0, 0, 0)' }}>
@@ -125,10 +133,6 @@ function ModalPosts({ posts, setPosts, open, setOpen, clusters }) {
 							</Link>
 						</Tooltip>
 					</div>
-
-					{ errorFileMessage &&
-						<p style={{ color: '#e96a64', marginLeft: 'auto' }}>{errorFileMessage}</p>
-					}
 
 					<table className="flex h-auto items-center"
 						style={{ display: 'inline-block', maxHeight: '395px', overflow: 'auto', marginBottom: '1%' }}
