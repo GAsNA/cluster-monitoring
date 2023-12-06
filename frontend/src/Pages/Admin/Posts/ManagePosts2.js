@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button, Input, Select, SelectItem, Tooltip } from '@nextui-org/react';
 import { Card, Typography } from "@material-tailwind/react";
 import ModalPosts from './ModalPosts.js';
+import ModalConfirmation from '../../../Components/ModalConfirmation.js';
 import { modifyPost, deletePost } from '../../../utils/functionsAction.js';
 import { DeleteIcon } from '../../../Icon/DeleteIcon';
 import { SaveIcon } from '../../../Icon/SaveIcon';
@@ -74,6 +75,8 @@ function RowPost({ post, clusters, posts, setPosts }) {
 	const [seat, setSeat] = useState(post.Seat);
 	const [clusterID, setClusterID] = useState(post.ClusterID);
 
+	const [openModalConfirmation, setOpenModalConfirmation] = useState(false);
+
 	// autocompletion for cluster
 	function changeSeat(val) {
 		const newCluster = clusters.find(c => { return val.toLowerCase().startsWith(c.Name.toLowerCase()) })
@@ -125,7 +128,7 @@ function RowPost({ post, clusters, posts, setPosts }) {
 						</Button>
 					</Tooltip>
 					<Tooltip color="danger" content="Delete">
-						<Button isIconOnly variant="light" onPress={() => deletePost(post, posts, setPosts)}>
+						<Button isIconOnly variant="light" onPress={() => setOpenModalConfirmation(true)}>
 							<span className="text-lg text-danger cursor-pointer active:opacity-50">
 								<DeleteIcon />
 							</span>
@@ -133,6 +136,12 @@ function RowPost({ post, clusters, posts, setPosts }) {
 					</Tooltip>
 				</div>
 			</td>
+
+			<ModalConfirmation open={openModalConfirmation} setOpen={setOpenModalConfirmation}
+				action={() => deletePost(post, posts, setPosts)}
+				text=<p><span style={{ color: '#01babc' }}>Are you sure</span> you want to delete this post?
+					<br/>This action is irreversible.
+				</p> />
 		</tr>
 	);
 }

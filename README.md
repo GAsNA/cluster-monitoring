@@ -9,7 +9,6 @@ Frontend is in React ; Backend is in Go.
 - Admin side (staff)
     - page for mac adress and serie num from pc
         - autocompletion merge? (2 fucntions in two files for now)
-        - confirmation modal on delete post
         - search bar for post
         - on enter press, save line
     - set post to unavailable/do not use
