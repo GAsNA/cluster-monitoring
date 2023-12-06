@@ -15,7 +15,6 @@ function ModalPosts({ posts, setPosts, open, setOpen, clusters }) {
 
 	const [errorFileMessage, setErrorFileMessage] = useState(null);
 	const inputFileRef = useRef(null);
-	const [filesUploaded, setFilesUploaded] = useState([]);
 
 	function handleClickFile() {
 		inputFileRef.current.click();
@@ -33,11 +32,6 @@ function ModalPosts({ posts, setPosts, open, setOpen, clusters }) {
 			complete: function (results) {
 				const rowsArray = [];
 				const valuesArray = [];
-
-				// Check if the file has already been uploaded. Modal confimation ??
-				if (filesUploaded.find((f) => f.name === file.name)) {
-					setErrorFileMessage("This file has already been uploaded."); return;
-				}
 
 				let error = false;
 
@@ -76,7 +70,6 @@ function ModalPosts({ posts, setPosts, open, setOpen, clusters }) {
 
 				setPostsToCreate([...postsToCreate, ...results.data])
 
-				setFilesUploaded([...filesUploaded, file])
 				setErrorFileMessage(null);
 			},
 		});
