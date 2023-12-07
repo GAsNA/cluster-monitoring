@@ -57,6 +57,7 @@ function Navigator() {
 								{ user && user.Login }
 							</p>
 						</DropdownItem>
+						<DropdownItem textValue="anonymisation" key="anonymisation" color="danger">Anonymisation</DropdownItem>
 						<DropdownItem textValue="logout" key="logout" color="danger" onAction={logout}>Log Out</DropdownItem>
 					</DropdownMenu>
 				</Dropdown>
