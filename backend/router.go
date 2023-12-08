@@ -12,7 +12,7 @@ func InitializeRouter() *mux.Router {
 		// AUTH
 	router.Methods("GET", "OPTIONS").Path("/auth/me").HandlerFunc(controllers.Me)
 	router.Methods("GET").Path("/auth/login").HandlerFunc(controllers.Login)
-	router.Methods("POST", "OPTIONS").Path("/auth/logout").HandlerFunc(controllers.Logout)
+	router.Methods("GET", "OPTIONS").Path("/auth/logout").HandlerFunc(controllers.Logout)
 	router.Methods("GET", "OPTIONS").Path("/auth/anonymisation").HandlerFunc(controllers.Anonymisation)
 
 		// TICKETTYPES

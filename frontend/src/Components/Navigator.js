@@ -8,22 +8,22 @@ import { client } from '../utils/common.jsx';
 function Navigator() {
 	const user = JSON.parse(localStorage.getItem("user"))
 
-	async function anonymisation() {
-		await client.get(API_ROUTES.ANONYMISATION)
+	async function logout() {
+		await client.get(API_ROUTES.LOGOUT, "")
 				.then((response) => {
-					logout()
+					Cookies.remove("token")
+					localStorage.clear();
+					window.location.replace(APP_ROUTES.HOME);
 				})
 				.catch((error) => {
 					toast.error('An error occured');
 				})
 	}
 
-	async function logout() {
-		await client.post(API_ROUTES.LOGOUT, "")
+	async function anonymisation() {
+		await client.get(API_ROUTES.ANONYMISATION)
 				.then((response) => {
-					Cookies.remove("token")
-					localStorage.clear();
-					window.location.replace(APP_ROUTES.HOME);
+					logout()
 				})
 				.catch((error) => {
 					toast.error('An error occured');
