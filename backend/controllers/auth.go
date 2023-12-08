@@ -117,3 +117,17 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	addHeader(&w)
 	w.WriteHeader(http.StatusOK)
 }
+
+func Anonymisation(w http.ResponseWriter, r *http.Request) {
+	addHeader(&w)
+
+	// Verification JWT and get claims
+	claims, err := verifyJwtAndClaims(&w, r)
+	if err != nil { return }
+
+	// Tickets linked to this user have to be linked to anoter / or how can it be
+	// Then delete user from db
+	fmt.Println(claims.User)
+
+	w.WriteHeader(http.StatusOK)
+}

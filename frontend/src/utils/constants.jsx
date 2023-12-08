@@ -8,6 +8,7 @@ export const API_ROUTES = {
 	ME: 'auth/me',
 	LOGIN: 'auth/login',
 	LOGOUT: 'auth/logout',
+	ANONYMISATION: 'auth/anonymisation',
 	GET_TICKET_TYPES: '/tickettypes',
 	CREATE_TICKET_TYPE: '/tickettypes',
 	UPDATE_TICKET_TYPE: '/tickettypes/',

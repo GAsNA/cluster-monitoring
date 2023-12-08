@@ -8,6 +8,16 @@ import { client } from '../utils/common.jsx';
 function Navigator() {
 	const user = JSON.parse(localStorage.getItem("user"))
 
+	async function anonymisation() {
+		await client.get(API_ROUTES.ANONYMISATION)
+				.then((response) => {
+					logout()
+				})
+				.catch((error) => {
+					toast.error('An error occured');
+				})
+	}
+
 	async function logout() {
 		await client.post(API_ROUTES.LOGOUT, "")
 				.then((response) => {
@@ -57,7 +67,7 @@ function Navigator() {
 								{ user && user.Login }
 							</p>
 						</DropdownItem>
-						<DropdownItem textValue="anonymisation" key="anonymisation" color="danger">Anonymisation</DropdownItem>
+						<DropdownItem textValue="anonymisation" key="anonymisation" color="danger" onAction={anonymisation}>Anonymisation</DropdownItem>
 						<DropdownItem textValue="logout" key="logout" color="danger" onAction={logout}>Log Out</DropdownItem>
 					</DropdownMenu>
 				</Dropdown>
