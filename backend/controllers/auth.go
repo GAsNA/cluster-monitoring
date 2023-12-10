@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"time"
+	"strconv"
 
 	"main/models"
 	"main/jwt"
@@ -125,9 +126,15 @@ func Anonymisation(w http.ResponseWriter, r *http.Request) {
 	claims, err := verifyJwtAndClaims(&w, r)
 	if err != nil { return }
 
-	// Tickets linked to this user have to be linked to anoter / or how can it be
-	// Then delete user from db
-	fmt.Println(claims.User)
+	// Change IDIntra to 0/null, Login to deleted-user-{ID},
+		// Image to empty string (or default image?), IsStaff to false
+	user := claims.User
+	user.IDIntra = 0
+	user.Login = "deleted-user-" + strconv.Itoa(user.ID)
+	user.Image = ""
+	user.IsStaff = false
+
+	models.UpdateUser(user)
 
 	w.WriteHeader(http.StatusOK)
 }
