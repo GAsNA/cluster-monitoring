@@ -7,13 +7,19 @@ import (
 	"github.com/uptrace/bun"
 )
 
-// MODEL
+// MODELS
 type Cluster struct {
 	bun.BaseModel	`bun:"table:cluster"`
 
 	ID		int		`bun:"id,pk,autoincrement,notnull,type:SERIAL"`
 	Name	string	`bun:"name,notnull"`
 	Link	string	`bun:"link,notnull"`
+}
+
+type ClusterWithTickets struct {
+	Cluster `bun:",extend"`
+
+	Tickets	[]Ticket	`bun:"tickets"`
 }
 
 // CREATE TABLE
@@ -49,6 +55,18 @@ func FindClusterByID(id int) *Cluster {
 func AllClusters() []Cluster {
 	var clusters	[]Cluster
 	err := config.DB().NewSelect().Model(&clusters).
+				Scan(config.Ctx())
+	if err != nil { log.Fatal(err) }
+
+	return clusters
+}
+
+func AllClustersWithTickets() []ClusterWithTickets {
+	var clusters	[]ClusterWithTickets
+	err := config.DB().NewSelect().Model(&clusters).
+				ColumnExpr("cluster.*").
+				ColumnExpr("t AS tickets").
+				Join("JOIN ticket AS t ON t.cluster_id = cluster.ID").
 				Scan(config.Ctx())
 	if err != nil { log.Fatal(err) }
 

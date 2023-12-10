@@ -19,7 +19,7 @@ func ClustersIndex(w http.ResponseWriter, r *http.Request) {
 	if err != nil { return }
 
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(models.AllClusters())
+	json.NewEncoder(w).Encode(models.AllClustersWithTickets())
 }
 
 func ClustersCreate(w http.ResponseWriter, r *http.Request) {
