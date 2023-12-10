@@ -17,6 +17,8 @@ func main() {
 
 	// TABLE USER
 	models.CreateUserTable()
+	/*u := &models.User{ IDIntra: 135512, Login: "renard", Image: "https://cdn.intra.42.fr/users/da8e4c4562e2f37369819549e76fb69b/renard.png", IsStaff: true }
+	models.NewUser(u)*/
 
 	// TABLE TICKET TYPE
 	models.CreateTicketTypeTable()

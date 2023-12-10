@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Dropdown, DropdownTrigger, DropdownItem, DropdownMenu, Avatar, Link, Button } from '@nextui-org/react';
 import Cookies from 'js-cookie';
 import toast from 'react-hot-toast';
 import { API_ROUTES, APP_ROUTES } from '../utils/constants.jsx';
 import { client } from '../utils/common.jsx';
+import ModalConfirmation from './ModalConfirmation.js';
 
 function Navigator() {
 	const user = JSON.parse(localStorage.getItem("user"))
+
+	const [openModalConfirmation, setOpenModalConfirmation] = useState(false);
 
 	async function logout() {
 		await client.get(API_ROUTES.LOGOUT, "")
@@ -31,6 +34,7 @@ function Navigator() {
 	}
 
 	return (
+	<>
 		<Navbar maxWidth="full" shouldHideOnScroll>
 			<NavbarBrand>
 				<Link color="foreground" href={ APP_ROUTES.DASHBOARD }>
@@ -67,12 +71,23 @@ function Navigator() {
 								{ user && user.Login }
 							</p>
 						</DropdownItem>
-						<DropdownItem textValue="anonymisation" key="anonymisation" color="danger" onAction={anonymisation}>Anonymisation</DropdownItem>
-						<DropdownItem textValue="logout" key="logout" color="danger" onAction={logout}>Log Out</DropdownItem>
+						<DropdownItem textValue="anonymisation" key="anonymisation" color="danger"
+							onAction={() => setOpenModalConfirmation(true)}
+						>
+							Anonymisation
+						</DropdownItem>
+						<DropdownItem textValue="logout" key="logout" color="danger" onAction={logout}>
+							Log Out
+						</DropdownItem>
 					</DropdownMenu>
 				</Dropdown>
 			</NavbarContent>
 		</Navbar>
+
+		<ModalConfirmation open={openModalConfirmation} setOpen={setOpenModalConfirmation} action={anonymisation}
+			text=<p><span style={{ color: '#01babc' }}>Are you sure</span> you want to be anonymise?</p>
+		/>
+	</>
 	);
 }
 
