@@ -19,9 +19,9 @@ type Ticket struct {
 	TypeID			int			`bun:"type_id,notnull"`
 	Comment			string		`bun:"comment"`
 	AuthorID		int			`bun:"author_id",notnull`
-	CreatedAt		time.Time	`bun:"created_at,notnull"`
+	CreatedAt		time.Time	`bun:"created_at,notnull,type:timestamptz"`
 	Resolved		bool		`bun:"resolved,notnull"`
-	ResolvedAt		time.Time	`bun:"resolved_at"`
+	ResolvedAt		time.Time	`bun:"resolved_at,type:timestamptz"`
 	ResolvedByID	int			`bun:"resolved_by_id"`
 }
 

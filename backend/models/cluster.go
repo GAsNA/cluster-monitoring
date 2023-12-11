@@ -65,8 +65,10 @@ func AllClustersWithTickets() []ClusterWithTickets {
 	var clusters	[]ClusterWithTickets
 	err := config.DB().NewSelect().Model(&clusters).
 				ColumnExpr("cluster.*").
-				ColumnExpr("t AS tickets").
-				Join("JOIN ticket AS t ON t.cluster_id = cluster.ID").
+				ColumnExpr("json_agg(json_build_object('ID', t.id, 'Seat', t.seat, 'ClusterID', t.cluster_id, 'TypeID', t.type_id, 'Comment', t.comment, 'AuthorID', t.author_id, 'CreatedAt', t.created_at, 'Resolved', t.resolved, 'ResolvedAt', t.resolved_at, 'ResolvedByID', t.resolved_by_id)) AS tickets").
+				Join("LEFT JOIN ticket AS t ON t.cluster_id = cluster.ID").
+				Group("cluster.id").
+				Order("cluster.id ASC").
 				Scan(config.Ctx())
 	if err != nil { log.Fatal(err) }
 
