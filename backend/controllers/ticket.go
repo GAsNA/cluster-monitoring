@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strconv"
 	"time"
+	"math"
   
 	"main/models"
 )
@@ -22,9 +23,25 @@ func TicketsIndex(w http.ResponseWriter, r *http.Request) {
 	// Check rights
 	err = checkRights(&w, r, claims)
 	if err != nil { return }
+
+	// Get limit and page to return
+	limit, err := strconv.Atoi(r.URL.Query().Get("limit"))
+	if err != nil { limit = 30 }
+	page, err := strconv.Atoi(r.URL.Query().Get("page"))
+	if err != nil { page = 1 }
+
+	// How many element in DB
+	count := models.CountAllTickets()
+
+	// Add necessary headers
+	w.Header().Set("X-Total-Count", strconv.Itoa(count))
+	w.Header().Set("X-Page", strconv.Itoa(page))
+	w.Header().Set("X-Total-Pages", strconv.Itoa(int(math.Ceil(float64(count) / float64(limit)))))
+	w.Header().Set("X-Per-Page", strconv.Itoa(limit))
 	
+	// Send result
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(models.AllTickets())
+	json.NewEncoder(w).Encode(models.AllTickets(limit, page))
 }
 
 func TicketsIndexBySeat(w http.ResponseWriter, r *http.Request) {

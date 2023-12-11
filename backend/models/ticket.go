@@ -66,6 +66,13 @@ func NewTicket(t *Ticket) {
 }
 
 	// Select
+func CountAllTickets() int {
+	count, err := config.DB().NewSelect().Model((*Ticket)(nil)).Count(config.Ctx())
+	if err != nil { log.Fatal(err) }
+
+	return count
+}
+
 func FindTicketByID(id int) *Ticket {
 	var tickets	[]Ticket
 	err := config.DB().NewSelect().Model(&tickets).
@@ -77,14 +84,18 @@ func FindTicketByID(id int) *Ticket {
 	return &tickets[0]
 }
 
-func AllTickets() []TicketWithTypeAndAuthor {
-	var tickets	[]TicketWithTypeAndAuthor
+func AllTickets(limit, page int) []TicketWithTypeAndAuthor {
+	tickets := []TicketWithTypeAndAuthor{}
+
 	err := config.DB().NewSelect().Model(&tickets).
 				ColumnExpr("ticket.*").
 				ColumnExpr("tt.name AS ticket_type__name").
 				ColumnExpr("a.id_intra AS author__id_intra, a.login AS author__login, a.image AS author__image").
 				Join("JOIN ticket_type AS tt ON tt.id = ticket.type_id").
 				Join("JOIN public.\"user\" AS a ON a.id = ticket.author_id").
+				Order("ticket.created_at DESC").
+				Limit(limit).
+				Offset((page - 1) * limit).
 				Scan(config.Ctx())
 	if err != nil { log.Fatal(err) }
 
