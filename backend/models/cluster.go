@@ -16,10 +16,10 @@ type Cluster struct {
 	Link	string	`bun:"link,notnull"`
 }
 
-type ClusterWithTickets struct {
+type ClusterWithTicketsWithTypeAndAuthor struct {
 	Cluster `bun:",extend"`
 
-	Tickets	[]Ticket	`bun:"tickets"`
+	Tickets	[]TicketWithTypeAndAuthor	`bun:"tickets"`
 }
 
 // CREATE TABLE
@@ -61,19 +61,19 @@ func AllClusters() []Cluster {
 	return clusters
 }
 
-func AllClustersWithTickets() []ClusterWithTickets {
+/*func AllClustersWithTickets() []ClusterWithTickets {
 	var clusters	[]ClusterWithTickets
 	err := config.DB().NewSelect().Model(&clusters).
 				ColumnExpr("cluster.*").
 				ColumnExpr("json_agg(json_build_object('ID', t.id, 'Seat', t.seat, 'ClusterID', t.cluster_id, 'TypeID', t.type_id, 'Comment', t.comment, 'AuthorID', t.author_id, 'CreatedAt', t.created_at, 'Resolved', t.resolved, 'ResolvedAt', t.resolved_at, 'ResolvedByID', t.resolved_by_id)) AS tickets").
-				Join("LEFT JOIN ticket AS t ON t.cluster_id = cluster.ID").
+				Join("LEFT JOIN ticket AS t ON t.cluster_id = cluster.id").
 				Group("cluster.id").
 				Order("cluster.id ASC").
 				Scan(config.Ctx())
 	if err != nil { log.Fatal(err) }
 
 	return clusters
-}
+}*/
 
 	// Update
 func UpdateCluster(c *Cluster) {
