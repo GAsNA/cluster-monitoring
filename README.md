@@ -25,7 +25,7 @@ Frontend is in React ; Backend is in Go.
 - Responsive ticket
 - Button "add ..." on admin page will be in separated component
 
-- Pagination / limit on get routes
+- Pagination / limit on get routes (with max values)
     - Implementation in front (do not get all tickets at once for example)
 
 ### Questions
