@@ -25,6 +25,9 @@ Frontend is in React ; Backend is in Go.
 - Responsive ticket
 - Button "add ..." on admin page will be in separated component
 
+- Pagination / limit on get routes
+    - Implementation in front (do not get all tickets at once for example)
+
 ### Questions
 - see for authorization header when option, options route, how manage ?
 - localstorage for user is good idea ?
