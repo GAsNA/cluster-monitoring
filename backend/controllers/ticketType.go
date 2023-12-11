@@ -12,7 +12,7 @@ import (
 )
 
 func TicketTypesIndex(w http.ResponseWriter, r *http.Request) {
-	addHeader(&w)
+	addHeadersCommon(&w)
 	
 	// Verification JWT and get claims
 	_, err := verifyJwtAndClaims(&w, r)
@@ -23,7 +23,7 @@ func TicketTypesIndex(w http.ResponseWriter, r *http.Request) {
 }
 
 func TicketTypesCreate(w http.ResponseWriter, r *http.Request) {
-	addHeader(&w)
+	addHeadersCommon(&w)
 
 	// Verification JWT and get claims
 	claims, err := verifyJwtAndClaims(&w, r)
@@ -48,7 +48,7 @@ func TicketTypesCreate(w http.ResponseWriter, r *http.Request) {
 }
 
 func TicketTypesShow(w http.ResponseWriter, r *http.Request) {
-	addHeader(&w)
+	addHeadersCommon(&w)
 	
 	// Verification JWT and get claims
 	_, err := verifyJwtAndClaims(&w, r)
@@ -65,7 +65,7 @@ func TicketTypesShow(w http.ResponseWriter, r *http.Request) {
 }
 
 func TicketTypesUpdate(w http.ResponseWriter, r *http.Request) {
-	addHeader(&w)
+	addHeadersCommon(&w)
 
 	// Verification JWT and get claims
 	claims, err := verifyJwtAndClaims(&w, r)
@@ -93,7 +93,7 @@ func TicketTypesUpdate(w http.ResponseWriter, r *http.Request) {
 }
 
 func TicketTypesDelete(w http.ResponseWriter, r *http.Request) {
-	addHeader(&w)
+	addHeadersCommon(&w)
 
 	// Verification JWT and get claims
 	claims, err := verifyJwtAndClaims(&w, r)

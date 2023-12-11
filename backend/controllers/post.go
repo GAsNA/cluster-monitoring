@@ -12,7 +12,7 @@ import (
 )
 
 func PostsIndex(w http.ResponseWriter, r *http.Request) {
-	addHeader(&w)
+	addHeadersCommon(&w)
 
 	// Verification JWT and get claims
 	claims, err := verifyJwtAndClaims(&w, r)
@@ -27,7 +27,7 @@ func PostsIndex(w http.ResponseWriter, r *http.Request) {
 }
 
 func PostsCreate(w http.ResponseWriter, r *http.Request) {
-	addHeader(&w)
+	addHeadersCommon(&w)
 	
 	// Verification JWT and get claims
 	claims, err := verifyJwtAndClaims(&w, r)
@@ -53,7 +53,7 @@ func PostsCreate(w http.ResponseWriter, r *http.Request) {
 }
 
 func PostsShow(w http.ResponseWriter, r *http.Request) {
-	addHeader(&w)
+	addHeadersCommon(&w)
 
 	// Verification JWT and get claims
 	claims, err := verifyJwtAndClaims(&w, r)
@@ -74,7 +74,7 @@ func PostsShow(w http.ResponseWriter, r *http.Request) {
 }
 
 func PostsUpdate(w http.ResponseWriter, r *http.Request) {
-	addHeader(&w)
+	addHeadersCommon(&w)
 
 	// Verification JWT and get claims
 	claims, err := verifyJwtAndClaims(&w, r)
@@ -103,7 +103,7 @@ func PostsUpdate(w http.ResponseWriter, r *http.Request) {
 }
 
 func PostsDelete(w http.ResponseWriter, r *http.Request) {
-	addHeader(&w)
+	addHeadersCommon(&w)
 
 	// Verification JWT and get claims
 	claims, err := verifyJwtAndClaims(&w, r)

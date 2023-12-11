@@ -15,7 +15,7 @@ import (
 )
 
 func Me(w http.ResponseWriter, r *http.Request) {
-	addHeader(&w)
+	addHeadersCommon(&w)
 
 	// Verification JWT and get claims
 	claims, err := verifyJwtAndClaims(&w, r)
@@ -26,7 +26,7 @@ func Me(w http.ResponseWriter, r *http.Request) {
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {
-	addHeader(&w)
+	addHeadersCommon(&w)
 
 	error := r.URL.Query().Get("error")
 	error_description := r.URL.Query().Get("error_description")
@@ -115,12 +115,12 @@ func Login(w http.ResponseWriter, r *http.Request) {
 }
 
 func Logout(w http.ResponseWriter, r *http.Request) {
-	addHeader(&w)
+	addHeadersCommon(&w)
 	w.WriteHeader(http.StatusOK)
 }
 
 func Anonymisation(w http.ResponseWriter, r *http.Request) {
-	addHeader(&w)
+	addHeadersCommon(&w)
 
 	// Verification JWT and get claims
 	claims, err := verifyJwtAndClaims(&w, r)

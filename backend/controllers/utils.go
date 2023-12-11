@@ -17,11 +17,18 @@ var upgrader = websocket.Upgrader {
 	CheckOrigin:		func(r *http.Request) bool { return true },
 }
 
-func addHeader(w *http.ResponseWriter) {
+func addHeadersCommon(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
 	(*w).Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE")
 	(*w).Header().Set("Access-Control-Allow-Headers", "Authorization, Content-Type")
 	(*w).Header().Set("Content-type", "application/json;charset=UTF-8")
+}
+
+func addHeadersGet(w *http.ResponseWriter, total_count, page, total_pages, per_page string) {
+	(*w).Header().Set("X-Total-Count", total_count)
+	(*w).Header().Set("X-Page", page)
+	(*w).Header().Set("X-Total-Pages", total_pages)
+	(*w).Header().Set("X-Per-Page", per_page)
 }
 
 func verifyJwtAndClaims(w *http.ResponseWriter, r *http.Request) (*jwt.Claims, error) {

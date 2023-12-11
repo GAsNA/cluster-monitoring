@@ -12,7 +12,7 @@ import (
 )
 
 func UsersIndex(w http.ResponseWriter, r *http.Request) {
-	addHeader(&w)
+	addHeadersCommon(&w)
 
 	// Verification JWT and get claims
 	_, err := verifyJwtAndClaims(&w, r)
@@ -23,7 +23,7 @@ func UsersIndex(w http.ResponseWriter, r *http.Request) {
 }
 
 func UsersCreate(w http.ResponseWriter, r *http.Request) {
-	addHeader(&w)
+	addHeadersCommon(&w)
 
 	// Verification JWT and get claims
 	claims, err := verifyJwtAndClaims(&w, r)
@@ -48,7 +48,7 @@ func UsersCreate(w http.ResponseWriter, r *http.Request) {
 }
 
 func UsersShow(w http.ResponseWriter, r *http.Request) {
-	addHeader(&w)
+	addHeadersCommon(&w)
 	
 	// Verification JWT and get claims
 	_, err := verifyJwtAndClaims(&w, r)
@@ -65,7 +65,7 @@ func UsersShow(w http.ResponseWriter, r *http.Request) {
 }
 
 func UsersUpdate(w http.ResponseWriter, r *http.Request) {
-	addHeader(&w)
+	addHeadersCommon(&w)
 
 	// Verification JWT and get claims
 	claims, err := verifyJwtAndClaims(&w, r)
@@ -93,7 +93,7 @@ func UsersUpdate(w http.ResponseWriter, r *http.Request) {
 }
 
 func UsersDelete(w http.ResponseWriter, r *http.Request) {
-	addHeader(&w)
+	addHeadersCommon(&w)
 
 	// Verification JWT and get claims
 	claims, err := verifyJwtAndClaims(&w, r)

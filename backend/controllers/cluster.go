@@ -12,7 +12,7 @@ import (
 )
 
 func ClustersIndex(w http.ResponseWriter, r *http.Request) {
-	addHeader(&w)
+	addHeadersCommon(&w)
 
 	// Verification JWT and get claims
 	_, err := verifyJwtAndClaims(&w, r)
@@ -24,7 +24,7 @@ func ClustersIndex(w http.ResponseWriter, r *http.Request) {
 }
 
 func ClustersCreate(w http.ResponseWriter, r *http.Request) {
-	addHeader(&w)
+	addHeadersCommon(&w)
 
 	// Verification JWT and get claims
 	claims, err := verifyJwtAndClaims(&w, r)
@@ -49,7 +49,7 @@ func ClustersCreate(w http.ResponseWriter, r *http.Request) {
 }
 
 func ClustersShow(w http.ResponseWriter, r *http.Request) {
-	addHeader(&w)
+	addHeadersCommon(&w)
 	
 	// Verification JWT and get claims
 	_, err := verifyJwtAndClaims(&w, r)
@@ -66,7 +66,7 @@ func ClustersShow(w http.ResponseWriter, r *http.Request) {
 }
 
 func ClustersUpdate(w http.ResponseWriter, r *http.Request) {
-	addHeader(&w)
+	addHeadersCommon(&w)
 
 	// Verification JWT and get claims
 	claims, err := verifyJwtAndClaims(&w, r)
@@ -94,7 +94,7 @@ func ClustersUpdate(w http.ResponseWriter, r *http.Request) {
 }
 
 func ClustersDelete(w http.ResponseWriter, r *http.Request) {
-	addHeader(&w)
+	addHeadersCommon(&w)
 
 	// Verification JWT and get claims
 	_, err := verifyJwtAndClaims(&w, r)

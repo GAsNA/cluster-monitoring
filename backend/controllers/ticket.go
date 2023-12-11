@@ -14,7 +14,7 @@ import (
 )
 
 func TicketsIndex(w http.ResponseWriter, r *http.Request) {
-	addHeader(&w)
+	addHeadersCommon(&w)
 
 	// Verification JWT and get claims
 	claims, err := verifyJwtAndClaims(&w, r)
@@ -34,10 +34,8 @@ func TicketsIndex(w http.ResponseWriter, r *http.Request) {
 	count := models.CountAllTickets()
 
 	// Add necessary headers
-	w.Header().Set("X-Total-Count", strconv.Itoa(count))
-	w.Header().Set("X-Page", strconv.Itoa(page))
-	w.Header().Set("X-Total-Pages", strconv.Itoa(int(math.Ceil(float64(count) / float64(limit)))))
-	w.Header().Set("X-Per-Page", strconv.Itoa(limit))
+	addHeadersGet(&w, strconv.Itoa(count), strconv.Itoa(page),
+		strconv.Itoa(int(math.Ceil(float64(count) / float64(limit)))), strconv.Itoa(limit))
 	
 	// Send result
 	w.WriteHeader(http.StatusOK)
@@ -45,7 +43,7 @@ func TicketsIndex(w http.ResponseWriter, r *http.Request) {
 }
 
 func TicketsIndexBySeat(w http.ResponseWriter, r *http.Request) {
-	addHeader(&w)
+	addHeadersCommon(&w)
 
 	// Verification JWT and get claims
 	claims, err := verifyJwtAndClaims(&w, r)
@@ -66,7 +64,7 @@ func TicketsIndexBySeat(w http.ResponseWriter, r *http.Request) {
 }
 
 func TicketsCreate(w http.ResponseWriter, r *http.Request) {
-	addHeader(&w)
+	addHeadersCommon(&w)
 	
 	// Verification JWT and get claims
 	claims, err := verifyJwtAndClaims(&w, r)
@@ -90,7 +88,7 @@ func TicketsCreate(w http.ResponseWriter, r *http.Request) {
 }
 
 func TicketsShow(w http.ResponseWriter, r *http.Request) {
-	addHeader(&w)
+	addHeadersCommon(&w)
 
 	// Verification JWT and get claims
 	_, err := verifyJwtAndClaims(&w, r)
@@ -107,7 +105,7 @@ func TicketsShow(w http.ResponseWriter, r *http.Request) {
 }
 
 func TicketsUpdate(w http.ResponseWriter, r *http.Request) {
-	addHeader(&w)
+	addHeadersCommon(&w)
 
 	// Verification JWT and get claims
 	claims, err := verifyJwtAndClaims(&w, r)
@@ -147,7 +145,7 @@ func TicketsUpdate(w http.ResponseWriter, r *http.Request) {
 }
 
 func TicketsDelete(w http.ResponseWriter, r *http.Request) {
-	addHeader(&w)
+	addHeadersCommon(&w)
 
 	// Verification JWT and get claims
 	claims, err := verifyJwtAndClaims(&w, r)
