@@ -52,7 +52,7 @@ func InitializeRouter() *mux.Router {
 //	router.Methods("GET").Path("/ticketypes/{id}").HandlerFunc(controllers.TicketTypesShow)
 
 		// TICKETS
-//	router.Methods("GET").Path("/tickes/{id}").HandlerFunc(controllers.TicketsShow)
+//	router.Methods("GET").Path("/tickets/{id}").HandlerFunc(controllers.TicketsShow)
 
 		// CLUSTERS
 //	router.Methods("GET").Path("/clusters/{id}").HandlerFunc(controllers.ClustersShow)

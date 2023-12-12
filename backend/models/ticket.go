@@ -57,15 +57,9 @@ func NewTicket(t *Ticket) (Ticket, error) {
 	t.CreatedAt = time.Now();
 	t.ResolvedByID = t.AuthorID;
 
-	res, err := config.DB().NewInsert().Model(t).
+	_, err := config.DB().NewInsert().Model(t).
 					Ignore().
 					Exec(config.Ctx())	
-	if err != nil { return *t, err }
-
-	id, err := res.LastInsertId()
-	if err != nil { return *t, err }
-
-	t.ID = int(id)
 
 	return *t, err
 }
