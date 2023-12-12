@@ -65,8 +65,14 @@ func NewTicket(t *Ticket) (Ticket, error) {
 }
 
 	// Select
-func CountAllTickets() (int, error) {
-	count, err := config.DB().NewSelect().Model((*Ticket)(nil)).Count(config.Ctx())
+func CountAllTickets(seat string) (int, error) {
+	subquery := config.DB().NewSelect().Model((*Ticket)(nil))
+
+	if seat != "" {
+		subquery = subquery.Where("seat = ?", seat)
+	}
+
+	count, err := subquery.Count(config.Ctx()) 
 
 	return count, err
 }

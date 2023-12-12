@@ -30,7 +30,7 @@ func TicketsIndex(w http.ResponseWriter, r *http.Request) {
 	if err != nil { page = 1 }
 
 	// How many element in DB
-	count, err := models.CountAllTickets()
+	count, err := models.CountAllTickets("")
 	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
 
 	// Get tickets
@@ -64,6 +64,8 @@ func TicketsIndexBySeat(w http.ResponseWriter, r *http.Request) {
 	if err != nil { page = 1 }
 
 	// How many element in DB
+	count, err := models.CountAllTickets(seat)
+	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
 
 	// Get tickets
 	var tickets interface{}
@@ -75,8 +77,8 @@ func TicketsIndexBySeat(w http.ResponseWriter, r *http.Request) {
 	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
 
 	// Add necessary headers
-	addHeadersGet(&w, strconv.Itoa(1), strconv.Itoa(page),
-		strconv.Itoa(int(math.Ceil(1 / float64(limit)))), strconv.Itoa(limit))
+	addHeadersGet(&w, strconv.Itoa(count), strconv.Itoa(page),
+		strconv.Itoa(int(math.Ceil(float64(count) / float64(limit)))), strconv.Itoa(limit))
 
 	// Send result
 	w.WriteHeader(http.StatusOK)
