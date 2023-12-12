@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"github.com/gorilla/mux"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -31,7 +30,12 @@ func TicketsIndex(w http.ResponseWriter, r *http.Request) {
 	if err != nil { page = 1 }
 
 	// How many element in DB
-	count := models.CountAllTickets()
+	count, err := models.CountAllTickets()
+	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
+
+	// Get tickets
+	tickets, err := models.AllTickets(limit, page)
+	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
 
 	// Add necessary headers
 	addHeadersGet(&w, strconv.Itoa(count), strconv.Itoa(page),
@@ -39,7 +43,7 @@ func TicketsIndex(w http.ResponseWriter, r *http.Request) {
 	
 	// Send result
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(models.AllTickets(limit, page))
+	json.NewEncoder(w).Encode(tickets)
 }
 
 func TicketsIndexBySeat(w http.ResponseWriter, r *http.Request) {
@@ -49,18 +53,34 @@ func TicketsIndexBySeat(w http.ResponseWriter, r *http.Request) {
 	claims, err := verifyJwtAndClaims(&w, r)
 	if err != nil { return }
 
+	// Get seat
 	vars := mux.Vars(r)
 	seat := vars["id"]
 
-	limit := r.URL.Query().Get("limit")
+	// Get limit and page
+	limit, err := strconv.Atoi(r.URL.Query().Get("limit"))
+	if err != nil { limit = 30 }
+	page, err := strconv.Atoi(r.URL.Query().Get("page"))
+	if err != nil { page = 1 }
 
-	w.WriteHeader(http.StatusOK)
-	
+	// How many element in DB
+
+	// Get tickets
+	var tickets interface{}
 	if claims.User.IsStaff {
-		json.NewEncoder(w).Encode(models.AllTicketsOfSeatWithTypeAndAuthor(seat, limit))
+		tickets, err = models.AllTicketsOfSeatWithTypeAndAuthor(seat, limit, page)
 	} else {
-		json.NewEncoder(w).Encode(models.AllTicketsOfSeatWithType(seat, limit))
+		tickets, err = models.AllTicketsOfSeatWithType(seat, limit, page)
 	}
+	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
+
+	// Add necessary headers
+	addHeadersGet(&w, strconv.Itoa(1), strconv.Itoa(page),
+		strconv.Itoa(int(math.Ceil(1 / float64(limit)))), strconv.Itoa(limit))
+
+	// Send result
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(tickets)
 }
 
 func TicketsCreate(w http.ResponseWriter, r *http.Request) {
@@ -72,15 +92,16 @@ func TicketsCreate(w http.ResponseWriter, r *http.Request) {
 
 	// Create ticket
 	body, err := ioutil.ReadAll(r.Body)
-	if err != nil { log.Fatal(err) }
+	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
 
 	var ticket models.Ticket
 	err = json.Unmarshal(body, &ticket)
-	if err != nil { log.Fatal(err) }
+	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
 
-	ticket.AuthorID = claims.User.ID
+	ticket.AuthorID = claims.User.ID	
 
-	models.NewTicket(&ticket)
+	ticket, err = models.NewTicket(&ticket)
+	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
 
 	// Send back ticket
 	w.WriteHeader(http.StatusOK)
@@ -94,12 +115,16 @@ func TicketsShow(w http.ResponseWriter, r *http.Request) {
 	_, err := verifyJwtAndClaims(&w, r)
 	if err != nil { return }
 
+	// Get ID of the ticket
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
-	if err != nil { log.Fatal(err) }
+	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
 
-	ticket := models.FindTicketByID(id)
+	// Get ticket
+	ticket, err := models.FindTicketByID(id)
+	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
 
+	// Send result
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(ticket)
 }
@@ -115,18 +140,22 @@ func TicketsUpdate(w http.ResponseWriter, r *http.Request) {
 	err = checkRights(&w, r, claims)
 	if err != nil { return }
 
+	// Get ID of the ticket
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
-	if err != nil { log.Fatal(err)}
+	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
 
+	// Get ticket
 	body, err := ioutil.ReadAll(r.Body)
-	if err != nil { log.Fatal(err) }
+	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
 
-	ticket := models.FindTicketByID(id)
+	ticket, err := models.FindTicketByID(id)
+	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
+
 	lastStatusResolved := ticket.Resolved
 
 	err = json.Unmarshal(body, &ticket)
-	if err != nil { log.Fatal(err) }
+	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
 	
 	// If ticket is passed from unresolved to resolved
 	if lastStatusResolved == false && ticket.Resolved == true {
@@ -138,10 +167,13 @@ func TicketsUpdate(w http.ResponseWriter, r *http.Request) {
 		ticket.ResolvedByID = ticket.AuthorID
 	}
 
-	models.UpdateTicket(ticket)
+	// Update ticket in DB
+	ticket_ret, err := models.UpdateTicket(ticket)
+	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
 
+	// Send result
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(ticket)
+	json.NewEncoder(w).Encode(ticket_ret)
 }
 
 func TicketsDelete(w http.ResponseWriter, r *http.Request) {
@@ -155,12 +187,15 @@ func TicketsDelete(w http.ResponseWriter, r *http.Request) {
 	err = checkRights(&w, r, claims)
 	if err != nil { return }
 
+	// Get ID of the ticket
 	vars := mux.Vars(r)
-
-	// strconv.Atoi is shorthand for ParseInt
 	id, err := strconv.Atoi(vars["id"])
-	if err != nil { log.Fatal(err) }
+	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
 
+	// Delete ticket in DB
+	err = models.DeleteTicketByID(id)
+	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
+
+	// Send result
 	w.WriteHeader(http.StatusOK)
-	models.DeleteTicketByID(id)
 }

@@ -1,9 +1,7 @@
 package models
 
 import (
-	"log"
 	"time"
-	"strconv"
 	"main/config"
 
 	"github.com/uptrace/bun"
@@ -41,7 +39,7 @@ type TicketWithTypeAndAuthor struct {
 }
 
 // CREATE TABLE
-func CreateTicketTable() {
+func CreateTicketTable() error {
 	_, err := config.DB().NewCreateTable().Model((*Ticket)(nil)).
 					ForeignKey(`("author_id") REFERENCES "user" ("id") ON DELETE CASCADE`).
 					ForeignKey(`("resolved_by_id") REFERENCES "user" ("id") ON DELETE CASCADE`).
@@ -49,42 +47,48 @@ func CreateTicketTable() {
 					ForeignKey(`("type_id") REFERENCES "ticket_type" ("id") ON DELETE CASCADE`).
 					IfNotExists().
 					Exec(config.Ctx())
-	if err != nil { log.Fatal(err) }
+	return err
 }
 
 // ACTIONS
-func NewTicket(t *Ticket) {
-	if t == nil { return }
+func NewTicket(t *Ticket) (Ticket, error) {
+	if t == nil { return *(*Ticket)(nil), nil }
 
 	t.CreatedAt = time.Now();
 	t.ResolvedByID = t.AuthorID;
 
-	_, err := config.DB().NewInsert().Model(t).
+	res, err := config.DB().NewInsert().Model(t).
 					Ignore().
-					Exec(config.Ctx())
-	if err != nil { log.Fatal(err) }
+					Exec(config.Ctx())	
+	if err != nil { return *t, err }
+
+	id, err := res.LastInsertId()
+	if err != nil { return *t, err }
+
+	t.ID = int(id)
+
+	return *t, err
 }
 
 	// Select
-func CountAllTickets() int {
+func CountAllTickets() (int, error) {
 	count, err := config.DB().NewSelect().Model((*Ticket)(nil)).Count(config.Ctx())
-	if err != nil { log.Fatal(err) }
 
-	return count
+	return count, err
 }
 
-func FindTicketByID(id int) *Ticket {
-	var tickets	[]Ticket
+func FindTicketByID(id int) (*Ticket, error) {
+	tickets := []Ticket{}
 	err := config.DB().NewSelect().Model(&tickets).
 				Where("id = ?", id).
 				Scan(config.Ctx())
-	if err != nil { log.Fatal(err) }
+	if err != nil { return (*Ticket)(nil), err }
 
-	if len(tickets) == 0 { log.Println("FindTicketByID: no ticket found"); return (*Ticket)(nil) }
-	return &tickets[0]
+	if len(tickets) == 0 { return (*Ticket)(nil), nil }
+	return &tickets[0], nil
 }
 
-func AllTickets(limit, page int) []TicketWithTypeAndAuthor {
+func AllTickets(limit, page int) ([]TicketWithTypeAndAuthor, error) {
 	tickets := []TicketWithTypeAndAuthor{}
 
 	err := config.DB().NewSelect().Model(&tickets).
@@ -97,65 +101,60 @@ func AllTickets(limit, page int) []TicketWithTypeAndAuthor {
 				Limit(limit).
 				Offset((page - 1) * limit).
 				Scan(config.Ctx())
-	if err != nil { log.Fatal(err) }
 
-	return tickets
+	return tickets, err
 }
 
-func AllTicketsOfSeatWithTypeAndAuthor(seat, limit string) []TicketWithTypeAndAuthor {
-	var tickets []TicketWithTypeAndAuthor
+func AllTicketsOfSeatWithTypeAndAuthor(seat string, limit, page int) ([]TicketWithTypeAndAuthor, error) {
+	tickets := []TicketWithTypeAndAuthor{}
 
-	subquery := config.DB().NewSelect().Model(&tickets).
+	err := config.DB().NewSelect().Model(&tickets).
 					Where("seat = ?", seat).
 					ColumnExpr("ticket.*").
 					ColumnExpr("tt.name AS ticket_type__name").
 					ColumnExpr("a.id_intra AS author__id_intra, a.login AS author__login, a.image AS author__image").
 					Join("JOIN ticket_type AS tt ON tt.id = ticket.type_id").
 					Join("JOIN public.\"user\" AS a ON a.id = ticket.author_id").
-					Order("ticket.created_at DESC")
-	
-	limit_int, err := strconv.Atoi(limit)
-	if err == nil { subquery = subquery.Limit(limit_int) }
+					Order("ticket.created_at DESC").
+					Limit(limit).
+					Offset((page - 1) * limit).
+					Scan(config.Ctx())
 
-	err = subquery.Scan(config.Ctx())
-	if err != nil { log.Fatal(err) }
-
-	return tickets
+	return tickets, err
 }
 
-func AllTicketsOfSeatWithType(seat, limit string) []TicketWithType {
-	var tickets []TicketWithType
+func AllTicketsOfSeatWithType(seat string, limit, page int) ([]TicketWithType, error) {
+	tickets := []TicketWithType{}
 
-	subquery := config.DB().NewSelect().Model(&tickets).
+	err := config.DB().NewSelect().Model(&tickets).
 					Where("seat = ?", seat).
 					ColumnExpr("ticket.*").
 					ColumnExpr("tt.name AS ticket_type__name").
 					Join("JOIN ticket_type AS tt ON tt.id = ticket.type_id").
-					Order("ticket.created_at DESC")
-	
-	limit_int, err := strconv.Atoi(limit)
-	if err == nil { subquery = subquery.Limit(limit_int) }
+					Order("ticket.created_at DESC").
+					Limit(limit).
+					Offset((page - 1) * limit).
+					Scan(config.Ctx())
 
-	err = subquery.Scan(config.Ctx())
-	if err != nil { log.Fatal(err) }
-
-	return tickets
+	return tickets, err
 }
 
 	// Update
-func UpdateTicket(t *Ticket) {
-	if t == nil { return }
+func UpdateTicket(t *Ticket) (Ticket, error) {
+	if t == nil { return *(*Ticket)(nil), nil }
 
 	_, err := config.DB().NewUpdate().Model(t).
 				Where("id = ?", t.ID).
 				Exec(config.Ctx())
-	if err != nil { log.Fatal(err) }
+	
+	return *t, err
 }
 
 	// Delete
-func DeleteTicketByID(id int) {
+func DeleteTicketByID(id int) error {
 	_, err := config.DB().NewDelete().Model((*Ticket)(nil)).
 				Where("id = ?", id).
 				Exec(config.Ctx())
-	if err != nil { log.Fatal(err) }
+	
+	return err
 }
