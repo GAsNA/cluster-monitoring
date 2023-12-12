@@ -124,6 +124,9 @@ func TicketsShow(w http.ResponseWriter, r *http.Request) {
 	ticket, err := models.FindTicketByID(id)
 	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
 
+	// If ticket not found
+	if ticket == nil { w.WriteHeader(http.StatusNotFound); return }
+
 	// Send result
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(ticket)
@@ -151,6 +154,9 @@ func TicketsUpdate(w http.ResponseWriter, r *http.Request) {
 
 	ticket, err := models.FindTicketByID(id)
 	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
+
+	// If ticket not found
+	if ticket == nil { w.WriteHeader(http.StatusNotFound); return }
 
 	lastStatusResolved := ticket.Resolved
 
@@ -193,8 +199,11 @@ func TicketsDelete(w http.ResponseWriter, r *http.Request) {
 	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
 
 	// Delete ticket in DB
-	err = models.DeleteTicketByID(id)
+	nbRowsAffected, err := models.DeleteTicketByID(id)
 	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
+
+	// If no row affected
+	if nbRowsAffected == 0 { w.WriteHeader(http.StatusNotFound); return }
 
 	// Send result
 	w.WriteHeader(http.StatusOK)

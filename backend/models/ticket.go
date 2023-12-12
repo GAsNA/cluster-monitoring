@@ -145,10 +145,13 @@ func UpdateTicket(t *Ticket) (Ticket, error) {
 }
 
 	// Delete
-func DeleteTicketByID(id int) error {
-	_, err := config.DB().NewDelete().Model((*Ticket)(nil)).
+func DeleteTicketByID(id int) (int64, error) {
+	res, err := config.DB().NewDelete().Model((*Ticket)(nil)).
 				Where("id = ?", id).
 				Exec(config.Ctx())
+	if err != nil { return 0, err }
 	
-	return err
+	nbRowsAffected, err := res.RowsAffected()
+	
+	return nbRowsAffected, err
 }
