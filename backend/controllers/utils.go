@@ -60,6 +60,6 @@ func verifyJwtAndClaims(w *http.ResponseWriter, r *http.Request) (*jwt.Claims, e
 func checkRights(w *http.ResponseWriter, r *http.Request, claims *jwt.Claims) error {
 	if claims.User.IsStaff { return nil }
 
-	(*w).WriteHeader(http.StatusUnauthorized)
+	(*w).WriteHeader(http.StatusForbidden)
 	return errors.New("No enough rights")
 }
