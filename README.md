@@ -24,7 +24,7 @@ Frontend is in React ; Backend is in Go.
 - Swagger
 - Responsive ticket
 - Button "add ..." on admin page will be in separated component
-
+- Get tickets by seat with FILTER (not another route)
 - Pagination / limit on get routes (with max values)
     - if nb page is greater then nb existing pages 
     - Implementation in front (do not get all tickets at once for example)
