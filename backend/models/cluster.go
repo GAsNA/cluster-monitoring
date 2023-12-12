@@ -1,7 +1,6 @@
 package models
 
 import (
-	"log"
 	"main/config"
 
 	"github.com/uptrace/bun"
@@ -23,42 +22,49 @@ type ClusterWithTicketsWithTypeAndAuthor struct {
 }
 
 // CREATE TABLE
-func CreateClusterTable() {
+func CreateClusterTable() error {
 	_, err := config.DB().NewCreateTable().Model((*Cluster)(nil)).
 					IfNotExists().
 					Exec(config.Ctx())
-	if err != nil { log.Fatal(err) }
+	return err
 }
 
 // ACTIONS
-func NewCluster(c *Cluster) {
-	if c == nil { return }
+func NewCluster(c *Cluster) error {
+	if c == nil { return nil }
 
 	_, err := config.DB().NewInsert().Model(c).
 					Ignore().
 					Exec(config.Ctx())
-	if err != nil { log.Fatal(err) }
+	return err
 }
 
 	// Select
-func FindClusterByID(id int) *Cluster {
-	var clusters	[]Cluster
+func CountAllClusters() (int, error) {
+	count, err := config.DB().NewSelect().Model((*Cluster)(nil)).Count(config.Ctx())
+	return count, err
+}
+
+func FindClusterByID(id int) (*Cluster, error) {
+	clusters := []Cluster{}
 	err := config.DB().NewSelect().Model(&clusters).
 				Where("id = ?", id).
 				Scan(config.Ctx())
-	if err != nil { log.Fatal(err) }
+	if err != nil { return (*Cluster)(nil), err }
 
-	if len(clusters) == 0 { log.Println("FindClusterByID: no cluster found"); return (*Cluster)(nil) }
-	return &clusters[0]
+	if len(clusters) == 0 { return (*Cluster)(nil), nil }
+	return &clusters[0], nil
 }
 
-func AllClusters() []Cluster {
-	var clusters	[]Cluster
-	err := config.DB().NewSelect().Model(&clusters).
-				Scan(config.Ctx())
-	if err != nil { log.Fatal(err) }
+func AllClusters(limit, page int) ([]Cluster, error) {
+	clusters := []Cluster{}
 
-	return clusters
+	err := config.DB().NewSelect().Model(&clusters).
+				Limit(limit).
+				Offset((page - 1) * limit).
+				Scan(config.Ctx())
+
+	return clusters, err
 }
 
 /*func AllClustersWithTickets() []ClusterWithTickets {
@@ -73,22 +79,28 @@ func AllClusters() []Cluster {
 	if err != nil { log.Fatal(err) }
 
 	return clusters
+
 }*/
 
 	// Update
-func UpdateCluster(c *Cluster) {
-	if c == nil { return }
+func UpdateCluster(c *Cluster) (int64, error) {
+	if c == nil { return 0, nil }
 
-	_, err := config.DB().NewUpdate().Model(c).
+	res, err := config.DB().NewUpdate().Model(c).
 				Where("id = ?", c.ID).
 				Exec(config.Ctx())
-	if err != nil { log.Fatal(err) }
+	
+	nbRowsAffected, err := res.RowsAffected()
+	return nbRowsAffected, err
 }
 
 	// Delete
-func DeleteClusterByID(id int) {
-	_, err := config.DB().NewDelete().Model((*Cluster)(nil)).
+func DeleteClusterByID(id int) (int64, error) {
+	res, err := config.DB().NewDelete().Model((*Cluster)(nil)).
 				Where("id = ?", id).
 				Exec(config.Ctx())
-	if err != nil { log.Fatal(err) }
+	if err != nil { return 0, err }
+
+	nbRowsAffected, err := res.RowsAffected()
+	return nbRowsAffected, err
 }

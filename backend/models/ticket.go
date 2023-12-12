@@ -51,8 +51,8 @@ func CreateTicketTable() error {
 }
 
 // ACTIONS
-func NewTicket(t *Ticket) (Ticket, error) {
-	if t == nil { return *(*Ticket)(nil), nil }
+func NewTicket(t *Ticket) error {
+	if t == nil { return nil }
 
 	t.CreatedAt = time.Now();
 	t.ResolvedByID = t.AuthorID;
@@ -61,7 +61,7 @@ func NewTicket(t *Ticket) (Ticket, error) {
 					Ignore().
 					Exec(config.Ctx())	
 
-	return *t, err
+	return err
 }
 
 	// Select
@@ -140,14 +140,15 @@ func AllTicketsOfSeatWithType(seat string, limit, page int) ([]TicketWithType, e
 }
 
 	// Update
-func UpdateTicket(t *Ticket) (Ticket, error) {
-	if t == nil { return *(*Ticket)(nil), nil }
+func UpdateTicket(t *Ticket) (int64, error) {
+	if t == nil { return 0, nil }
 
-	_, err := config.DB().NewUpdate().Model(t).
+	res, err := config.DB().NewUpdate().Model(t).
 				Where("id = ?", t.ID).
 				Exec(config.Ctx())
 	
-	return *t, err
+	nbRowsAffected, err := res.RowsAffected()
+	return nbRowsAffected, err
 }
 
 	// Delete
@@ -158,6 +159,5 @@ func DeleteTicketByID(id int) (int64, error) {
 	if err != nil { return 0, err }
 	
 	nbRowsAffected, err := res.RowsAffected()
-	
 	return nbRowsAffected, err
 }

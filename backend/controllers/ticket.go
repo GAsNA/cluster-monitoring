@@ -96,7 +96,7 @@ func TicketsCreate(w http.ResponseWriter, r *http.Request) {
 
 	ticket.AuthorID = claims.User.ID	
 
-	ticket, err = models.NewTicket(&ticket)
+	err = models.NewTicket(&ticket)
 	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
 
 	// Send back ticket
@@ -170,12 +170,15 @@ func TicketsUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Update ticket in DB
-	ticket_ret, err := models.UpdateTicket(ticket)
+	nbRowsAffected, err := models.UpdateTicket(ticket)
 	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
+
+	// If no row affected
+	if nbRowsAffected == 0 { w.WriteHeader(http.StatusNotFound); return }
 
 	// Send result
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(ticket_ret)
+	json.NewEncoder(w).Encode(ticket)
 }
 
 func TicketsDelete(w http.ResponseWriter, r *http.Request) {
