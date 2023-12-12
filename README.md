@@ -26,6 +26,7 @@ Frontend is in React ; Backend is in Go.
 - Button "add ..." on admin page will be in separated component
 
 - Pagination / limit on get routes (with max values)
+    - if nb page is greater then nb existing pages 
     - Implementation in front (do not get all tickets at once for example)
 
 ### Questions
