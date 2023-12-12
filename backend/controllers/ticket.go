@@ -24,10 +24,7 @@ func TicketsIndex(w http.ResponseWriter, r *http.Request) {
 	if err != nil { return }
 
 	// Get limit and page to return
-	limit, err := strconv.Atoi(r.URL.Query().Get("limit"))
-	if err != nil { limit = 30 }
-	page, err := strconv.Atoi(r.URL.Query().Get("page"))
-	if err != nil { page = 1 }
+	limit, page := getFilters(r.URL.Query())
 
 	// How many element in DB
 	count, err := models.CountAllTickets("")
@@ -58,10 +55,7 @@ func TicketsIndexBySeat(w http.ResponseWriter, r *http.Request) {
 	seat := vars["id"]
 
 	// Get limit and page
-	limit, err := strconv.Atoi(r.URL.Query().Get("limit"))
-	if err != nil { limit = 30 }
-	page, err := strconv.Atoi(r.URL.Query().Get("page"))
-	if err != nil { page = 1 }
+	limit, page := getFilters(r.URL.Query())
 
 	// How many element in DB
 	count, err := models.CountAllTickets(seat)
