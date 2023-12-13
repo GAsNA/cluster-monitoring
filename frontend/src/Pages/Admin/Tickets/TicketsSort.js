@@ -136,14 +136,12 @@ function TicketsSort({ ticketTypes=[] }) {
 					</div>
 
 					<div style={{ width: '200px', margin: '15px 1%' }}>
-						{ ticketTypesForSelect && ticketTypesForSelect.length > 0 &&
-						<Select disallowEmptySelection defaultSelectedKeys={[(ticketTypesForSelect[0].ID).toString()]} label="Ticket types"
+						<Select disallowEmptySelection label="Ticket types"
 							labelPlacement="outside" onSelectionChange={onTicketTypeChoiceChange} >
 								{ ticketTypesForSelect.map((type) => (
 									<SelectItem textValue={type.Name} key={type.ID}>{type.Name}</SelectItem>
 								))}
 						</Select>
-						}
 					</div>
 					
 					<RadioGroup label="Order by date" orientation="horizontal" value={orderByDateChoice}
