@@ -1,7 +1,6 @@
 package models
 
 import (
-	"log"
 	"main/config"
 
 	"github.com/uptrace/bun"
@@ -16,69 +15,81 @@ type TicketType struct {
 }
 
 // CREATE TABLE
-func CreateTicketTypeTable() {
+func CreateTicketTypeTable() error {
 	_, err := config.DB().NewCreateTable().Model((*TicketType)(nil)).
 					IfNotExists().
 					Exec(config.Ctx())
-	if err != nil { log.Fatal(err) }
+	return err
 }
 
 // ACTIONS
-func NewTicketType(tt *TicketType) {
-	if tt == nil { return }
+func NewTicketType(tt *TicketType) error {
+	if tt == nil { return nil }
 
 	_, err := config.DB().NewInsert().Model(tt).
 					Ignore().
 					Exec(config.Ctx())
-	if err != nil { log.Fatal(err) }
+	return err
 }
 
 	// Select
-func FindTicketTypeByID(id int) *TicketType {
-	var ticketTypes	[]TicketType
+func CountAllTicketTypes() (int, error) {
+	count, err := config.DB().NewSelect().Model((*TicketType)(nil)).Count(config.Ctx())
+	return count, err
+}
+
+func FindTicketTypeByID(id int) (*TicketType, error) {
+	ticketTypes := []TicketType{}
 	err := config.DB().NewSelect().Model(&ticketTypes).
 				Where("id = ?", id).
 				Scan(config.Ctx())
-	if err != nil { log.Fatal(err) }
+	if err != nil { return (*TicketType)(nil), err }
 
-	if len(ticketTypes) == 0 { log.Println("FindTicketTypeByID: no ticket type found"); return (*TicketType)(nil) }
-	return &ticketTypes[0]
+	if len(ticketTypes) == 0 { return (*TicketType)(nil), nil }
+	return &ticketTypes[0], nil
 }
 
-func FindTicketTypeByName(name string) *TicketType {
-	var ticketTypes	[]TicketType
+func FindTicketTypeByName(name string) (*TicketType, error) {
+	ticketTypes := []TicketType{}
 	err := config.DB().NewSelect().Model(&ticketTypes).
 				Where("name = ?", name).
 				Scan(config.Ctx())
-	if err != nil { log.Fatal(err) }
+	if err != nil { return (*TicketType)(nil), err }
 
-	if len(ticketTypes) == 0 { log.Println("FindTicketTypeByName: no ticket type found"); return (*TicketType)(nil) }
-	return &ticketTypes[0]
+	if len(ticketTypes) == 0 { return (*TicketType)(nil), nil }
+	return &ticketTypes[0], nil
 }
 
-func AllTicketTypes() []TicketType {
-	var ticketTypes	[]TicketType
+func AllTicketTypes(limit, page int) ([]TicketType, error) {
+	ticketTypes := []TicketType{}
 	err := config.DB().NewSelect().Model(&ticketTypes).
+				Limit(limit).
+				Offset((page - 1) * limit).
 				Scan(config.Ctx())
-	if err != nil { log.Fatal(err) }
 
-	return ticketTypes
+	return ticketTypes, err
 }
 
 	// Update
-func UpdateTicketType(tt *TicketType) {
-	if tt == nil { return }
+func UpdateTicketType(tt *TicketType) (int64, error) {
+	if tt == nil { return 0, nil }
 
-	_, err := config.DB().NewUpdate().Model(tt).
+	res, err := config.DB().NewUpdate().Model(tt).
 				Where("id = ?", tt.ID).
 				Exec(config.Ctx())
-	if err != nil { log.Fatal(err) }
+	if err != nil { return 0, err }
+
+	nbRowsAffected, err := res.RowsAffected()
+	return nbRowsAffected, err
 }
 
 	// Delete
-func DeleteTicketTypeByID(id int) {
-	_, err := config.DB().NewDelete().Model((*TicketType)(nil)).
+func DeleteTicketTypeByID(id int) (int64, error) {
+	res, err := config.DB().NewDelete().Model((*TicketType)(nil)).
 				Where("id = ?", id).
 				Exec(config.Ctx())
-	if err != nil { log.Fatal(err) }
+	if err != nil { return 0, err }
+
+	nbRowsAffected, err := res.RowsAffected()
+	return nbRowsAffected, err
 }
