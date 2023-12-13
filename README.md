@@ -4,9 +4,13 @@ Little web application to monitoring 42Paris clusters.
 Frontend is in React ; Backend is in Go.
 
 ## TODO
-- HOW TO GET RIDE OF THE '../../..' etc LINKS IN FILES?
+### General
 - When cookie and jwt expires..
+
+### Frontend
+- HOW TO GET RIDE OF THE '../../..' etc LINKS IN FILES?
 - Admin side (staff)
+    - Nb tickets associated to ticket type and cluster to redo
     - page for mac adress and serie num from pc
         - charge posts little by little in the table by scrolling
         - search bar for post
@@ -16,15 +20,17 @@ Frontend is in React ; Backend is in Go.
     - possibility to reoganise order of cluster and ticket type ?
     - multi selection for ticket and post
 - For all people, be able to see their own tickets ??
-- Ticket linked to post NOT SEAT ?? (because ethernet for example)
-- Pagination on back for ticket (at least) - so pagination in filters page is made in back too
 - Change the color of the seats depending on the number of tickets "in progress"
     - get tickets in dasboard by cluster
 - In form ticket, if keyboard is choose, select keys on virtual keyboard
-- Swagger
 - Responsive ticket
 - Button "add ..." on admin page will be in separated component
+
+### Backend
+- Swagger
+- Ticket linked to post NOT SEAT ?? (because ethernet for example)
 - Get tickets by seat with FILTER (not another route)
+- Secure api call (for example if id type ticket is not existing at ticket creation)
 - Pagination / limit on get routes (with max values)
     - if nb page is greater then nb existing pages 
     - Implementation in front (do not get all tickets at once for example)
