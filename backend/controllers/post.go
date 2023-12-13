@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"github.com/gorilla/mux"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"strconv"
+	"math"
   
 	"main/models"
 )
@@ -21,9 +21,25 @@ func PostsIndex(w http.ResponseWriter, r *http.Request) {
 	// Check rights
 	err = checkRights(&w, r, claims)
 	if err != nil { return }
+
+	// Get limit and page to return
+	limit, page := getFilters(r.URL.Query())
+
+	// How many element in DB
+	count, err := models.CountAllPosts()
+	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
+
+	// Get posts
+	posts, err := models.AllPosts(limit, page)
+	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
+
+	// Add necessary headers
+	addHeadersGet(&w, strconv.Itoa(count), strconv.Itoa(page),
+		strconv.Itoa(int(math.Ceil(float64(count) / float64(limit)))), strconv.Itoa(limit))
 	
+	// Send result
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(models.AllPosts())
+	json.NewEncoder(w).Encode(posts)
 }
 
 func PostsCreate(w http.ResponseWriter, r *http.Request) {
@@ -39,13 +55,14 @@ func PostsCreate(w http.ResponseWriter, r *http.Request) {
 
 	// Create post
 	body, err := ioutil.ReadAll(r.Body)
-	if err != nil { log.Fatal(err) }
+	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
 
 	var post models.Post
 	err = json.Unmarshal(body, &post)
-	if err != nil { log.Fatal(err) }
+	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
 
-	models.NewPost(&post)
+	err = models.NewPost(&post)
+	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
 
 	// Send back post
 	w.WriteHeader(http.StatusOK)
@@ -63,12 +80,19 @@ func PostsShow(w http.ResponseWriter, r *http.Request) {
 	err = checkRights(&w, r, claims)
 	if err != nil { return }
 
+	// Get ID of post
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
-	if err != nil { log.Fatal(err) }
+	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
 
-	post := models.FindPostByID(id)
+	// Get post
+	post, err := models.FindPostByID(id)
+	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
 
+	// If post not found
+	if post == nil { w.WriteHeader(http.StatusNotFound); return }
+
+	// Send result
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(post)
 }
@@ -84,20 +108,32 @@ func PostsUpdate(w http.ResponseWriter, r *http.Request) {
 	err = checkRights(&w, r, claims)
 	if err != nil { return }
 
+	// Get ID of post
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
-	if err != nil { log.Fatal(err)}
+	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
 
+	// Get post
 	body, err := ioutil.ReadAll(r.Body)
-	if err != nil { log.Fatal(err) }
+	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
 
-	post := models.FindPostByID(id)
+	post, err := models.FindPostByID(id)
+	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
+
+	// If post not found
+	if post == nil { w.WriteHeader(http.StatusNotFound); return }
 
 	err = json.Unmarshal(body, &post)
-	if err != nil { log.Fatal(err) }
+	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
 	
-	models.UpdatePost(post)
+	// Update post in DB
+	nbRowsAffected, err := models.UpdatePost(post)
+	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
 
+	// If no row affected
+	if nbRowsAffected == 0 { w.WriteHeader(http.StatusNotFound); return }
+
+	// Send result
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(post)
 }
@@ -113,12 +149,18 @@ func PostsDelete(w http.ResponseWriter, r *http.Request) {
 	err = checkRights(&w, r, claims)
 	if err != nil { return }
 
+	// Get ID of post
 	vars := mux.Vars(r)
-
-	// strconv.Atoi is shorthand for ParseInt
 	id, err := strconv.Atoi(vars["id"])
-	if err != nil { log.Fatal(err) }
+	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
 
+	// Delete post in DB
+	nbRowsAffected, err := models.DeletePostByID(id)
+	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
+
+	// If no row affected
+	if nbRowsAffected == 0 { w.WriteHeader(http.StatusNotFound); return }
+
+	// Send result
 	w.WriteHeader(http.StatusOK)
-	models.DeletePostByID(id)
 }

@@ -89,6 +89,7 @@ func UpdateCluster(c *Cluster) (int64, error) {
 	res, err := config.DB().NewUpdate().Model(c).
 				Where("id = ?", c.ID).
 				Exec(config.Ctx())
+	if err != nil { return 0, err }
 	
 	nbRowsAffected, err := res.RowsAffected()
 	return nbRowsAffected, err

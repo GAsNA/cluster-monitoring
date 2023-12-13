@@ -146,6 +146,7 @@ func UpdateTicket(t *Ticket) (int64, error) {
 	res, err := config.DB().NewUpdate().Model(t).
 				Where("id = ?", t.ID).
 				Exec(config.Ctx())
+	if err != nil { return 0, err }
 	
 	nbRowsAffected, err := res.RowsAffected()
 	return nbRowsAffected, err

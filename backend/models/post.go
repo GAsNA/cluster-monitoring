@@ -1,7 +1,6 @@
 package models
 
 import (
-	"log"
 	"main/config"
 
 	"github.com/uptrace/bun"
@@ -19,59 +18,73 @@ type Post struct {
 }
 
 // CREATE TABLE
-func CreatePostTable() {
+func CreatePostTable() error {
 	_, err := config.DB().NewCreateTable().Model((*Post)(nil)).
 					ForeignKey(`("cluster_id") REFERENCES "cluster" ("id") ON DELETE CASCADE`).
 					IfNotExists().
 					Exec(config.Ctx())
-	if err != nil { log.Fatal(err) }
+	return err
 }
 
 // ACTIONS
-func NewPost(p *Post) {
-	if p == nil { return }
+func NewPost(p *Post) error {
+	if p == nil { return nil }
 
 	_, err := config.DB().NewInsert().Model(p).
 					Ignore().
 					Exec(config.Ctx())
-	if err != nil { log.Fatal(err) }
+	return err
 }
 
 	// Select
-func FindPostByID(id int) *Post {
-	var posts	[]Post
+func CountAllPosts() (int, error) {
+	count, err := config.DB().NewSelect().Model((*Post)(nil)).Count(config.Ctx())
+
+	return count, err
+}
+
+func FindPostByID(id int) (*Post, error) {
+	posts := []Post{}
 	err := config.DB().NewSelect().Model(&posts).
 				Where("id = ?", id).
 				Scan(config.Ctx())
-	if err != nil { log.Fatal(err) }
+	if err != nil { return (*Post)(nil), err }
 
-	if len(posts) == 0 { log.Println("FindPostByID: no post found"); return (*Post)(nil) }
-	return &posts[0]
+	if len(posts) == 0 { return (*Post)(nil), nil }
+	return &posts[0], nil
 }
 
-func AllPosts() []Post {
-	var posts	[]Post
-	err := config.DB().NewSelect().Model(&posts).
-				Scan(config.Ctx())
-	if err != nil { log.Fatal(err) }
+func AllPosts(limit, page int) ([]Post, error) {
+	posts := []Post{}
 
-	return posts
+	err := config.DB().NewSelect().Model(&posts).
+				Limit(limit).
+				Offset((page - 1) * limit).
+				Scan(config.Ctx())
+
+	return posts, err
 }
 
 	// Update
-func UpdatePost(p *Post) {
-	if p == nil { return }
+func UpdatePost(p *Post) (int64, error) {
+	if p == nil { return 0, nil }
 
-	_, err := config.DB().NewUpdate().Model(p).
+	res, err := config.DB().NewUpdate().Model(p).
 				Where("id = ?", p.ID).
 				Exec(config.Ctx())
-	if err != nil { log.Fatal(err) }
+	if err != nil { return 0, err }
+
+	nbRowsAffected, err := res.RowsAffected()
+	return nbRowsAffected, err
 }
 
 	// Delete
-func DeletePostByID(id int) {
-	_, err := config.DB().NewDelete().Model((*Post)(nil)).
+func DeletePostByID(id int) (int64, error) {
+	res, err := config.DB().NewDelete().Model((*Post)(nil)).
 				Where("id = ?", id).
 				Exec(config.Ctx())
-	if err != nil { log.Fatal(err) }
+	if err != nil { return 0, err }
+
+	nbRowsAffected, err := res.RowsAffected()
+	return nbRowsAffected, err
 }
