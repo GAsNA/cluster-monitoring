@@ -14,23 +14,13 @@ import ManagePosts2 from './Posts/ManagePosts2.js';
 function Admin() {
 	const user = JSON.parse(localStorage.getItem("user"))
 
-	const [tickets, setTickets] = useState([]);
+	const [tickets] = useState([]);
 	const [ticketTypes, setTicketTypes] = useState([]);
 	const [clusters, setClusters] = useState([]);
 	const [posts, setPosts] = useState([]);
 	const [init, setInit] = useState(false);
 
 	const [windowHeight, setWindowHeight] = useState(window.innerHeight);
-
-	async function getAllTickets() {
-		await client.get(API_ROUTES.GET_TICKETS)
-				.then((response) => {
-					if (response.data) { setTickets(response.data); }
-				})
-				.catch((error) => {
-					toast.error('An error occured');
-				})
-	}
 
 	async function getTicketTypes() {
 		await client.get(API_ROUTES.GET_TICKET_TYPES)
@@ -73,7 +63,7 @@ function Admin() {
 	}, []);
 
 	useEffect(() => {
-		if (!init) { setInit(true); getAllTickets(); getTicketTypes(); getClusters(); getPosts(); }
+		if (!init) { setInit(true); getTicketTypes(); getClusters(); getPosts(); }
 	}, [init])
 
 	if (user && !user.IsStaff) {
@@ -89,7 +79,7 @@ function Admin() {
 			<Tabs aria-label="Options">
 				<Tab key="tickets" title="Tickets">
 					<div style={{ maxWidth: '1000px', margin: 'auto' }}>
-						<TicketsSort tickets={tickets} setTickets={setTickets} ticketTypes={ticketTypes} />
+						<TicketsSort ticketTypes={ticketTypes} />
 					</div>
 				</Tab>
 

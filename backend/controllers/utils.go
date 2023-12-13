@@ -21,6 +21,7 @@ var upgrader = websocket.Upgrader {
 
 func addHeadersCommon(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	(*w).Header().Set("Access-Control-Expose-Headers", "X-Total-Count, X-Page, X-Total-Pages, X-Per-Page")
 	(*w).Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE")
 	(*w).Header().Set("Access-Control-Allow-Headers", "Authorization, Content-Type")
 	(*w).Header().Set("Content-type", "application/json;charset=UTF-8")

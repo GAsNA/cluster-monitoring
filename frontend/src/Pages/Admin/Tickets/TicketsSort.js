@@ -1,63 +1,82 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Input, Pagination, Select, SelectItem, RadioGroup, Radio } from '@nextui-org/react';
+import { toast } from 'react-hot-toast';
+import { API_ROUTES } from '../../../utils/constants.jsx';
+import { client } from '../../../utils/common.jsx';
 import ListTickets from '../../../Components/ListTickets.js';
 
-function TicketsSort({ tickets=[], ticketTypes=[] }) {
-	const [ticketsFiltered, setTicketsFiltered] = useState(tickets);
-	const [ticketsToShow, setTicketsToShow] = useState(ticketsFiltered);
+function TicketsSort({ ticketTypes=[] }) {
+	const [tickets, setTickets] = useState([]);
+	//const [ticketsFiltered, setTicketsFiltered] = useState(tickets);
+	//const [ticketsToShow, setTicketsToShow] = useState(ticketsFiltered);
 
 	const limitPerPage = 30;
+	const [totalPages, setTotalPages] = useState(1);
 	const [currentPage, setCurrentPage] = useState(1);
 
-	const [seatChoice, setSeatChoice] = useState("");
-	const [authorChoice, setAuthorChoice] = useState("");
-	const [statusChoice, setStatusChoice] = useState('all');
-	const [ticketTypeChoice, setTicketTypeChoice] = useState(-1);
-	const [orderByDateChoice, setOrderByDateChoice] = useState('desc');
+	//const [seatChoice, setSeatChoice] = useState("");
+	//const [authorChoice, setAuthorChoice] = useState("");
+	//const [statusChoice, setStatusChoice] = useState('all');
+	//const [ticketTypeChoice, setTicketTypeChoice] = useState(-1);
+	const [orderByDateChoice] = useState('desc');
 	
 	const statusTypes = [
 		{ name: "All", key: 'all' }, 
 		{ name: "Resolved", key: 'resolved' },
 		{ name: "In progress", key: 'inProgress' }
 	];
-	const [ticketTypesForSelect, setTicketTypesForSelect] = useState([]);
+	const [ticketTypesForSelect] = useState([]);
 	const orderByDate = [
 		{ name: "Desc", key: 'desc' }, 
 		{ name: "Asc", key: 'asc' },
 	];
 
-	const [getTickets, setGetTickets] = useState(false);
-	const [getTicketTypesForSelect, setGetTicketTypesForSelect] = useState(false);
-	const [toRefreshFilteredTickets, setToRefreshFilteredTickets] = useState(true);
+	//const [getTickets, setGetTickets] = useState(false);
+	//const [getTicketTypesForSelect, setGetTicketTypesForSelect] = useState(false);
+	//const [toRefreshFilteredTickets, setToRefreshFilteredTickets] = useState(true);
 
 	const refFilterSection = useRef(null);	
-	
+
 	function onSeatChoiceChange(value) {
-		setSeatChoice(value.toLowerCase());
-		setToRefreshFilteredTickets(true);
+	//	setSeatChoice(value.toLowerCase());
+	//	setToRefreshFilteredTickets(true);
 	}
 
 	function onAuthorChoiceChange(value) {
-		setAuthorChoice(value.toLowerCase());
-		setToRefreshFilteredTickets(true);
+	//	setAuthorChoice(value.toLowerCase());
+	//	setToRefreshFilteredTickets(true);
 	}
 
 	function onStatusChoiceChange(value) {
-		setStatusChoice([...value][0]);
-		setToRefreshFilteredTickets(true);
+	//	setStatusChoice([...value][0]);
+	//	setToRefreshFilteredTickets(true);
 	}
 
 	function onTicketTypeChoiceChange(value) {
-		setTicketTypeChoice([...value][0]);
-		setToRefreshFilteredTickets(true);
+	//	setTicketTypeChoice([...value][0]);
+	//	setToRefreshFilteredTickets(true);
 	}
 
 	function onOrderByDateChoiceChange(value) {
-		setOrderByDateChoice(value);
-		setToRefreshFilteredTickets(true);
+	//	setOrderByDateChoice(value);
+	//	setToRefreshFilteredTickets(true);
 	}
 
 	useEffect(() => {
+		async function getAllTickets() {
+			await client.get(API_ROUTES.GET_TICKETS + "?limit=" + limitPerPage + "&page=" + currentPage)
+					.then((response) => {
+						setTotalPages(response.headers['x-total-pages'])
+						if (response.data) { setTickets(response.data); }
+					})
+					.catch((error) => {
+						toast.error('An error occured');
+					})
+		}
+		getAllTickets();
+	}, [currentPage]);
+
+	/*useEffect(() => {
 		if (!getTickets && tickets.length > 0) { setGetTickets(true); setTicketsFiltered(tickets); }
 		if (!getTicketTypesForSelect && ticketTypes.length > 0) { 
 			setGetTicketTypesForSelect(true); 
@@ -90,7 +109,7 @@ function TicketsSort({ tickets=[], ticketTypes=[] }) {
 		} else {
 			setTicketsToShow([]);
 		}
-	}, [getTickets, getTicketTypesForSelect, currentPage, ticketsFiltered, tickets, ticketTypes, authorChoice, seatChoice, statusChoice, ticketTypeChoice, orderByDateChoice, toRefreshFilteredTickets]);
+	}, [getTickets, getTicketTypesForSelect, currentPage, ticketsFiltered, tickets, ticketTypes, authorChoice, seatChoice, statusChoice, ticketTypeChoice, orderByDateChoice, toRefreshFilteredTickets]);*/
 
 	return (
 		<>
@@ -137,13 +156,13 @@ function TicketsSort({ tickets=[], ticketTypes=[] }) {
 
 				</div>
 
-				{ ticketsFiltered && ticketsFiltered.length > limitPerPage &&
-					<Pagination total={Math.ceil(ticketsFiltered.length / limitPerPage)} onChange={setCurrentPage} />
+				{ totalPages > 1 &&
+					<Pagination total={totalPages} onChange={setCurrentPage} />
 				}
 			</div>
 			
 			<div>
-				<ListTickets tickets={ticketsToShow} setTickets={setTicketsToShow} displaySeat />
+				<ListTickets tickets={tickets} setTickets={setTickets} displaySeat />
 			</div>
 		</>
 	);
