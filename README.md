@@ -30,7 +30,7 @@ Frontend is in React ; Backend is in Go.
 - Swagger
 - Ticket linked to post NOT SEAT ?? (because ethernet for example)
 - Get tickets by seat with FILTER (not another route)
-- Secure api call (for example if id type ticket is not existing at ticket creation)
+- Secure api call (for example if id type ticket is not existing at ticket creation, all value by default - I can set a ticket to true for now...)
 - Pagination / limit on get routes (with max values)
     - if nb page is greater then nb existing pages 
     - Implementation in front (do not get all tickets at once for example)
