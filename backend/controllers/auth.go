@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"log"
 	"os"
 	"net/http"
 	"bytes"
@@ -47,7 +46,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 			})
 
 	resp, err := http.Post("https://api.intra.42.fr/oauth/token", "application/json", bytes.NewBuffer(body))
-	if err != nil { log.Fatal(err) }
+	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
 	defer resp.Body.Close()
 
     var res map[string]interface{}
@@ -55,11 +54,12 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 	// Request to get user information
 	req, err := http.NewRequest("GET", "https://api.intra.42.fr/v2/me", nil)
+	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
     req.Header.Add("Authorization", "Bearer " + fmt.Sprintf("%v", res["access_token"]))
 
     client := &http.Client{}
     resp, err = client.Do(req)
-    if err != nil { log.Println("Error on response.\n[ERROR] -", err) }
+	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
     defer resp.Body.Close()
 
     json.NewDecoder(resp.Body).Decode(&res)
@@ -88,7 +88,9 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	user_image := res["image"].(map[string]interface{})["link"].(string)
 	user_is_staff := res["staff?"].(bool)
 
-	user := models.FindUserByIDIntra(user_id_intra)
+	user, err := models.FindUserByIDIntra(user_id_intra)
+	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
+	
 	if user == (*models.User)(nil) {
 		user = &models.User{ IDIntra: user_id_intra, Login: user_login, Image: user_image, IsStaff: user_is_staff }
 		models.NewUser(user)
@@ -99,11 +101,12 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 	// PROVISIONAL: to delete
 	if r.URL.Query().Get("state") == "true" {
-		user = models.FindUserByLogin("renard")
+		user, err = models.FindUserByLogin("renard")
 	}
 
 	// Set JWT cookie and redirect
 	token, err := jwt.GenerateJWT(user)
+	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
 	http.SetCookie(w, &http.Cookie{
 						Name: "token",
 						Value: token,

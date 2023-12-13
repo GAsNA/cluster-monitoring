@@ -1,7 +1,6 @@
 package models
 
 import (
-	"log"
 	"main/config"
 
 	"github.com/uptrace/bun"
@@ -19,80 +18,92 @@ type User struct {
 }
 
 // CREATE TABLE
-func CreateUserTable() {
+func CreateUserTable() error {
 	_, err := config.DB().NewCreateTable().Model((*User)(nil)).
 					IfNotExists().
 					Exec(config.Ctx())
-	if err != nil { log.Fatal(err) }
+	return err
 }
 
 // ACTIONS
-func NewUser(u *User) {
-	if u == nil { return }
+func NewUser(u *User) error {
+	if u == nil { return nil }
 
 	_, err := config.DB().NewInsert().Model(u).
 					Ignore().
 					Exec(config.Ctx())
-	if err != nil { log.Fatal(err) }
+	return err
 }
 
 	// Select
-func FindUserByID(id int) *User {
-	var users	[]User
+func CountAllUsers() (int, error) {
+	count, err := config.DB().NewSelect().Model((*User)(nil)).Count(config.Ctx())
+	return count, err
+}
+
+func FindUserByID(id int) (*User, error) {
+	users := []User{}
 	err := config.DB().NewSelect().Model(&users).
 				Where("id = ?", id).
 				Scan(config.Ctx())
-	if err != nil { log.Fatal(err) }
+	if err != nil { return (*User)(nil), err }
 
-	if len(users) == 0 { log.Println("FindUserByID: no user found"); return (*User)(nil) }
-	return &users[0]
+	if len(users) == 0 { return (*User)(nil), nil }
+	return &users[0], nil
 }
 
-func FindUserByIDIntra(id int) *User {
-	var users	[]User
+func FindUserByIDIntra(id int) (*User, error) {
+	users := []User{}
 	err := config.DB().NewSelect().Model(&users).
 				Where("id_intra = ?", id).
 				Scan(config.Ctx())
-	if err != nil { log.Fatal(err) }
+	if err != nil { return (*User)(nil), err }
 
-	if len(users) == 0 { log.Println("FindUserByIDIntra: no user found"); return (*User)(nil) }
-	return &users[0]
+	if len(users) == 0 { return (*User)(nil), nil }
+	return &users[0], nil
 }
 
-func FindUserByLogin(login string) *User {
-	var users	[]User
+func FindUserByLogin(login string) (*User, error) {
+	users := []User{}
 	err := config.DB().NewSelect().Model(&users).
 				Where("login = ?", login).
 				Scan(config.Ctx())
-	if err != nil { log.Fatal(err) }
+	if err != nil { return (*User)(nil), err }
 
-	if len(users) == 0 { log.Println("FindUserByLogin: no user found"); return (*User)(nil) }
-	return &users[0]
+	if len(users) == 0 { return (*User)(nil), nil }
+	return &users[0], nil
 }
 
-func AllUsers() []User {
-	var users	[]User
+func AllUsers(limit, page int) ([]User, error) {
+	users := []User{}
 	err := config.DB().NewSelect().Model(&users).
+				Limit(limit).
+				Offset((page - 1) * limit).
 				Scan(config.Ctx())
-	if err != nil { log.Fatal(err) }
 
-	return users
+	return users, err
 }
 
 	// Update
-func UpdateUser(u *User) {
-	if u == nil { return }
+func UpdateUser(u *User) (int64, error) {
+	if u == nil { return 0, nil }
 
-	_, err := config.DB().NewUpdate().Model(u).
+	res, err := config.DB().NewUpdate().Model(u).
 				Where("id = ?", u.ID).
 				Exec(config.Ctx())
-	if err != nil { log.Fatal(err) }
+	if err != nil { return 0, err }
+
+	nbRowsAffected, err := res.RowsAffected()
+	return nbRowsAffected, err
 }
 
 	// Delete
-func DeleteUserByID(id int) {
-	_, err := config.DB().NewDelete().Model((*User)(nil)).
+func DeleteUserByID(id int) (int64, error) {
+	res, err := config.DB().NewDelete().Model((*User)(nil)).
 				Where("id = ?", id).
 				Exec(config.Ctx())
-	if err != nil { log.Fatal(err) }
+	if err != nil { return 0, err }
+
+	nbRowsAffected, err := res.RowsAffected()
+	return nbRowsAffected, err
 }
