@@ -2,6 +2,8 @@ import React, { useState, useLayoutEffect, useEffect } from 'react';
 import { Divider, Tabs, Tab } from '@nextui-org/react';
 import { Toaster, toast } from 'react-hot-toast';
 import { Navigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import { jwtDecode } from "jwt-decode";
 import Navigator from '../../Components/Navigator.js';
 import { APP_ROUTES, API_ROUTES } from '../../utils/constants.jsx';
 import { client } from '../../utils/common.jsx';
@@ -12,7 +14,8 @@ import ManagePosts from './Posts/ManagePosts.js';
 import ManagePosts2 from './Posts/ManagePosts2.js';
 
 function Admin() {
-	const user = JSON.parse(localStorage.getItem("user"))
+	const token = Cookies.get('token')
+	const decodedToken = jwtDecode(token);
 
 	const [tickets] = useState([]);
 	const [ticketTypes, setTicketTypes] = useState([]);
@@ -63,11 +66,13 @@ function Admin() {
 	}, []);
 
 	useEffect(() => {
-		if (!init) { setInit(true); getTicketTypes(); getClusters(); getPosts(); }
-	}, [init])
+		if (!init && decodedToken.user.IsStaff) { setInit(true); getTicketTypes(); getClusters(); getPosts(); }
+	}, [init, decodedToken.user.IsStaff])
 
-	if (user && !user.IsStaff) {
-		return <Navigate to={APP_ROUTES.DASHBOARD} replace />;
+	// Check rights to this page
+	if (!token) return <Navigate to="/" />;	
+	if (!decodedToken.user.IsStaff) {
+		return <Navigate to={APP_ROUTES.DASHBOARD} />;
 	}
 
 	return (
