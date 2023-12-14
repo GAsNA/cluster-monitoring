@@ -116,7 +116,7 @@ func AllTicketsWithTypeAndAuthor(limit, page int, seat, author, resolved, ticket
 				Join("JOIN public.\"user\" AS a ON a.id = ticket.author_id")
 
 	if seat != "" {
-		subquery = subquery.Where("seat = ?", seat)
+		subquery = subquery.Where("seat LIKE ?", "%" + seat + "%")
 	}
 	if author != "" {
 		subquery = subquery.Where("a.login LIKE ?", "%" + author + "%")
@@ -148,7 +148,7 @@ func AllTicketsWithType(limit, page int, seat, author, resolved, ticketType, ord
 				Join("JOIN ticket_type AS tt ON tt.id = ticket.type_id")
 
 	if seat != "" {
-		subquery = subquery.Where("seat = ?", seat)
+		subquery = subquery.Where("seat LIKE ?", "%" + seat + "%")
 	}
 	if author != "" {
 		subquery = subquery.Where("a.login LIKE ?", "%" + author + "%")
