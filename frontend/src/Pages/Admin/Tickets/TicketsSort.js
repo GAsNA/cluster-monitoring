@@ -23,13 +23,17 @@ function TicketsSort({ ticketTypes=[] }) {
 		{ name: "Resolved", key: 'resolved' },
 		{ name: "In progress", key: 'inProgress' }
 	];
-	const [ticketTypesForSelect] = useState([{ID: -1, Name: 'All'}, ...ticketTypes]);
+	const [ticketTypesForSelect, setTicketTypesForSelect] = useState([{ID: -1, Name: 'All'}, ...ticketTypes]);
 	const orderByDate = [
 		{ name: "Desc", key: 'desc' }, 
 		{ name: "Asc", key: 'asc' },
 	];
 
 	const refFilterSection = useRef(null);	
+
+	useEffect(() => {
+		setTicketTypesForSelect([{ID: -1, Name: 'All'}, ...ticketTypes]);
+	}, [ticketTypes])
 
 	useEffect(() => {
 		let resolvedChoice = ""
