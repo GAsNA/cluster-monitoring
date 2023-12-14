@@ -6,6 +6,7 @@ Frontend is in React ; Backend is in Go.
 ## TODO
 ### General
 - When cookie and jwt expires..
+- Protect admin pages with a route?
 
 ### Frontend
 - HOW TO GET RIDE OF THE '../../..' etc LINKS IN FILES?
@@ -29,7 +30,6 @@ Frontend is in React ; Backend is in Go.
 ### Backend
 - Swagger
 - Ticket linked to post NOT SEAT ?? (because ethernet for example)
-- Get tickets by seat with FILTER (not another route)
 - Secure api call (for example if id type ticket is not existing at ticket creation, all value by default - I can set a ticket to true for now...)
 - Pagination / limit on get routes (with max values)
     - if nb page is greater then nb existing pages 

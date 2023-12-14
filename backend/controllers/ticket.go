@@ -19,10 +19,6 @@ func TicketsIndex(w http.ResponseWriter, r *http.Request) {
 	claims, err := verifyJwtAndClaims(&w, r)
 	if err != nil { return }
 
-	// Check rights
-	err = checkRights(&w, r, claims)
-	if err != nil { return }
-
 	// Get filters
 	query := r.URL.Query()
 	limit, page := getFiltersCommon(query)
@@ -37,50 +33,19 @@ func TicketsIndex(w http.ResponseWriter, r *http.Request) {
 	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
 
 	// Get tickets
-	tickets, err := models.AllTickets(limit, page, seat, author, resolved, ticketType, order)
-	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
+	var tickets interface{}
+	if claims.User.IsStaff {
+		tickets, err = models.AllTicketsWithTypeAndAuthor(limit, page, seat, author, resolved, ticketType, order)
+		if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
+	} else {
+		tickets, err = models.AllTicketsWithType(limit, page, seat, author, resolved, ticketType, order)
+		if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
+	}
 
 	// Add necessary headers
 	addHeadersGet(&w, strconv.Itoa(count), strconv.Itoa(page),
 		strconv.Itoa(int(math.Ceil(float64(count) / float64(limit)))), strconv.Itoa(limit))
 	
-	// Send result
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(tickets)
-}
-
-func TicketsIndexBySeat(w http.ResponseWriter, r *http.Request) {
-	addHeadersCommon(&w)
-
-	// Verification JWT and get claims
-	claims, err := verifyJwtAndClaims(&w, r)
-	if err != nil { return }
-
-	// Get seat
-	vars := mux.Vars(r)
-	seat := vars["id"]
-
-	// Get limit and page
-	limit, page := getFiltersCommon(r.URL.Query())
-
-	// How many element in DB
-//	count, err := models.CountAllTickets(seat)
-//	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
-	count := 1
-
-	// Get tickets
-	var tickets interface{}
-	if claims.User.IsStaff {
-		tickets, err = models.AllTicketsOfSeatWithTypeAndAuthor(seat, limit, page)
-	} else {
-		tickets, err = models.AllTicketsOfSeatWithType(seat, limit, page)
-	}
-	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
-
-	// Add necessary headers
-	addHeadersGet(&w, strconv.Itoa(count), strconv.Itoa(page),
-		strconv.Itoa(int(math.Ceil(float64(count) / float64(limit)))), strconv.Itoa(limit))
-
 	// Send result
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(tickets)

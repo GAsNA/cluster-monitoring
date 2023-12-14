@@ -52,10 +52,9 @@ function Dashboard() {
 	}
 
 	async function getTicketsBySeat(seat) {
-		await client.get(API_ROUTES.GET_TICKETS_SEAT + seat + "?limit=10")
+		await client.get(API_ROUTES.GET_TICKETS + "?order=desc&limit=10&seat=" + seat)
 				.then((response) => {
-					const sorted = response.data ? [...response.data].sort((a, b) => a.CreatedAt > b.CreatedAt ? -1 : 1,) : [];
-					setTicketsBySeat(sorted)
+					setTicketsBySeat(response.data)
 				})
 				.catch((error) => {
 					toast.error('An error occured');
