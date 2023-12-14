@@ -23,15 +23,21 @@ func TicketsIndex(w http.ResponseWriter, r *http.Request) {
 	err = checkRights(&w, r, claims)
 	if err != nil { return }
 
-	// Get limit and page to return
-	limit, page := getFilters(r.URL.Query())
+	// Get filters
+	query := r.URL.Query()
+	limit, page := getFiltersCommon(query)
+	seat := query.Get("seat")
+	author := query.Get("author")
+	resolved := query.Get("resolved")
+	ticketType := query.Get("type")
+	order := query.Get("order")
 
 	// How many element in DB
-	count, err := models.CountAllTickets("")
+	count, err := models.CountAllTickets(seat, author, resolved, ticketType)
 	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
 
 	// Get tickets
-	tickets, err := models.AllTickets(limit, page)
+	tickets, err := models.AllTickets(limit, page, seat, author, resolved, ticketType, order)
 	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
 
 	// Add necessary headers
@@ -55,11 +61,12 @@ func TicketsIndexBySeat(w http.ResponseWriter, r *http.Request) {
 	seat := vars["id"]
 
 	// Get limit and page
-	limit, page := getFilters(r.URL.Query())
+	limit, page := getFiltersCommon(r.URL.Query())
 
 	// How many element in DB
-	count, err := models.CountAllTickets(seat)
-	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
+//	count, err := models.CountAllTickets(seat)
+//	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
+	count := 1
 
 	// Get tickets
 	var tickets interface{}

@@ -19,7 +19,7 @@ func UsersIndex(w http.ResponseWriter, r *http.Request) {
 	if err != nil { return }
 
 	// Get limit and page to return
-	limit, page := getFilters(r.URL.Query())
+	limit, page := getFiltersCommon(r.URL.Query())
 
 	// How many element in DB
 	count, err := models.CountAllUsers()

@@ -2,6 +2,8 @@ package models
 
 import (
 	"time"
+	"strings"
+	"strconv"
 	"main/config"
 
 	"github.com/uptrace/bun"
@@ -65,11 +67,26 @@ func NewTicket(t *Ticket) error {
 }
 
 	// Select
-func CountAllTickets(seat string) (int, error) {
-	subquery := config.DB().NewSelect().Model((*Ticket)(nil))
+func CountAllTickets(seat, author, resolved, ticketType string) (int, error) {
+	subquery := config.DB().NewSelect().Model((*Ticket)(nil)).
+				ColumnExpr("ticket.*").
+				ColumnExpr("tt.name AS ticket_type__name").
+				ColumnExpr("a.id_intra AS author__id_intra, a.login AS author__login, a.image AS author__image").
+				Join("JOIN ticket_type AS tt ON tt.id = ticket.type_id").
+				Join("JOIN public.\"user\" AS a ON a.id = ticket.author_id")
 
 	if seat != "" {
 		subquery = subquery.Where("seat = ?", seat)
+	}
+	if author != "" {
+		subquery = subquery.Where("a.login LIKE ?", "%" + author + "%")
+	}
+	resolved_bool, err := strconv.ParseBool(resolved)
+	if err == nil {
+		subquery = subquery.Where("resolved = ?", resolved_bool)
+	}
+	if ticketType != "" {
+		subquery = subquery.Where("tt.name = ?", ticketType)
 	}
 
 	count, err := subquery.Count(config.Ctx()) 
@@ -88,19 +105,36 @@ func FindTicketByID(id int) (*Ticket, error) {
 	return &tickets[0], nil
 }
 
-func AllTickets(limit, page int) ([]TicketWithTypeAndAuthor, error) {
+func AllTickets(limit, page int, seat, author, resolved, ticketType, order string) ([]TicketWithTypeAndAuthor, error) {
 	tickets := []TicketWithTypeAndAuthor{}
 
-	err := config.DB().NewSelect().Model(&tickets).
+	subquery := config.DB().NewSelect().Model(&tickets).
 				ColumnExpr("ticket.*").
 				ColumnExpr("tt.name AS ticket_type__name").
 				ColumnExpr("a.id_intra AS author__id_intra, a.login AS author__login, a.image AS author__image").
 				Join("JOIN ticket_type AS tt ON tt.id = ticket.type_id").
-				Join("JOIN public.\"user\" AS a ON a.id = ticket.author_id").
-				Order("ticket.created_at DESC").
-				Limit(limit).
-				Offset((page - 1) * limit).
-				Scan(config.Ctx())
+				Join("JOIN public.\"user\" AS a ON a.id = ticket.author_id")
+
+	if seat != "" {
+		subquery = subquery.Where("seat = ?", seat)
+	}
+	if author != "" {
+		subquery = subquery.Where("a.login LIKE ?", "%" + author + "%")
+	}
+	resolved_bool, err := strconv.ParseBool(resolved)
+	if err == nil {
+		subquery = subquery.Where("resolved = ?", resolved_bool)
+	}
+	if ticketType != "" {
+		subquery = subquery.Where("tt.name = ?", ticketType)
+	}
+	if strings.ToLower(order) == "asc" || strings.ToLower(order) == "desc" {
+		subquery = subquery.Order("ticket.created_at " + order)
+	}
+	
+	err = subquery.Limit(limit).
+			Offset((page - 1) * limit).
+			Scan(config.Ctx())
 
 	return tickets, err
 }

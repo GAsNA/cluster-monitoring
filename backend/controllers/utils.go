@@ -34,7 +34,7 @@ func addHeadersGet(w *http.ResponseWriter, total_count, page, total_pages, per_p
 	(*w).Header().Set("X-Per-Page", per_page)
 }
 
-func getFilters(query url.Values) (int, int) {
+func getFiltersCommon(query url.Values) (int, int) {
 	limit, err := strconv.Atoi(query.Get("limit"))
 	if err != nil { limit = 30 }
 	page, err := strconv.Atoi(query.Get("page"))
