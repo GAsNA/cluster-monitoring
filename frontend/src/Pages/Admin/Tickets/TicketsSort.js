@@ -15,7 +15,7 @@ function TicketsSort({ ticketTypes=[] }) {
 	const [seatChoice, setSeatChoice] = useState("");
 	const [authorChoice, setAuthorChoice] = useState("");
 	const [statusChoice, setStatusChoice] = useState('all');
-	const [ticketTypeChoice, setTicketTypeChoice] = useState("All");
+	const [ticketTypeChoice, setTicketTypeChoice] = useState(-1);
 	const [orderByDateChoice, setOrderByDateChoice] = useState('desc');
 	
 	const statusTypes = [
@@ -41,7 +41,10 @@ function TicketsSort({ ticketTypes=[] }) {
 		else if (statusChoice === "inProgress") { resolvedChoice = "false" }
 
 		let typeChoice = ""
-		if (ticketTypeChoice !== "All") { typeChoice = ticketTypeChoice }
+		if (ticketTypeChoice !== "-1") {
+			let typeChoiceObject = ticketTypes.find((tt) => Number(ticketTypeChoice) === tt.ID)
+			if (typeChoiceObject) { typeChoice = typeChoiceObject.Name }
+		}
 
 		async function getAllTickets() {
 			await client.get(API_ROUTES.GET_TICKETS + "?limit=" + limitPerPage + "&page=" + currentPage +
@@ -56,7 +59,7 @@ function TicketsSort({ ticketTypes=[] }) {
 					})
 		}
 		getAllTickets();
-	}, [currentPage, seatChoice, authorChoice, statusChoice, ticketTypeChoice, orderByDateChoice]);
+	}, [currentPage, seatChoice, authorChoice, statusChoice, ticketTypeChoice, orderByDateChoice, ticketTypes]);
 
 	return (
 		<>
@@ -83,12 +86,12 @@ function TicketsSort({ ticketTypes=[] }) {
 					</div>
 
 					<div style={{ width: '200px', margin: '15px 1%' }}>
-						<Select disallowEmptySelection defaultSelectedKeys={[ticketTypesForSelect[0].Name]}
+						<Select disallowEmptySelection defaultSelectedKeys={[(ticketTypesForSelect[0].ID).toString()]}
 							label="Ticket types" labelPlacement="outside"
 							onSelectionChange={(val) => setTicketTypeChoice([...val][0])}
 						>
 								{ ticketTypesForSelect.map((type) => (
-									<SelectItem textValue={type.Name} key={type.Name}>{type.Name}</SelectItem>
+									<SelectItem textValue={type.Name} key={type.ID}>{type.Name}</SelectItem>
 								))}
 						</Select>
 					</div>
