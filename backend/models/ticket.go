@@ -116,17 +116,17 @@ func AllTicketsWithTypeAndAuthor(limit, page int, seat, author, resolved, ticket
 				Join("JOIN public.\"user\" AS a ON a.id = ticket.author_id")
 
 	if seat != "" {
-		subquery = subquery.Where("seat LIKE ?", "%" + seat + "%")
+		subquery = subquery.Where("LOWER(seat) LIKE LOWER(?)", "%" + seat + "%")
 	}
 	if author != "" {
-		subquery = subquery.Where("a.login LIKE ?", "%" + author + "%")
+		subquery = subquery.Where("LOWER(a.login) LIKE LOWER(?)", "%" + author + "%")
 	}
 	resolved_bool, err := strconv.ParseBool(resolved)
 	if err == nil {
 		subquery = subquery.Where("resolved = ?", resolved_bool)
 	}
 	if ticketType != "" {
-		subquery = subquery.Where("tt.name = ?", ticketType)
+		subquery = subquery.Where("LOWER(tt.name) = LOWER(?)", ticketType)
 	}
 	if strings.ToLower(order) == "asc" || strings.ToLower(order) == "desc" {
 		subquery = subquery.Order("ticket.created_at " + order)
@@ -148,17 +148,17 @@ func AllTicketsWithType(limit, page int, seat, author, resolved, ticketType, ord
 				Join("JOIN ticket_type AS tt ON tt.id = ticket.type_id")
 
 	if seat != "" {
-		subquery = subquery.Where("seat LIKE ?", "%" + seat + "%")
+		subquery = subquery.Where("LOWER(seat) LIKE LOWER(?)", "%" + seat + "%")
 	}
 	if author != "" {
-		subquery = subquery.Where("a.login LIKE ?", "%" + author + "%")
+		subquery = subquery.Where("LOWER(a.login) LIKE LOWER(?)", "%" + author + "%")
 	}
 	resolved_bool, err := strconv.ParseBool(resolved)
 	if err == nil {
 		subquery = subquery.Where("resolved = ?", resolved_bool)
 	}
 	if ticketType != "" {
-		subquery = subquery.Where("tt.name = ?", ticketType)
+		subquery = subquery.Where("LOWER(tt.name) = LOWER(?)", ticketType)
 	}
 	if strings.ToLower(order) == "asc" || strings.ToLower(order) == "desc" {
 		subquery = subquery.Order("ticket.created_at " + order)
