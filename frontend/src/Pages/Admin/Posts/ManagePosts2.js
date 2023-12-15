@@ -1,16 +1,62 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Input, Select, SelectItem, Tooltip } from '@nextui-org/react';
 import { Card, Typography } from "@material-tailwind/react";
+import { toast } from 'react-hot-toast';
 import ModalPosts from './ModalPosts.js';
 import ModalConfirmation from '../../../Components/ModalConfirmation.js';
+import { API_ROUTES } from '../../../utils/constants.jsx';
+import { client } from '../../../utils/common.jsx';
 import { modifyPost, deletePost } from '../../../utils/functionsAction.js';
 import { DeleteIcon } from '../../../Icon/DeleteIcon';
 import { SaveIcon } from '../../../Icon/SaveIcon';
 
-function ManagePosts2({ posts, setPosts, clusters }) {
+function ManagePosts2({ clusters }) {
+	const [posts, setPosts] = useState([]);
 	const [openModalPosts, setOpenModalPosts] = useState(false);
 
 	const columns = ["MAC ADDRESS", "SERIAL NUMBER", "SEAT", "CLUSTER", "ACTIONS"];
+
+	const [init, setInit] = useState(true);
+	const [isLoading, setIsLoading] = useState(false);
+	const [hasMore, setHasMore] = useState(true);
+	const [currentPage, setCurrentPage] = useState(1);
+
+	async function getPosts() {
+		setIsLoading(true);
+
+		await client.get(API_ROUTES.GET_POSTS + "?limit=10&page=" + currentPage)
+				.then((response) => {
+					if (response.data.length === 0) { setHasMore(false) }
+					setPosts(prevItems => [...prevItems, ...response.data]);
+					setCurrentPage(prevPage => prevPage + 1);
+				})
+				.catch((error) => {
+					toast.error('An error occured');
+				})
+
+		setIsLoading(false);
+	}
+
+	useEffect(() => {
+		if (init) { setInit(false); getPosts(); }
+		// eslint-disable-next-line
+	}, [init]);
+
+	function handleScroll() {
+		const documentElement = document.documentElement;
+		if (documentElement.clientHeight + documentElement.scrollTop !== documentElement.scrollHeight
+			|| isLoading || !hasMore)
+		{
+			return;
+		}
+		getPosts();
+	};
+
+	useEffect(() => {
+		window.addEventListener('scroll', handleScroll);
+		return () => window.removeEventListener('scroll', handleScroll);
+		// eslint-disable-next-line
+	}, [isLoading]);
 
 	return (
 		<>
@@ -47,7 +93,7 @@ function ManagePosts2({ posts, setPosts, clusters }) {
 									))
 									:
 									<tr key="noPost">
-										<td colspan="5">
+										<td colSpan="5">
 											<Typography variant="small" color="blue-gray"
 												className="text-center font-normal leading-none opacity-70"
 												style={{ marginTop: '1%' }}
@@ -59,6 +105,14 @@ function ManagePosts2({ posts, setPosts, clusters }) {
 								}
 							</tbody>
 						</table>
+						{isLoading &&
+							<Typography variant="small" color="blue-gray"
+								className="text-center font-normal leading-none opacity-70"
+								style={{ marginTop: '1%', fontSize: "0.875rem", lineHeight: "1.25rem" }}
+							>
+								Loading...
+							</Typography>
+						}
 					</Card>
 				</div>
 
