@@ -1,8 +1,61 @@
 import { toast } from 'react-hot-toast';
+import Cookies from 'js-cookie';
 import { client } from '../utils/common.jsx';
-import { API_ROUTES } from '../utils/constants.jsx';
+import { API_ROUTES, APP_ROUTES, URL_INTRA_AUTHORIZE } from '../utils/constants.jsx';
+
+/* -------------- AUTH -------------- */
+export async function login(staff) {
+	window.location.replace(URL_INTRA_AUTHORIZE + "?client_id=" + process.env.REACT_APP_UID + "&redirect_uri=" + API_ROUTES.ROOT + "/" + API_ROUTES.LOGIN + "&response_type=code&scope=public&state=" + staff)
+}
+
+export async function localStoreMe() {
+	await client.get(API_ROUTES.ME)
+			.then((response) => {
+				localStorage.setItem('user', JSON.stringify(response.data))
+			})
+			.catch((error) => {
+				toast.error('An error occured');
+			})
+}
+
+export async function logout() {
+	await client.get(API_ROUTES.LOGOUT, "")
+			.then((response) => {
+				Cookies.remove("token")
+				localStorage.clear();
+				window.location.replace(APP_ROUTES.HOME);
+			})
+			.catch((error) => {
+				toast.error('An error occured');
+			})
+}
+
+export async function anonymisation() {
+	await client.get(API_ROUTES.ANONYMISATION)
+			.then((response) => {
+				logout()
+			})
+			.catch((error) => {
+				toast.error('An error occured');
+			})
+}
 
 /* -------------- TICKETS -------------- */
+export async function getTickets(seat, order, limit, page, author, resolved, type) {
+	let data = [], totalPages = "";
+	
+		await client.get(API_ROUTES.GET_TICKETS + "?order=" + order +"&limit=" + limit + "&seat=" + seat +
+			"&page=" + page + "&author=" + author + "&resolved=" + resolved + "&type=" + type)
+				.then((response) => {
+					data = response.data
+					totalPages = response.headers['x-total-pages']
+				})
+				.catch((error) => {
+					toast.error('An error occured');
+				})
+	return { 'data': data, 'totalPages': totalPages }
+}
+
 export async function createTicket(seat, cluster, ticketType, comment, setSending, closeModal) {
 	setSending(true);
 	await client.post(API_ROUTES.CREATE_TICKET, { "Seat": seat.id, "ClusterID": cluster.ID, "TypeID": parseInt([...ticketType][0]), "Comment": comment, })
@@ -49,6 +102,16 @@ export async function deleteTicket(ticket, tickets, setTickets) {
 }
 
 /* -------------- TICKET TYPES -------------- */
+export async function getTicketTypes(setTicketTypes) {
+	await client.get(API_ROUTES.GET_TICKET_TYPES)
+			.then((response) => {
+				setTicketTypes(response.data)
+			})
+			.catch((error) => {
+				toast.error('An error occured');
+			})
+}
+
 export async function createTicketType(name, ticketTypes, setSending, close) {
 	setSending(true);
 	await client.post(API_ROUTES.CREATE_TICKET_TYPE, { "Name": name })
@@ -96,6 +159,21 @@ export async function deleteTicketType(ticketType, ticketTypes, setTicketTypes) 
 }
 
 /* -------------- POSTS -------------- */
+export async function getPosts(limit, page, setPosts, setIsLoading, setHasMore, setPage) {
+	setIsLoading(true);
+
+	await client.get(API_ROUTES.GET_POSTS + "?limit=" + limit + "&page=" + page)
+			.then((response) => {
+				if (response.data.length === 0) { setHasMore(false) }
+				setPosts(prevItems => [...prevItems, ...response.data]);
+				setPage(prevPage => prevPage + 1);
+			})
+			.catch((error) => {
+				toast.error('An error occured');
+			})
+
+	setIsLoading(false);
+}
 export async function createPosts(postsToCreate, setPostsToCreate, posts, setPosts, setSending) {
 	postsToCreate = postsToCreate.filter(p => p.Mac !== "" && p.Serial !== "")
 
@@ -150,6 +228,25 @@ export async function deletePost(post, posts, setPosts) {
 }
 
 /* -------------- CLUSTERS -------------- */
+export async function getClusters(setClusters) {
+	await client.get(API_ROUTES.GET_CLUSTERS)
+			.then((response) => {
+				/*const clusters = response.data.map((item) => {
+					let temp = {...item}
+					temp.IsActive = false
+					return temp
+				});
+				clusters[0].IsActive = true;
+
+				setAllClusters(clusters);
+				setCluster(clusters[0]);*/
+				setClusters(response.data)
+			})
+			.catch((error) => {
+				toast.error('An error occured');
+			})
+}
+
 export async function createCluster(name, link, clusters, setSending, close) {
 	setSending(true);
 	await client.post(API_ROUTES.CREATE_CLUSTER, { "Name": name, "Link": link })

@@ -1,37 +1,13 @@
 import React, { useState } from 'react';
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Dropdown, DropdownTrigger, DropdownItem, DropdownMenu, Avatar, Link, Button } from '@nextui-org/react';
-import Cookies from 'js-cookie';
-import toast from 'react-hot-toast';
-import { API_ROUTES, APP_ROUTES } from '../utils/constants.jsx';
-import { client } from '../utils/common.jsx';
+import { logout, anonymisation } from '../utils/functionsAction.js';
+import { APP_ROUTES } from '../utils/constants.jsx';
 import ModalConfirmation from './ModalConfirmation.js';
 
 function Navigator() {
 	const user = JSON.parse(localStorage.getItem("user"))
 
 	const [openModalConfirmation, setOpenModalConfirmation] = useState(false);
-
-	async function logout() {
-		await client.get(API_ROUTES.LOGOUT, "")
-				.then((response) => {
-					Cookies.remove("token")
-					localStorage.clear();
-					window.location.replace(APP_ROUTES.HOME);
-				})
-				.catch((error) => {
-					toast.error('An error occured');
-				})
-	}
-
-	async function anonymisation() {
-		await client.get(API_ROUTES.ANONYMISATION)
-				.then((response) => {
-					logout()
-				})
-				.catch((error) => {
-					toast.error('An error occured');
-				})
-	}
 
 	return (
 	<>

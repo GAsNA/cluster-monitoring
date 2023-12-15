@@ -1,12 +1,12 @@
 import React, { useState, useLayoutEffect, useEffect } from 'react';
 import { Divider, Tabs, Tab } from '@nextui-org/react';
-import { Toaster, toast } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 import { Navigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { jwtDecode } from "jwt-decode";
 import Navigator from '../../Components/Navigator.js';
-import { APP_ROUTES, API_ROUTES } from '../../utils/constants.jsx';
-import { client } from '../../utils/common.jsx';
+import { getClusters, getTicketTypes } from '../../utils/functionsAction.js';
+import { APP_ROUTES } from '../../utils/constants.jsx';
 import TicketsSort from './Tickets/TicketsSort.js';
 import ManageTicketTypes from './TicketTypes/ManageTicketTypes.js';
 import ManageClusters from './Clusters/ManageClusters.js';
@@ -24,26 +24,6 @@ function Admin() {
 
 	const [windowHeight, setWindowHeight] = useState(window.innerHeight);
 
-	async function getTicketTypes() {
-		await client.get(API_ROUTES.GET_TICKET_TYPES)
-				.then((response) => {
-					if (response.data) { setTicketTypes(response.data); }
-				})
-				.catch((error) => {
-					toast.error('An error occured');
-				})
-	}
-
-	async function getClusters() {
-		await client.get(API_ROUTES.GET_CLUSTERS)
-				.then((response) => {
-					if (response.data) { setClusters(response.data); }
-				})
-				.catch((error) => {
-					toast.error('An error occured');
-				})
-	}
-	
 	useLayoutEffect(() => {
 		function updateWindowHeight() {
 			setWindowHeight(window.innerHeight);
@@ -55,7 +35,7 @@ function Admin() {
 	}, []);
 
 	useEffect(() => {
-		if (!init && decodedToken.user.IsStaff) { setInit(true); getTicketTypes(); getClusters(); }
+		if (!init && decodedToken.user.IsStaff) { setInit(true); getTicketTypes(setTicketTypes); getClusters(setClusters); }
 	}, [init, decodedToken.user.IsStaff])
 
 	// Check rights to this page

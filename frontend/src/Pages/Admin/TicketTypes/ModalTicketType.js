@@ -24,15 +24,11 @@ function ModalTicketType({ open, setOpen, ticketTypes, setTicketTypes, ticketTyp
 		setOpen(false);
 	}
 
-	function areYouSure() {
-		setOpenModalConfirmation(true);
-	}
-
 	function send() {
 		if (name === "") { return }
 
 		if (ticketTypes.find((item) => item.Name === name)) {
-			areYouSure();
+			setOpenModalConfirmation(true);
 		} else {
 			action();
 		}

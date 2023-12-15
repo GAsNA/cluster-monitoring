@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
-import { Toaster, toast } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 import { Navigate } from 'react-router-dom';
 import { SvgLoader, SvgProxy } from 'react-svgmt';
-import { client } from '../../utils/common.jsx';
-import { APP_ROUTES, API_ROUTES } from '../../utils/constants.jsx';
+import { getClusters, getTicketTypes, getTickets } from '../../utils/functionsAction.js';
+import { APP_ROUTES } from '../../utils/constants.jsx';
 import Navigator from '../../Components/Navigator.js';
 import NavigatorClusters from './NavigatorClusters.js';
 import ModalTickets from './ModalTickets.js';
@@ -22,44 +22,7 @@ function Dashboard() {
 	const [openModal, setOpenModal] = useState(false);
 
 	const [getTtAndClusters, setGetTtAndClusters] = useState(false);
-
-	async function getClusters() {
-		await client.get(API_ROUTES.GET_CLUSTERS)
-				.then((response) => {
-					const clusters = response.data.map((item) => {
-						let temp = {...item}
-						temp.IsActive = false
-						return temp
-					});
-					clusters[0].IsActive = true;
-
-					setAllClusters(clusters);
-					setCluster(clusters[0]);
-				})
-				.catch((error) => {
-					toast.error('An error occured');
-				})
-	}
-
-	async function getTicketTypes() {
-		await client.get(API_ROUTES.GET_TICKET_TYPES)
-				.then((response) => {
-					setIssueTypes(response.data)
-				})
-				.catch((error) => {
-					toast.error('An error occured');
-				})
-	}
-
-	async function getTicketsBySeat(seat) {
-		await client.get(API_ROUTES.GET_TICKETS + "?order=desc&limit=10&seat=" + seat)
-				.then((response) => {
-					setTicketsBySeat(response.data)
-				})
-				.catch((error) => {
-					toast.error('An error occured');
-				})
-	}
+	const [initAllClusters, setInitAllClusters] = useState(false);
 
 	function changeCluster(newClusterId) {
 		if (parseInt(newClusterId) === cluster.ID) { return }
@@ -93,9 +56,28 @@ function Dashboard() {
 	}
 
 	useEffect(() => {
-		if (selectedSeat) { getTicketsBySeat(selectedSeat.id); }
-		if (!getTtAndClusters) { setGetTtAndClusters(true); getTicketTypes(); getClusters(); }
+		if (selectedSeat) { getTickets(selectedSeat.id, "desc", "10", setTicketsBySeat); }
+		if (!getTtAndClusters) {
+			setGetTtAndClusters(true);
+			getTicketTypes(setIssueTypes);
+			getClusters(setAllClusters);
+			setInitAllClusters(true);
+		}
 	}, [selectedSeat, getTtAndClusters]);
+
+	useEffect(() => {
+		if (initAllClusters && allClusters.length > 0) {
+			setInitAllClusters(false);
+			const clusters = allClusters.map((c) => {
+				let temp = {...c}
+				temp.IsActive = false
+				return temp
+			})
+			clusters[0].IsActive = true
+			setAllClusters(clusters)
+			setCluster(clusters[0])
+		}
+	}, [initAllClusters, allClusters])
 
 	if (!Cookies.get('token')) {
 		return <Navigate to={APP_ROUTES.HOME} replace />;

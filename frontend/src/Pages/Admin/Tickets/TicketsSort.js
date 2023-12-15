@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Input, Pagination, Select, SelectItem, RadioGroup, Radio } from '@nextui-org/react';
-import { toast } from 'react-hot-toast';
-import { API_ROUTES } from '../../../utils/constants.jsx';
-import { client } from '../../../utils/common.jsx';
+import { getTickets } from '../../../utils/functionsAction.js';
 import ListTickets from '../../../Components/ListTickets.js';
 
 function TicketsSort({ ticketTypes=[] }) {
@@ -46,19 +44,11 @@ function TicketsSort({ ticketTypes=[] }) {
 			if (typeChoiceObject) { typeChoice = typeChoiceObject.Name }
 		}
 
-		async function getAllTickets() {
-			await client.get(API_ROUTES.GET_TICKETS + "?limit=" + limitPerPage + "&page=" + currentPage +
-				"&seat=" + seatChoice + "&author=" + authorChoice + "&resolved=" + resolvedChoice +
-				"&type=" + typeChoice + "&order=" + orderByDateChoice)
-					.then((response) => {
-						setTotalPages(response.headers['x-total-pages'])
-						if (response.data) { setTickets(response.data); }
-					})
-					.catch((error) => {
-						toast.error('An error occured');
-					})
-		}
-		getAllTickets();
+		getTickets(seatChoice, orderByDateChoice, limitPerPage, currentPage, authorChoice, resolvedChoice, typeChoice)
+			.then(function(d) {
+				setTotalPages(d.totalPages);
+				setTickets(d.data);
+			})
 	}, [currentPage, seatChoice, authorChoice, statusChoice, ticketTypeChoice, orderByDateChoice, ticketTypes]);
 
 	return (

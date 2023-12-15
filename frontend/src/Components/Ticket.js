@@ -20,10 +20,6 @@ function Ticket({ ticket, tickets, setTickets, displaySeat=false }) {
 		return (date.getDate() + "/" + parseInt(date.getMonth() + 1) + "/" + date.getFullYear())
 	}
 
-	function areYouSure() {
-		setOpenModalConfirmation(true);
-	}
-
 	return (
 		<Card style={{ padding: '2%', marginBottom: '2%', background: 'white', color: 'black' }}>
 			<CardHeader className="justify-between" style={{ display: 'flex', flexWrap: 'wrap' }}>
@@ -89,7 +85,7 @@ function Ticket({ ticket, tickets, setTickets, displaySeat=false }) {
 								Set as { !ticket.Resolved ? resolvedText : inProgressText }
 							</DropdownItem>,
 							<DropdownItem textValue="delete" key="delete" style={{ color: '#e96a64' }}
-								onPress={areYouSure}
+								onPress={() => setOpenModalConfirmation(true)}
 							>
 								Delete
 							</DropdownItem>

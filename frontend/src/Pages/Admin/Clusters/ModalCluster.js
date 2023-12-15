@@ -26,15 +26,11 @@ function ModalCluster({ open, setOpen, clusters, setClusters, cluster, setCluste
 		setOpen(false);
 	}
 
-	function areYouSure() {
-		setOpenModalConfirmation(true);
-	}
-
 	function send() {
 		if (name === "" || link === "") { return }
 		
 		if (clusters.find((item) => item.Name === name)) {
-			areYouSure();
+			setOpenModalConfirmation(true);
 		} else {
 			action();
 		}

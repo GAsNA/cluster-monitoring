@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Input, Select, SelectItem, Tooltip } from '@nextui-org/react';
 import { Card, Typography } from "@material-tailwind/react";
-import { toast } from 'react-hot-toast';
 import ModalPosts from './ModalPosts.js';
 import ModalConfirmation from '../../../Components/ModalConfirmation.js';
-import { API_ROUTES } from '../../../utils/constants.jsx';
-import { client } from '../../../utils/common.jsx';
+import { getPosts } from '../../../utils/functionsAction.js';
 import { modifyPost, deletePost } from '../../../utils/functionsAction.js';
 import { DeleteIcon } from '../../../Icon/DeleteIcon';
 import { SaveIcon } from '../../../Icon/SaveIcon';
@@ -21,26 +19,12 @@ function ManagePosts2({ clusters }) {
 	const [hasMore, setHasMore] = useState(true);
 	const [currentPage, setCurrentPage] = useState(1);
 
-	async function getPosts() {
-		setIsLoading(true);
-
-		await client.get(API_ROUTES.GET_POSTS + "?limit=30&page=" + currentPage)
-				.then((response) => {
-					if (response.data.length === 0) { setHasMore(false) }
-					setPosts(prevItems => [...prevItems, ...response.data]);
-					setCurrentPage(prevPage => prevPage + 1);
-				})
-				.catch((error) => {
-					toast.error('An error occured');
-				})
-
-		setIsLoading(false);
-	}
-
 	useEffect(() => {
-		if (init) { setInit(false); getPosts(); }
-		// eslint-disable-next-line
-	}, [init]);
+		if (init) {
+			setInit(false);
+			getPosts("30", currentPage, setPosts, setIsLoading, setHasMore, setCurrentPage);
+		}
+	}, [init, currentPage]);
 
 	function handleScroll() {
 		const documentElement = document.documentElement;
@@ -49,7 +33,7 @@ function ManagePosts2({ clusters }) {
 		{
 			return;
 		}
-		getPosts();
+		getPosts("30", currentPage, setPosts, setIsLoading, setHasMore, setCurrentPage);
 	};
 
 	useEffect(() => {
