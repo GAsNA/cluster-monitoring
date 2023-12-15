@@ -13,7 +13,6 @@ Frontend is in React ; Backend is in Go.
 - Admin side (staff)
     - Nb tickets associated to ticket type and cluster to redo
     - page for mac adress and serie num from pc
-        - charge posts little by little in the table by scrolling
         - search bar for post
     - set post to unavailable/do not use
     - get cluster with ticket to filter nb ticket in this cluster
@@ -22,7 +21,7 @@ Frontend is in React ; Backend is in Go.
     - multi selection for ticket and post
 - For all people, be able to see their own tickets ??
 - Change the color of the seats depending on the number of tickets "in progress"
-    - get tickets in dasboard by cluster
+    - get tickets in dashboard by cluster
 - In form ticket, if keyboard is choose, select keys on virtual keyboard
 - Responsive ticket
 - Button "add ..." on admin page will be in separated component
@@ -32,8 +31,6 @@ Frontend is in React ; Backend is in Go.
 - Ticket linked to post NOT SEAT ?? (because ethernet for example)
 - Secure api call (for example if id type ticket is not existing at ticket creation, all value by default - I can set a ticket to true for now...)
 - Pagination / limit on get routes (with max values)
-    - if nb page is greater then nb existing pages 
-    - Implementation in front (do not get all tickets at once for example)
 
 ### Questions
 - see for authorization header when option, options route, how manage ?
