@@ -24,7 +24,7 @@ function ManagePosts2({ clusters }) {
 	async function getPosts() {
 		setIsLoading(true);
 
-		await client.get(API_ROUTES.GET_POSTS + "?limit=10&page=" + currentPage)
+		await client.get(API_ROUTES.GET_POSTS + "?limit=30&page=" + currentPage)
 				.then((response) => {
 					if (response.data.length === 0) { setHasMore(false) }
 					setPosts(prevItems => [...prevItems, ...response.data]);
