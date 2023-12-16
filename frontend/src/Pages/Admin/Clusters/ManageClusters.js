@@ -11,6 +11,14 @@ function ManageClusters({ tickets, clusters, setClusters }) {
 
 	const [cluster, setCluster] = useState();
 
+	function sendDeleteCluster() {
+		deleteCluster(cluster)
+			.then(function(d) {
+				if (d.err !== null) { return }
+				setClusters(clusters.filter(function(c) { return c.ID !== cluster.ID }))
+			})
+	}
+
 	return (
 		<>
 			<Button color="primary" onPress={setOpenModalCluster}>Add a cluster</Button>
@@ -32,7 +40,7 @@ function ManageClusters({ tickets, clusters, setClusters }) {
 
 			</div>
 
-			<ModalConfirmation open={openModalConfirmation} action={() => deleteCluster(cluster, clusters, setClusters)}
+			<ModalConfirmation open={openModalConfirmation} action={sendDeleteCluster}
 				text=<p><span style={{ color: '#01babc' }}>Are you sure</span> you want to delete this cluster?
 					<br/>This will delete <b><span style={{ color: '#01babc' }}>ALL</span></b> associated tickets.
 					<br/>This action is irreversible.

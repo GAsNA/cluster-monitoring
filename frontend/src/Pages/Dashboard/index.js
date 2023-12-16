@@ -56,14 +56,64 @@ function Dashboard() {
 	}
 
 	useEffect(() => {
-		if (selectedSeat) { getTickets(selectedSeat.id, "desc", "10", setTicketsBySeat); }
+		if (selectedSeat) {
+			getTickets("desc", "10", "1", selectedSeat.id, "", "", "")
+				.then(function(d) {
+					if (d.err === null) {
+						setTicketsBySeat(d.data);
+					}
+				})
+		}
 		if (!getTtAndClusters) {
 			setGetTtAndClusters(true);
-			getTicketTypes(setIssueTypes);
-			getClusters(setAllClusters);
+
+			/*let hasMore = true, err = null, page = 1;
+			while (hasMore) {
+				getTicketTypes("asc", "30", page)
+					// eslint-disable-next-line
+					.then(function(d) {
+						err = d.err;
+						if (d.err !== null) { return }
+						if (d.data.length > 0) { hasMore = false; return }
+						const newTTs = issueTypes;
+						newTTs.push(...d.data);
+						setIssueTypes(newTTs);
+					})
+				if (err !== null) { break }
+				page += 1;
+			}
+
+			hasMore = true; err = null; page = 1;
+			while (hasMore) {
+				getClusters("asc", "30", page)
+					// eslint-disable-next-line
+					.then(function(d) {
+						err = d.err;
+						if (d.err !== null) { return }
+						if (d.data.length > 0) { hasMore = false; return }
+						const newCs = allClusters;
+						newCs.push(...d.data);
+						setAllClusters(newCs);
+					})
+				if (err !== null) { break }
+				page += 1;
+			}*/
+
+			getTicketTypes("asc", "30", "1")
+				.then(function(d) {
+					if (d.err !== null) { return }
+					setIssueTypes(d.data);
+				})
+
+			getClusters("asc", "30", "1")
+				.then(function(d) {
+					if (d.err !== null) { return }
+					setAllClusters(d.data);
+				})
+
 			setInitAllClusters(true);
 		}
-	}, [selectedSeat, getTtAndClusters]);
+	}, [selectedSeat, getTtAndClusters, allClusters, issueTypes]);
 
 	useEffect(() => {
 		if (initAllClusters && allClusters.length > 0) {

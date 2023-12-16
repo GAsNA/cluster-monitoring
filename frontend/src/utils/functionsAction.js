@@ -41,255 +41,304 @@ export async function anonymisation() {
 }
 
 /* -------------- TICKETS -------------- */
-export async function getTickets(seat, order, limit, page, author, resolved, type) {
-	let data = [], totalPages = "";
+export async function getTickets(order, limit, page, seat, author, resolved, type) {
+	let data = [], actualPage = "", perPage = "", totalCount = "", totalPages = "", err = null;
 	
-		await client.get(API_ROUTES.GET_TICKETS + "?order=" + order +"&limit=" + limit + "&seat=" + seat +
-			"&page=" + page + "&author=" + author + "&resolved=" + resolved + "&type=" + type)
-				.then((response) => {
-					data = response.data
-					totalPages = response.headers['x-total-pages']
-				})
-				.catch((error) => {
-					toast.error('An error occured');
-				})
-	return { 'data': data, 'totalPages': totalPages }
+	await client.get(API_ROUTES.GET_TICKETS + "?order=" + order +"&limit=" + limit + "&seat=" + seat +
+		"&page=" + page + "&author=" + author + "&resolved=" + resolved + "&type=" + type)
+			.then((response) => {
+				data = response.data
+				actualPage = response.headers['x-page']
+				perPage = response.headers['x-per-page']
+				totalCount = response.headers['x-total-count']
+				totalPages = response.headers['x-total-pages']
+			})
+			.catch((error) => {
+				err = error
+				toast.error('An error occured');
+			})
+
+	return { 'data': data,
+			'page': actualPage,
+			'perPage': perPage,
+			'totalCount': totalCount,
+			'totalPages': totalPages,
+			'err': err }
 }
 
-export async function createTicket(seat, cluster, ticketType, comment, setSending, closeModal) {
-	setSending(true);
-	await client.post(API_ROUTES.CREATE_TICKET, { "Seat": seat.id, "ClusterID": cluster.ID, "TypeID": parseInt([...ticketType][0]), "Comment": comment, })
+export async function createTicket(ticket) {
+	let data = {}, err = null;
+
+	await client.post(API_ROUTES.CREATE_TICKET, ticket)
 			.then((response) => {
+				data = response.data;
 				toast.success('Ticket successfully sent');
 			})
 			.catch((error) => {
+				err = error;
 				toast.error('An error occured');
 			});
 
-	setSending(false);
-	closeModal();
+	return { 'data': data,
+			'err': err }
 }
 
-export async function changeStatusTicket(ticket, tickets, setTickets) {
-	await client.put(API_ROUTES.UPDATE_TICKET + ticket.ID, { "Resolved": !ticket.Resolved })
+export async function updateTicket(ticket) {
+	let data = {}, err = null;
+
+	await client.put(API_ROUTES.UPDATE_TICKET + ticket.ID, ticket)
 			.then((response) => {
-				const newTicket = response.data
-				const newTickets = tickets.map((t) => {
-					if (t.ID === newTicket.ID) {
-						t.Resolved = newTicket.Resolved;
-						t.ResolvedAt = newTicket.ResolvedAt;
-						t.ResolvedByID = newTicket.ResolvedByID;
-					}
-					return t;
-				});
-				setTickets(newTickets);
-				toast.success('Ticket status changed!');
+				data = response.data;
+				toast.success('Ticket successfully updated!');
 			})
 			.catch((error) => {
+				err = error;
 				toast.error('An error occured');
 			})
+	
+	return { 'data': data,
+			'err': err }
 }
 
-export async function deleteTicket(ticket, tickets, setTickets) {
+export async function deleteTicket(ticket) {
+	let err = null;
+
 	await client.delete(API_ROUTES.DELETE_TICKET + ticket.ID)
 		.then((response) => {
-			setTickets(tickets.filter(function(t) { return t.ID !== ticket.ID }))
 			toast.success('Ticket deleted!');
 		})
 		.catch((error) => {
+			err = error;
 			toast.error('An error occured');
 		})
+
+	return { 'err': err }
 }
 
 /* -------------- TICKET TYPES -------------- */
-export async function getTicketTypes(setTicketTypes) {
-	await client.get(API_ROUTES.GET_TICKET_TYPES)
+export async function getTicketTypes(order, limit, page) {
+	let data = [], actualPage = "", perPage = "", totalCount = "", totalPages = "", err = null;
+	
+	await client.get(API_ROUTES.GET_TICKET_TYPES + "?order=" + order + "&limit=" + limit + "&page=" + page)
 			.then((response) => {
-				setTicketTypes(response.data)
+				//setTicketTypes(response.data)
+				data = response.data
+				actualPage = response.headers['x-page']
+				perPage = response.headers['x-per-page']
+				totalCount = response.headers['x-total-count']
+				totalPages = response.headers['x-total-pages']
 			})
 			.catch((error) => {
+				err = error;
 				toast.error('An error occured');
 			})
+
+	return { 'data': data,
+			'page': actualPage,
+			'perPage': perPage,
+			'totalCount': totalCount,
+			'totalPages': totalPages,
+			'err': err }
 }
 
-export async function createTicketType(name, ticketTypes, setSending, close) {
-	setSending(true);
-	await client.post(API_ROUTES.CREATE_TICKET_TYPE, { "Name": name })
+export async function createTicketType(ticketType) {
+	let data = {}, err = null;
+
+	await client.post(API_ROUTES.CREATE_TICKET_TYPE, ticketType)
 			.then((response) => {
-				ticketTypes.push(response.data)
+				data = response.data;
 				toast.success('Ticket type successfully created');
 			})
 			.catch((error) => {
+				err = error;
 				toast.error('An error occured');
 			})
-	setSending(false);
-	close();
+
+	return { 'data': data,
+			'err': err }
 }
 
-export async function modifyTicketType(ticketType, name, ticketTypes, setTicketTypes, setSending, close) {
-	setSending(true);
-	await client.put(API_ROUTES.UPDATE_TICKET_TYPE + ticketType.ID, { "Name": name })
+export async function updateTicketType(ticketType) {
+	let data = {}, err = null;
+
+	await client.put(API_ROUTES.UPDATE_TICKET_TYPE + ticketType.ID, ticketType)
 			.then((response) => {
-				const newTicketType = response.data
-				const newTicketTypes = ticketTypes.map((tt) => {
-					if (tt.ID === newTicketType.ID) {
-						tt.Name = newTicketType.Name;
-					}
-					return tt;
-				});
-				setTicketTypes(newTicketTypes);
+				data = response.data;
 				toast.success('Ticket type successfully updated');
 			})
 			.catch((error) => {
+				err = error;
 				toast.error('An error occured');
 			})
-	setSending(false);
-	close();
+
+	return { 'data': data,
+			'err': err }
 }
 
-export async function deleteTicketType(ticketType, ticketTypes, setTicketTypes) {
+export async function deleteTicketType(ticketType) {
+	let err = null;
+
 	await client.delete(API_ROUTES.DELETE_TICKET_TYPE + ticketType.ID)
 			.then((response) => {
-				setTicketTypes(ticketTypes.filter(function(tt) { return tt.ID !== ticketType.ID }))
 				toast.success('Ticket type deleted!');
 			})
 			.catch((error) => {
+				err = error;
 				toast.error('An error occured');
 			})
+
+	return { 'err': err }
 }
 
 /* -------------- POSTS -------------- */
-export async function getPosts(limit, page, setPosts, setIsLoading, setHasMore, setPage) {
-	setIsLoading(true);
+export async function getPosts(order, limit, page) {
+	let data = [], actualPage = "", perPage = "", totalCount = "", totalPages = "", err = null;
 
-	await client.get(API_ROUTES.GET_POSTS + "?limit=" + limit + "&page=" + page)
+	await client.get(API_ROUTES.GET_POSTS + "?order=" + order + "&limit=" + limit + "&page=" + page)
 			.then((response) => {
-				if (response.data.length === 0) { setHasMore(false) }
-				setPosts(prevItems => [...prevItems, ...response.data]);
-				setPage(prevPage => prevPage + 1);
+				data = response.data
+				actualPage = response.headers['x-page']
+				perPage = response.headers['x-per-page']
+				totalCount = response.headers['x-total-count']
+				totalPages = response.headers['x-total-pages']
 			})
 			.catch((error) => {
+				err = error;
 				toast.error('An error occured');
 			})
 
-	setIsLoading(false);
+	return { 'data': data,
+			'page': actualPage,
+			'perPage': perPage,
+			'totalCount': totalCount,
+			'totalPages': totalPages,
+			'err': err }
 }
-export async function createPosts(postsToCreate, setPostsToCreate, posts, setPosts, setSending) {
-	postsToCreate = postsToCreate.filter(p => p.Mac !== "" && p.Serial !== "")
 
-	setSending(true);
+export async function createPosts(posts, setPostsToCreate) {
+	let data = [], err = null;
 
-	await Promise.all(postsToCreate.map(async (post) => {
+	await Promise.all(posts.map(async (post) => {
 		await client.post(API_ROUTES.CREATE_POST, post)
 			.then((response) => {
 				const newPost = response.data
-				posts = [...posts, newPost];
-				postsToCreate = postsToCreate.filter(p => p.Mac !== newPost.Mac && p.Serial !== newPost.Serial )
+				posts = posts.filter(p => p.Mac !== newPost.Mac && p.Serial !== newPost.Serial)
+				data = [...data, response.data]
 				toast.success('Post successfully created!');
 			})
 			.catch((error) => {
+				err = error;
 				toast.error('An error occured');
 			})
 	}))
 
-	setPosts(posts);
-	setPostsToCreate(postsToCreate)
+	setPostsToCreate(posts)
 	
-	setSending(false);
+	return { 'data': data,
+			'err': err }
 }
 
-export async function modifyPost(post, posts, setPosts) {
+export async function updatePost(post) {
+	let data = {}, err = null;
+
 	await client.put(API_ROUTES.UPDATE_POST + post.ID, post)
 			.then((response) => {
-				const newPost = response.data
-				const newAllPosts = posts.map((p) => {
-					if (p.ID === newPost.ID) {return newPost;}
-					return p;
-				});
-				setPosts(newAllPosts);
+				data = response.data;
 				toast.success('Post successfully updated');
 			})
 			.catch((error) => {
+				err = error;
 				toast.error('An error occured');
 			})
+
+	return { 'data': data,
+			'err': err }
 }
 
-export async function deletePost(post, posts, setPosts) {
-	console.log("ID:", post.ID)
-	console.log("POSTS:", posts)
+export async function deletePost(post) {
+	let err = null;
+
 	await client.delete(API_ROUTES.DELETE_POST + post.ID)
 			.then((response) => {
-				setPosts(posts.filter(function(p) { return p.ID !== post.ID }))
 				toast.success('Post deleted!');
 			})
 			.catch((error) => {
+				err = error;
 				toast.error('An error occured');
 			})
+	
+	return { 'err': err }
 }
 
 /* -------------- CLUSTERS -------------- */
-export async function getClusters(setClusters) {
-	await client.get(API_ROUTES.GET_CLUSTERS)
-			.then((response) => {
-				/*const clusters = response.data.map((item) => {
-					let temp = {...item}
-					temp.IsActive = false
-					return temp
-				});
-				clusters[0].IsActive = true;
+export async function getClusters(order, limit, page) {
+	let data = [], actualPage = "", perPage = "", totalCount = "", totalPages = "", err = null;
 
-				setAllClusters(clusters);
-				setCluster(clusters[0]);*/
-				setClusters(response.data)
+	await client.get(API_ROUTES.GET_CLUSTERS + "?order=" + order + "&limit=" + limit + "&page=" + page)
+			.then((response) => {
+				data = response.data
+				actualPage = response.headers['x-page']
+				perPage = response.headers['x-per-page']
+				totalCount = response.headers['x-total-count']
+				totalPages = response.headers['x-total-pages']
 			})
 			.catch((error) => {
 				toast.error('An error occured');
 			})
+
+	return { 'data': data,
+			'page': actualPage,
+			'perPage': perPage,
+			'totalCount': totalCount,
+			'totalPages': totalPages,
+			'err': err }
 }
 
-export async function createCluster(name, link, clusters, setSending, close) {
-	setSending(true);
-	await client.post(API_ROUTES.CREATE_CLUSTER, { "Name": name, "Link": link })
+export async function createCluster(cluster) {
+	let data = {}, err = null;
+
+	await client.post(API_ROUTES.CREATE_CLUSTER, cluster)
 			.then((response) => {
-				clusters.push(response.data)
+				data = response.data;
 				toast.success('Cluster successfully created');
 			})
 			.catch((error) => {
+				err = error;
 				toast.error('An error occured');
 			})
-	setSending(false);
-	close();
+	
+	return { 'data': data,
+			'err': err }
 }
 
-export async function modifyCluster(cluster, name, link, clusters, setClusters, setSending, close) {
-	setSending(true);
-	await client.put(API_ROUTES.UPDATE_CLUSTER + cluster.ID, { "Name": name, "Link": link })
+export async function updateCluster(cluster) {
+	let data = {}, err = null;
+
+	await client.put(API_ROUTES.UPDATE_CLUSTER + cluster.ID, cluster)
 			.then((response) => {
-				const newCluster = response.data
-				const newClusters = clusters.map((c) => {
-					if (c.ID === newCluster.ID) {
-						c.Name = newCluster.Name;
-						c.Link = newCluster.Link;
-					}
-					return c;
-				});
-				setClusters(newClusters);
+				data = response.data;
 				toast.success('Cluster successfully updated');
 			})
 			.catch((error) => {
+				err = error;
 				toast.error('An error occured');
 			})
-	setSending(false);
-	close();
+
+	return { 'data': data,
+			'err': err }
 }
 
-export async function deleteCluster(cluster, clusters, setClusters) {
+export async function deleteCluster(cluster) {
+	let err = null
+
 	await client.delete(API_ROUTES.DELETE_CLUSTER + cluster.ID)
 			.then((response) => {
-				setClusters(clusters.filter(function(c) { return c.ID !== cluster.ID }))
 				toast.success('Cluster deleted!');
 			})
 			.catch((error) => {
+				err = error
 				toast.error('An error occured');
 			})
+
+	return { 'err': err }
 }

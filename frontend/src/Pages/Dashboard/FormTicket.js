@@ -14,8 +14,15 @@ function FormTicket({ seat, cluster, issueTypes, closeModal }) {
 
 	const [ sending, setSending ] = useState(false);
 
+	function sendTicket() {
+		setSending(true);
+		createTicket({ "Seat": seat.id, "ClusterID": cluster.ID, "TypeID": parseInt([...ticketType][0]), "Comment": comment });
+		setSending(false);
+		closeModal();
+	}
+
 	const handleKeyPress = (event) => {
-		if (event.key === 'Enter') { createTicket(seat, cluster, ticketType, comment, setSending, closeModal); }
+		if (event.key === 'Enter') { setOpenModalConfirmation(true) }
 	}
 
 	return (
@@ -49,7 +56,7 @@ function FormTicket({ seat, cluster, issueTypes, closeModal }) {
 				</Button>
 
 				<ModalConfirmation open={openModalConfirmation} setOpen={setOpenModalConfirmation}
-					action={() => createTicket(seat, cluster, ticketType, comment, setSending, closeModal)}
+					action={sendTicket}
 					text=<p><span style={{ color: '#01babc' }}>Are you sure</span>you want to send this ticket?</p>
 				/>
 			</>

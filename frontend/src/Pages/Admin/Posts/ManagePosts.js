@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Input, Select, SelectItem, Tooltip, Button } from '@nextui-org/react';
 import ModalPosts from './ModalPosts.js';
-import { modifyPost, deletePost } from '../../../utils/functionsAction.js';
+import { updatePost, deletePost } from '../../../utils/functionsAction.js';
 import { DeleteIcon } from '../../../Icon/DeleteIcon';
 import { SaveIcon } from '../../../Icon/SaveIcon';
 
@@ -161,7 +161,7 @@ function ActionsCell({ item, postsModified, setPostsModified, posts, setPosts })
 	return (
 		<div className="relative flex items-center gap-2">
 			<Tooltip color="success" content="Save">
-				<Button isIconOnly variant="light" onPress={() => modifyPost(item, postsModified, posts, setPosts)}>
+				<Button isIconOnly variant="light" onPress={() => updatePost(item, postsModified, posts, setPosts)}>
 					<span className="text-lg cursor-pointer active:opacity-50">
 						<SaveIcon />
 					</span>

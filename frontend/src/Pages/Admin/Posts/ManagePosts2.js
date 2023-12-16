@@ -4,7 +4,7 @@ import { Card, Typography } from "@material-tailwind/react";
 import ModalPosts from './ModalPosts.js';
 import ModalConfirmation from '../../../Components/ModalConfirmation.js';
 import { getPosts } from '../../../utils/functionsAction.js';
-import { modifyPost, deletePost } from '../../../utils/functionsAction.js';
+import { updatePost, deletePost } from '../../../utils/functionsAction.js';
 import { DeleteIcon } from '../../../Icon/DeleteIcon';
 import { SaveIcon } from '../../../Icon/SaveIcon';
 
@@ -16,14 +16,29 @@ function ManagePosts2({ clusters }) {
 
 	const [init, setInit] = useState(true);
 	const [isLoading, setIsLoading] = useState(false);
-	const [hasMore, setHasMore] = useState(true);
-	const [currentPage, setCurrentPage] = useState(1);
+	let [hasMore] = useState(true);
+	let currentPage = 1;
+
+	function sendGetPosts() {
+		setIsLoading(true);
+
+		getPosts("asc", "30", currentPage)
+			.then(function(d) {
+				if (d.err !== null) { return }
+				setPosts(prevItems => [...prevItems, ...d.data])
+				if (d.totalPages.toString() === currentPage.toString()) { hasMore = false; }
+				currentPage += 1
+			})
+
+		setIsLoading(false);
+	}
 
 	useEffect(() => {
 		if (init) {
 			setInit(false);
-			getPosts("30", currentPage, setPosts, setIsLoading, setHasMore, setCurrentPage);
+			sendGetPosts();
 		}
+		// eslint-disable-next-line
 	}, [init, currentPage]);
 
 	function handleScroll() {
@@ -33,7 +48,7 @@ function ManagePosts2({ clusters }) {
 		{
 			return;
 		}
-		getPosts("30", currentPage, setPosts, setIsLoading, setHasMore, setCurrentPage);
+		sendGetPosts();
 	};
 
 	useEffect(() => {
@@ -135,7 +150,23 @@ function RowPost({ post, clusters, posts, setPosts }) {
 		if (mac === "" || serial === "") { return; }
 
 		const newPost = { ID: post.ID, Mac: mac, Serial: serial, Seat: seat, ClusterID: clusterID }
-		modifyPost(newPost, posts, setPosts)
+		updatePost(newPost)
+			.then(function(d) {
+				if (d.err !== null) { return }
+				const newPs = posts.map((p) => {
+					if (p.ID === d.data.ID) { return d.data }
+					return p;
+				})
+				setPosts(newPs);
+			})
+	}
+
+	function sendToDeletePost() {
+		deletePost(post)
+			.then(function(d) {
+				if (d.err !== null) { return }
+				setPosts(posts.filter(function(p) { return p.ID !== post.ID }))
+			})
 	}
 	
 	const handleKeyPress = (event) => {
@@ -182,7 +213,7 @@ function RowPost({ post, clusters, posts, setPosts }) {
 			</td>
 
 			<ModalConfirmation open={openModalConfirmation} setOpen={setOpenModalConfirmation}
-				action={() => deletePost(post, posts, setPosts)}
+				action={sendToDeletePost}
 				text=<p><span style={{ color: '#01babc' }}>Are you sure</span> you want to delete this post?
 					<br/>This action is irreversible.
 				</p> />

@@ -7,7 +7,7 @@ import { CrossIcon } from '../../../Icon/CrossIcon';
 import { DownloadIcon } from '../../../Icon/DownloadIcon';
 import ExampleFilePosts from './example_file_posts.csv';
 
-function ModalPosts({ posts, setPosts, open, setOpen, clusters }) {
+function ModalPosts({ posts, setPosts, open, setOpen, clusters, hasMore }) {
 	const [postsToCreate, setPostsToCreate] = useState([{Mac: "", Serial: "", Seat: "", ClusterID: 0}]);
 
 	const [errorSendingMessage, setErrorSendingMessage] = useState(null); 
@@ -90,7 +90,14 @@ function ModalPosts({ posts, setPosts, open, setOpen, clusters }) {
 		if (postsToCreate.every((item) =>
 			(item.Mac === "" && item.Serial === "") || (item.Mac !== "" && item.Serial !== "")
 		)) {
-			createPosts(postsToCreate, setPostsToCreate, posts, setPosts, setSending);
+			setSending(true);
+			
+			createPosts(postsToCreate.filter(p => p.Mac !== "" && p.Serial !== ""), setPostsToCreate)
+				.then(function(d) {
+					if (!hasMore) { setPosts([...posts, ...d.data]) }
+				})
+			
+			setSending(false);
 			setErrorSendingMessage(null);
 			setErrorFileMessage(null);
 			return;

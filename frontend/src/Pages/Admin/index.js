@@ -35,8 +35,54 @@ function Admin() {
 	}, []);
 
 	useEffect(() => {
-		if (!init && decodedToken.user.IsStaff) { setInit(true); getTicketTypes(setTicketTypes); getClusters(setClusters); }
-	}, [init, decodedToken.user.IsStaff])
+		if (!init && decodedToken.user.IsStaff) {
+			setInit(true);
+			
+			/*let hasMore = true, err = null, page = 1;
+			while (hasMore) {
+				getTicketTypes("asc", "30", page)
+					// eslint-disable-next-line
+					.then(function(d) {
+						err = d.err;
+						if (d.err !== null) { return }
+						if (d.data.length > 0) { hasMore = false; return }
+						const newTTs = ticketTypes;
+						newTTs.push(...d.data);
+						setTicketTypes(newTTs);
+						page += 1;
+					})
+				if (err !== null) { break }
+			}
+			
+			hasMore = true; err = null; page = 1;
+			while (hasMore) {
+				getClusters("asc", "30", page)
+					// eslint-disable-next-line
+					.then(function(d) {
+						err = d.err;
+						if (d.err !== null) { return }
+						if (d.data.length > 0) { hasMore = false; return }
+						const newCs = clusters;
+						newCs.push(...d.data);
+						setClusters(newCs);
+						page += 1;
+					})
+				if (err !== null) { break }
+			}*/
+
+			getTicketTypes("asc", "30", "1")
+				.then(function(d) {
+					if (d.err !== null) { return }
+					setTicketTypes(d.data);
+				})
+
+			getClusters("asc", "30", "1")
+				.then(function(d) {
+					if (d.err !== null) { return }
+					setClusters(d.data);
+				})
+		}
+	}, [init, decodedToken.user.IsStaff, clusters, ticketTypes])
 
 	// Check rights to this page
 	if (!token) return <Navigate to="/" />;	

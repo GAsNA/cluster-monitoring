@@ -11,6 +11,14 @@ function ManageTicketTypes({ tickets, ticketTypes, setTicketTypes }) {
 
 	const [ticketType, setTicketType] = useState();
 
+	function sendToDeleteTicketType() {
+		deleteTicketType(ticketType)
+			.then(function(d) {
+				if (d.err !== null) { return }
+				setTicketTypes(ticketTypes.filter(function(tt) { return tt.ID !== ticketType.ID }))
+			})
+	}
+
 	return (
 		<>
 			<Button color="primary" onPress={setOpenModalTicketType}>Add a type</Button>
@@ -32,7 +40,7 @@ function ManageTicketTypes({ tickets, ticketTypes, setTicketTypes }) {
 
 			</div>
 
-			<ModalConfirmation open={openModalConfirmation} action={() => deleteTicketType(ticketType, ticketTypes, setTicketTypes)}
+			<ModalConfirmation open={openModalConfirmation} action={sendToDeleteTicketType}
 				text=<p><span style={{ color: '#01babc' }}>Are you sure</span> you want to delete this ticket type?
 					<br/>This will delete <b><span style={{ color: '#01babc' }}>ALL</span></b> associated tickets.
 					<br/>This action is irreversible.

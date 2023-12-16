@@ -44,8 +44,9 @@ function TicketsSort({ ticketTypes=[] }) {
 			if (typeChoiceObject) { typeChoice = typeChoiceObject.Name }
 		}
 
-		getTickets(seatChoice, orderByDateChoice, limitPerPage, currentPage, authorChoice, resolvedChoice, typeChoice)
+		getTickets(orderByDateChoice, limitPerPage, currentPage, seatChoice, authorChoice, resolvedChoice, typeChoice)
 			.then(function(d) {
+				if (d.err !== null) { return; }
 				setTotalPages(d.totalPages);
 				setTickets(d.data);
 			})

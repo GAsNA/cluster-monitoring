@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card, CardHeader, CardBody, Chip, DropdownItem, User, Link, Spacer } from '@nextui-org/react';
 import { URL_INTRA_PROFILES } from '../utils/constants.jsx';
-import { changeStatusTicket, deleteTicket } from '../utils/functionsAction.js';
+import { updateTicket, deleteTicket } from '../utils/functionsAction.js';
 import ModalConfirmation from './ModalConfirmation';
 import OptionButton from './OptionButton';
 
@@ -18,6 +18,30 @@ function Ticket({ ticket, tickets, setTickets, displaySeat=false }) {
 	function getDateFormated(dateStr) {
 		var date = new Date(dateStr)
 		return (date.getDate() + "/" + parseInt(date.getMonth() + 1) + "/" + date.getFullYear())
+	}
+
+	function sendUpdateTicket() {
+		updateTicket({ "ID": ticket.ID, "Resolved": !ticket.Resolved })
+			.then(function(d) {
+				if (d.err !== null) { return }
+				const newTickets = tickets.map((t) => {
+					if (t.ID === d.data.ID) {
+						t.Resolved = d.data.Resolved;
+						t.ResolvedAt = d.data.ResolvedAt;
+						t.ResolvedByID = d.data.ResolvedByID;
+					}
+					return t;
+				})
+				setTickets(newTickets);
+			})
+	}
+
+	function sendDeleteTicket() {
+		deleteTicket(ticket)
+			.then(function(d) {
+				if (d.err !== null) { return }
+				setTickets(tickets.filter(function(t) { return t.ID !== ticket.ID }))
+			})
 	}
 
 	return (
@@ -72,7 +96,7 @@ function Ticket({ ticket, tickets, setTickets, displaySeat=false }) {
 						<Spacer />
 						
 						<ModalConfirmation open={openModalConfirmation} setOpen={setOpenModalConfirmation}
-							action={() => deleteTicket(ticket, tickets, setTickets)}
+							action={sendDeleteTicket}
 							text=<p><span style={{ color: '#01babc' }}>Are you sure</span> you want to delete this ticket?
 								<br/>This action is irreversible.
 							</p>
@@ -80,7 +104,7 @@ function Ticket({ ticket, tickets, setTickets, displaySeat=false }) {
 						
 						<OptionButton color="black" dropdownItems={[
 							<DropdownItem textValue="set as" key="set_resolved" color={ !ticket.Resolved ? "success" : "default" }
-								onPress={() => changeStatusTicket(ticket, tickets, setTickets)}
+								onPress={sendUpdateTicket}
 							>
 								Set as { !ticket.Resolved ? resolvedText : inProgressText }
 							</DropdownItem>,

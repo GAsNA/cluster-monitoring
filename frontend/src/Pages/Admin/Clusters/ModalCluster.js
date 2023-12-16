@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input, Button, Spacer } from '@nextui-org/react';
-import { createCluster, modifyCluster } from '../../../utils/functionsAction.js';
+import { createCluster, updateCluster } from '../../../utils/functionsAction.js';
 import ModalConfirmation from '../../../Components/ModalConfirmation.js';
 
 function ModalCluster({ open, setOpen, clusters, setClusters, cluster, setCluster }) {
@@ -10,10 +10,33 @@ function ModalCluster({ open, setOpen, clusters, setClusters, cluster, setCluste
 	const [openModalConfirmation, setOpenModalConfirmation] = useState(false);
 	const [sending, setSending] = useState(false);
 
-	const action = cluster ? 
-					() => modifyCluster(cluster, name, link, clusters, setClusters, setSending, close)
-					:
-					() => createCluster(name, link, clusters, setSending, close);
+	function sendCluster() {
+		setSending(true);
+		
+		if (cluster) {
+			updateCluster({ "ID": cluster.ID, "Name": name, "Link": link })
+				.then(function(d) {
+					if (d.err !== null) { return }
+					const newCs = clusters.map((c) => {
+						if (c.ID === d.data.ID) {
+							c.Name = d.data.Name;
+							c.Link = d.data.Link;
+						}
+						return c;
+					})
+					setClusters(newCs);
+				})
+		} else {
+			createCluster({ "Name": name, "Link": link })
+				.then(function(d) {
+					if (d.err !== null) { return }
+					setClusters([...clusters, d.data])
+				})
+		}
+				
+		setSending(false);
+		close();
+	}
 
 	function onNameChange(value) {
 		setName(value.charAt(0).toUpperCase() + value.slice(1))
@@ -32,7 +55,7 @@ function ModalCluster({ open, setOpen, clusters, setClusters, cluster, setCluste
 		if (clusters.find((item) => item.Name === name)) {
 			setOpenModalConfirmation(true);
 		} else {
-			action();
+			sendCluster();
 		}
 	}
 
@@ -85,7 +108,7 @@ function ModalCluster({ open, setOpen, clusters, setClusters, cluster, setCluste
 			</Modal>
 
 			<ModalConfirmation open={openModalConfirmation} setOpen={setOpenModalConfirmation}
-				action={action}
+				action={sendCluster}
 				text=<p><span style={{ color: '#01babc' }}>Are you sure</span> you want to create this cluster?
 						<br />This cluster name <span style={{ color: '#01babc' }}>already exsists</span>.
 					</p>

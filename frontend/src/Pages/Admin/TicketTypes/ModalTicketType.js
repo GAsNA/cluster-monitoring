@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input, Button } from '@nextui-org/react';
-import { createTicketType, modifyTicketType } from '../../../utils/functionsAction.js';
+import { createTicketType, updateTicketType } from '../../../utils/functionsAction.js';
 import ModalConfirmation from '../../../Components/ModalConfirmation.js';
 
 function ModalTicketType({ open, setOpen, ticketTypes, setTicketTypes, ticketType, setTicketType }) {
@@ -9,10 +9,30 @@ function ModalTicketType({ open, setOpen, ticketTypes, setTicketTypes, ticketTyp
 	const [openModalConfirmation, setOpenModalConfirmation] = useState(false);
 	const [sending, setSending] = useState(false);
 
-	const action = ticketType ?
-					() => modifyTicketType(ticketType, name, ticketTypes, setTicketTypes, setSending, close)
-					:
-					() => createTicketType(name, ticketTypes, setSending, close);
+	function sendTicketType() {
+		setSending(true);
+
+		if (ticketType) {
+			updateTicketType({ "ID": ticketType.ID, "Name": name })
+				.then(function(d) {
+					if (d.err !== null) { return }
+					const newTTs = ticketTypes.map((tt) => {
+						if (tt.ID === d.data.ID) { tt.Name = d.data.Name; }
+						return tt;
+					})
+					setTicketTypes(newTTs);
+				})
+		} else {
+			createTicketType({ "Name": name })
+				.then(function(d) {
+					if (d.err !== null) { return }
+					setTicketTypes([...ticketTypes, d.data])
+				})
+		}
+		
+		setSending(false);
+		close();
+	}
 
 	function onNameChange(value) {
 		setName(value.charAt(0).toUpperCase() + value.slice(1).toLowerCase())
@@ -30,7 +50,7 @@ function ModalTicketType({ open, setOpen, ticketTypes, setTicketTypes, ticketTyp
 		if (ticketTypes.find((item) => item.Name === name)) {
 			setOpenModalConfirmation(true);
 		} else {
-			action();
+			sendTicketType();
 		}
 	}
 
@@ -76,7 +96,7 @@ function ModalTicketType({ open, setOpen, ticketTypes, setTicketTypes, ticketTyp
 			</Modal>
 
 			<ModalConfirmation open={openModalConfirmation} setOpen={setOpenModalConfirmation}
-				action={action}
+				action={sendTicketType}
 				text=<p><span style={{ color: '#01babc' }}>Are you sure</span> you want to create this ticket type?
 						<br />This ticket type name <span style={{ color: '#01babc' }}>already exsists</span>.
 					</p>

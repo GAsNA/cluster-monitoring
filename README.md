@@ -19,6 +19,8 @@ Frontend is in React ; Backend is in Go.
     - possibility to archieved ticket types and clusters ??
     - possibility to reoganise order of cluster and ticket type ?
     - multi selection for ticket and post
+    - length name ticket types and cluster
+    - when delete post, get the rest without skip
 - For all people, be able to see their own tickets ??
 - Change the color of the seats depending on the number of tickets "in progress"
     - get tickets in dashboard by cluster
