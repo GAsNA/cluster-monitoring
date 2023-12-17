@@ -9,6 +9,7 @@ Frontend is in React ; Backend is in Go.
 - Protect admin pages with a route?
 
 ### Frontend
+- usecallback, usememo
 - HOW TO GET RIDE OF THE '../../..' etc LINKS IN FILES?
 - Admin side (staff)
     - Nb tickets associated to ticket type and cluster to redo
