@@ -33,9 +33,6 @@ Frontend is in React ; Backend is in Go.
 - Ticket linked to post NOT SEAT ?? (because ethernet for example)
 - Secure api call (for example if id type ticket is not existing at ticket creation, all value by default - I can set a ticket to true for now...)
 
-### Questions
-- see for authorization header when option, options route, how manage ?
-
 ## Author
 [![rleseur's 42 stats](https://badge42.vercel.app/api/v2/cl7s08vet00110gmnrmm2benl/stats?cursusId=21&coalitionId=45)](https://github.com/JaeSeoKim/badge42)
 
