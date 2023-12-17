@@ -37,6 +37,7 @@ func addHeadersGet(w *http.ResponseWriter, total_count, page, total_pages, per_p
 func getFiltersCommon(query url.Values) (int, int) {
 	limit, err := strconv.Atoi(query.Get("limit"))
 	if err != nil { limit = 30 }
+	if limit > 1000 { limit = 1000 }
 	page, err := strconv.Atoi(query.Get("page"))
 	if err != nil { page = 1 }
 
