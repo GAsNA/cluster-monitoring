@@ -30,6 +30,8 @@ Frontend is in React ; Backend is in Go.
 - Swagger
 - Ticket linked to post NOT SEAT?? (because ethernet for example)
 - Secure api call (for example if id type ticket is not existing at ticket creation, all value by default - I can set a ticket to true for now...)
+    - ignore ID
+    - verif if obligatory elements, if empty
 - Get tickets with cluster (too heavy? limited + headers?)
 
 ## Author
