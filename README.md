@@ -35,7 +35,6 @@ Frontend is in React ; Backend is in Go.
 
 ### Questions
 - see for authorization header when option, options route, how manage ?
-- localstorage for user is good idea ?
 
 ## Author
 [![rleseur's 42 stats](https://badge42.vercel.app/api/v2/cl7s08vet00110gmnrmm2benl/stats?cursusId=21&coalitionId=45)](https://github.com/JaeSeoKim/badge42)
