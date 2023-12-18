@@ -23,14 +23,17 @@ func PostsIndex(w http.ResponseWriter, r *http.Request) {
 	if err != nil { return }
 
 	// Get limit and page to return
-	limit, page := getFiltersCommon(r.URL.Query())
+	query := r.URL.Query()
+	limit, page := getFiltersCommon(query)
+	mac := query.Get("mac")
+	serial := query.Get("serial")
 
 	// How many element in DB
-	count, err := models.CountAllPosts()
+	count, err := models.CountAllPosts(mac, serial)
 	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
 
 	// Get posts
-	posts, err := models.AllPosts(limit, page)
+	posts, err := models.AllPosts(limit, page, mac, serial)
 	if err != nil { w.WriteHeader(http.StatusInternalServerError); return }
 
 	// Add necessary headers

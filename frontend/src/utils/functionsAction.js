@@ -191,10 +191,11 @@ export async function deleteTicketType(ticketType) {
 }
 
 /* -------------- POSTS -------------- */
-export async function getPosts(order, limit, page) {
+export async function getPosts(order, limit, page, mac, serial) {
 	let data = [], actualPage = "", perPage = "", totalCount = "", totalPages = "", err = null;
 
-	await client.get(API_ROUTES.GET_POSTS + "?order=" + order + "&limit=" + limit + "&page=" + page)
+	await client.get(API_ROUTES.GET_POSTS + "?order=" + order + "&limit=" + limit + "&page=" + page +
+		"&mac=" + mac + "&serial=" + serial)
 			.then((response) => {
 				data = response.data
 				actualPage = response.headers['x-page']

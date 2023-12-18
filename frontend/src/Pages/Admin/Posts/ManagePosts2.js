@@ -14,18 +14,24 @@ function ManagePosts2({ clusters }) {
 
 	const columns = ["MAC ADDRESS", "SERIAL NUMBER", "SEAT", "CLUSTER", "ACTIONS"];
 
-	const [init, setInit] = useState(true);
+	const [macChoice, setMacChoice] = useState("");
+	const [serialChoice, setSerialChoice] = useState("");
+
 	const [isLoading, setIsLoading] = useState(false);
 	let [hasMore] = useState(true);
 	let currentPage = 1;
 
-	function sendGetPosts() {
+	function sendGetPosts(isScrolling) {
 		setIsLoading(true);
 
-		getPosts("asc", "30", currentPage)
+		getPosts("asc", "30", currentPage, macChoice, serialChoice)
 			.then(function(d) {
 				if (d.err !== null) { return }
-				setPosts(prevItems => [...prevItems, ...d.data])
+				if (isScrolling) {
+					setPosts(prevItems => [...prevItems, ...d.data])
+				} else {
+					setPosts(d.data)
+				}
 				if (d.totalPages.toString() === currentPage.toString()) { hasMore = false; }
 				currentPage += 1
 			})
@@ -34,12 +40,9 @@ function ManagePosts2({ clusters }) {
 	}
 
 	useEffect(() => {
-		if (init) {
-			setInit(false);
-			sendGetPosts();
-		}
+		sendGetPosts(false);
 		// eslint-disable-next-line
-	}, [init, currentPage]);
+	}, [macChoice, serialChoice]);
 
 	function handleScroll() {
 		const documentElement = document.documentElement;
@@ -48,7 +51,7 @@ function ManagePosts2({ clusters }) {
 		{
 			return;
 		}
-		sendGetPosts();
+		sendGetPosts(true);
 	};
 
 	useEffect(() => {
@@ -62,6 +65,18 @@ function ManagePosts2({ clusters }) {
 			<div style={{ margin: '20px 0' }}>
 			
 				<Button color="primary" onPress={setOpenModalPosts}>Add posts</Button>
+
+				<div style={{ display: 'flex', flexWrap: 'wrap' }}>
+					<div style={{ maxWidth: '200px', margin: '15px 1%' }}>
+						<Input key="mac" label="Mac address" labelPlacement="outside" isClearable
+							value={macChoice} onValueChange={setMacChoice} />
+					</div>
+
+					<div style={{ maxWidth: '200px', margin: '15px 1%' }}>
+						<Input key="serial" label="Serial number" labelPlacement="outside" isClearable
+							value={serialChoice} onValueChange={setSerialChoice} />
+					</div>
+				</div>
 
 				<div style={{ marginTop: '1%' }}>
 					<Card className="h-full w-full overflow-scroll"

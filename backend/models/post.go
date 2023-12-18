@@ -37,8 +37,17 @@ func NewPost(p *Post) error {
 }
 
 	// Select
-func CountAllPosts() (int, error) {
-	count, err := config.DB().NewSelect().Model((*Post)(nil)).Count(config.Ctx())
+func CountAllPosts(mac, serial string) (int, error) {
+	subquery := config.DB().NewSelect().Model((*Post)(nil))
+
+	if mac != "" {
+		subquery.Where("mac_address LIKE ?", "%" + mac + "%")
+	}
+	if serial != "" {
+		subquery.Where("serial_number LIKE ?", "%" + serial + "%")
+	}
+	
+	count, err := subquery.Count(config.Ctx())
 
 	return count, err
 }
@@ -54,13 +63,21 @@ func FindPostByID(id int) (*Post, error) {
 	return &posts[0], nil
 }
 
-func AllPosts(limit, page int) ([]Post, error) {
+func AllPosts(limit, page int, mac, serial string) ([]Post, error) {
 	posts := []Post{}
 
-	err := config.DB().NewSelect().Model(&posts).
-				Limit(limit).
-				Offset((page - 1) * limit).
-				Scan(config.Ctx())
+	subquery := config.DB().NewSelect().Model(&posts)
+
+	if mac != "" {
+		subquery.Where("mac_address LIKE ?", "%" + mac + "%")
+	}
+	if serial != "" {
+		subquery.Where("serial_number LIKE ?", "%" + serial + "%")
+	}
+
+	err := subquery.Limit(limit).
+			Offset((page - 1) * limit).
+			Scan(config.Ctx())
 
 	return posts, err
 }
