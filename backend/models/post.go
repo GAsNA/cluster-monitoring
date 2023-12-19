@@ -41,10 +41,10 @@ func CountAllPosts(mac, serial string) (int, error) {
 	subquery := config.DB().NewSelect().Model((*Post)(nil))
 
 	if mac != "" {
-		subquery.Where("mac_address LIKE ?", "%" + mac + "%")
+		subquery.Where("LOWER(mac_address) LIKE LOWER(?)", "%" + mac + "%")
 	}
 	if serial != "" {
-		subquery.Where("serial_number LIKE ?", "%" + serial + "%")
+		subquery.Where("LOWER(serial_number) LIKE LOWER(?)", "%" + serial + "%")
 	}
 	
 	count, err := subquery.Count(config.Ctx())
@@ -69,10 +69,10 @@ func AllPosts(limit, page int, mac, serial string) ([]Post, error) {
 	subquery := config.DB().NewSelect().Model(&posts)
 
 	if mac != "" {
-		subquery.Where("mac_address LIKE ?", "%" + mac + "%")
+		subquery.Where("LOWER(mac_address) LIKE LOWER(?)", "%" + mac + "%")
 	}
 	if serial != "" {
-		subquery.Where("serial_number LIKE ?", "%" + serial + "%")
+		subquery.Where("LOWER(serial_number) LIKE LOWER(?)", "%" + serial + "%")
 	}
 
 	err := subquery.Limit(limit).
