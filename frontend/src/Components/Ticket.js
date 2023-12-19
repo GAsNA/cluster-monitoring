@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallBack } from 'react';
 import { Card, CardHeader, CardBody, Chip, DropdownItem, User, Link, Spacer } from '@nextui-org/react';
 import { URL_INTRA_PROFILES } from '../utils/constants.jsx';
 import { updateTicket, deleteTicket } from '../utils/functionsAction.js';
@@ -20,7 +20,7 @@ function Ticket({ ticket, tickets, setTickets, displaySeat=false }) {
 		return (date.getDate() + "/" + parseInt(date.getMonth() + 1) + "/" + date.getFullYear())
 	}, [ticket.CreatedAt]);
 
-	function sendUpdateTicket() {
+	const sendUpdateTicket = useCallBack(() => {
 		updateTicket({ "ID": ticket.ID, "Resolved": !ticket.Resolved })
 			.then(function(d) {
 				if (d.err !== null) { return }
@@ -34,15 +34,15 @@ function Ticket({ ticket, tickets, setTickets, displaySeat=false }) {
 				})
 				setTickets(newTickets);
 			})
-	}
+	}, [ticket.ID, ticket.Resolved, setTickets]);
 
-	function sendDeleteTicket() {
+	const sendDeleteTicket = useCallBack(() => {
 		deleteTicket(ticket)
 			.then(function(d) {
 				if (d.err !== null) { return }
 				setTickets(tickets.filter(function(t) { return t.ID !== ticket.ID }))
 			})
-	}
+	}, [ticket, setTickets])
 
 	return (
 		<Card style={{ padding: '2%', marginBottom: '2%', background: 'white', color: 'black' }}>
