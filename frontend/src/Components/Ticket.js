@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Card, CardHeader, CardBody, Chip, DropdownItem, User, Link, Spacer } from '@nextui-org/react';
 import { URL_INTRA_PROFILES } from '../utils/constants.jsx';
 import { updateTicket, deleteTicket } from '../utils/functionsAction.js';
@@ -15,10 +15,10 @@ function Ticket({ ticket, tickets, setTickets, displaySeat=false }) {
 	const resolvedText = 'Resolved';
 	const inProgressText = 'In progress';
 
-	function getDateFormated(dateStr) {
-		var date = new Date(dateStr)
+	const formatedDate = useMemo(() => {
+		var date = new Date(ticket.CreatedAt)
 		return (date.getDate() + "/" + parseInt(date.getMonth() + 1) + "/" + date.getFullYear())
-	}
+	}, [ticket.CreatedAt]);
 
 	function sendUpdateTicket() {
 		updateTicket({ "ID": ticket.ID, "Resolved": !ticket.Resolved })
@@ -78,7 +78,7 @@ function Ticket({ ticket, tickets, setTickets, displaySeat=false }) {
 								:
 								ticket.TicketTypeName
 							}
-							<span className="ml-2 text-small tracking-tight text-default-400">{getDateFormated(ticket.CreatedAt)}</span>
+							<span className="ml-2 text-small tracking-tight text-default-400">{formatedDate}</span>
 						</h4>
 					</div>
 				</div>
