@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import { Toaster } from 'react-hot-toast';
 import { Navigate } from 'react-router-dom';
@@ -24,8 +24,8 @@ function Dashboard() {
 	const [getTtAndClusters, setGetTtAndClusters] = useState(false);
 	const [initAllClusters, setInitAllClusters] = useState(false);
 
-	function changeCluster(newClusterId) {
-		if (parseInt(newClusterId) === cluster.ID) { return }
+	const changeCluster = useCallback((newClusterId) => {
+		if (cluster && parseInt(newClusterId) === cluster.ID) { return }
 
 		setAllClusters(
 			allClusters.map(function (item) {
@@ -38,9 +38,9 @@ function Dashboard() {
 			})
 		);
 		setCluster(allClusters.find((item) => item.ID === parseInt(newClusterId)));
-	}
+	}, [allClusters, cluster, setAllClusters, setCluster])
 	
-	function addListeners() {
+	const addListeners = useCallback(() => {
 		document.querySelectorAll('image').forEach(item => {
 			item.addEventListener('click', event => {
 				setSelectedSeat(item);
@@ -53,7 +53,7 @@ function Dashboard() {
 				setSeatHover("");
 			})
 		})
-	}
+	}, [setSelectedSeat, setOpenModal, setSeatHover])
 
 	useEffect(() => {
 		if (selectedSeat) {

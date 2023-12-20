@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Button } from '@nextui-org/react';
 import { deleteCluster } from '../../../utils/functionsAction.js';
 import TicketCluster from './TicketCluster.js';
@@ -11,13 +11,13 @@ function ManageClusters({ tickets, clusters, setClusters }) {
 
 	const [cluster, setCluster] = useState();
 
-	function sendDeleteCluster() {
+	const sendDeleteCluster  = useCallback(() => {
 		deleteCluster(cluster)
 			.then(function(d) {
 				if (d.err !== null) { return }
 				setClusters(clusters.filter(function(c) { return c.ID !== cluster.ID }))
 			})
-	}
+	}, [cluster, clusters, setClusters])
 
 	return (
 		<>

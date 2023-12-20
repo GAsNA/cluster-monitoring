@@ -6,7 +6,7 @@ function NavigatorClusters({ allClusters, changeCluster }) {
 			<Navbar maxWidth="full" isBordered height="100%">
 				<NavbarContent className="sm:flex gap-4" style={{ display: 'flex', flexWrap: 'wrap', padding: '10px 0' }}>
 					{allClusters.map((item) => (
-						<NavbarItem isActive={item.IsActive} key={item.Name}>
+						<NavbarItem isActive={item.IsActive} key={item.ID}>
 							<Button value={item.ID} onPress={e => changeCluster(e.target.value)}
 								color={item.IsActive && "primary"}
 							>

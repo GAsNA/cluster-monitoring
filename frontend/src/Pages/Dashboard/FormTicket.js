@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Select, SelectItem, Textarea, Spacer, Button } from '@nextui-org/react';
 import { createTicket } from '../../utils/functionsAction.js';
 import ModalConfirmation from '../../Components/ModalConfirmation.js';
@@ -14,20 +14,19 @@ function FormTicket({ seat, cluster, issueTypes, closeModal }) {
 
 	const [ sending, setSending ] = useState(false);
 
-	function sendTicket() {
+	const sendTicket = useCallback(() => {
 		setSending(true);
 		createTicket({ "Seat": seat.id, "ClusterID": cluster.ID, "TypeID": parseInt([...ticketType][0]), "Comment": comment });
 		setSending(false);
 		closeModal();
-	}
+	}, [seat.id, cluster.ID, ticketType, comment, setSending, closeModal])
 
-	const handleKeyPress = (event) => {
+	const handleKeyPress = useCallback((event) => {
 		if (event.key === 'Enter') { setOpenModalConfirmation(true) }
-	}
+	}, [setOpenModalConfirmation])
 
-	return (
-		<>
-		{ issueTypes ?
+	if (issueTypes) {
+		return (
 			<>
 				<Select disallowEmptySelection defaultSelectedKeys={[defaultIssueTypeID]}
 					placeholder="Select a issue type" labelPlacement="outside"
@@ -60,11 +59,12 @@ function FormTicket({ seat, cluster, issueTypes, closeModal }) {
 					text=<p><span style={{ color: '#01babc' }}>Are you sure</span>you want to send this ticket?</p>
 				/>
 			</>
-		:
+		)
+	} else {
+		return (
 			<ErrorCard title="To send a ticket:" description="No issue types availables. Try again later." />
-		}
-		</>
-	);
+		)
+	}
 }
 
 export default FormTicket;

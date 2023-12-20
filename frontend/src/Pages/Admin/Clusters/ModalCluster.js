@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input, Button, Spacer } from '@nextui-org/react';
 import { createCluster, updateCluster } from '../../../utils/functionsAction.js';
 import ModalConfirmation from '../../../Components/ModalConfirmation.js';
@@ -10,7 +10,14 @@ function ModalCluster({ open, setOpen, clusters, setClusters, cluster, setCluste
 	const [openModalConfirmation, setOpenModalConfirmation] = useState(false);
 	const [sending, setSending] = useState(false);
 
-	function sendCluster() {
+	const close = useCallback(() => {
+		setCluster();
+		setName("");
+		setLink("");
+		setOpen(false);
+	}, [setCluster, setName, setLink, setOpen])
+
+	const sendCluster = useCallback(() => {
 		setSending(true);
 		
 		if (cluster) {
@@ -36,20 +43,13 @@ function ModalCluster({ open, setOpen, clusters, setClusters, cluster, setCluste
 				
 		setSending(false);
 		close();
-	}
+	}, [link, name, cluster, clusters, setClusters, setSending, close])
 
-	function onNameChange(value) {
+	const onNameChange = useCallback((value) => {
 		setName(value.charAt(0).toUpperCase() + value.slice(1))
-	}
+	}, [setName])
 
-	function close() {
-		setCluster();
-		setName("");
-		setLink("");
-		setOpen(false);
-	}
-
-	function send() {
+	const send = useCallback(() => {
 		if (name === "" || link === "") { return }
 		
 		if (clusters.find((item) => item.Name === name)) {
@@ -57,11 +57,11 @@ function ModalCluster({ open, setOpen, clusters, setClusters, cluster, setCluste
 		} else {
 			sendCluster();
 		}
-	}
+	}, [name, link, clusters, sendCluster, setOpenModalConfirmation])
 
-	const handleKeyPress= (event) => {
+	const handleKeyPress = useCallback((event) => {
 		if (event.key === 'Enter') { send(); }
-	}
+	}, [send])
 
 	useEffect(() => {
 		if (cluster) { setName(cluster.Name); setLink(cluster.Link); }

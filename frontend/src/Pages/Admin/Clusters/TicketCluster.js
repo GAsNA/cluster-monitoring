@@ -1,18 +1,18 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Card, CardHeader, DropdownItem } from '@nextui-org/react';
 import OptionButton from '../../../Components/OptionButton.js';
 
 function TicketCluster({ cluster, tickets, setCluster, setOpenModalCluster, setOpenModalConfirmation }) {
 	
-	function actionsModify(item) {
+	const actionsModify = useCallback((item) => {
 		setCluster(item);
 		setOpenModalCluster(true);
-	}
+	}, [setCluster, setOpenModalCluster])
 
-	function actionsDelete(item) {
+	const actionsDelete = useCallback((item) => {
 		setCluster(item);
 		setOpenModalConfirmation(true);
-	}
+	}, [setCluster, setOpenModalConfirmation])
 	
 	return (
 		<Card style={{ padding: '1%', marginBottom: '2%', background: '#231f20', color: 'white', marginRight: '1%' }}>

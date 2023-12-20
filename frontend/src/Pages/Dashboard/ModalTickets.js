@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Spacer } from '@nextui-org/react';
 import FormTicket from './FormTicket.js';
 import ListTickets from '../../Components/ListTickets.js';
 
 function ModalTickets({ open, setOpen, seat, cluster, setSelectedSeat, issueTypes, tickets, setTickets }) {
-	function close() {
+	const close = useCallback(() => {
 		setSelectedSeat();
 		setOpen(false);
-	}
+	}, [setSelectedSeat, setOpen])
 
 	const isMobile = useMediaQuery({ query: `(max-width: 800px)` });
 
